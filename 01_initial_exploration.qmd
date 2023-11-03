@@ -125,7 +125,7 @@ These dates will define migration phenology as well as local vs. migrating count
 All other calculations can be performed using these values and the raw data.
 
 
-### How to calculate dates of passage?
+## How to calculate dates of passage?
 
 - Don suggested following methodology from Allcock et al 2022
   - "fit a curve to the data for each year and use it to estimate ..."

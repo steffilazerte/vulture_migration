@@ -85,9 +85,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#load-clean-data" id="toc-load-clean-data" class="nav-link" data-scroll-target="#load-clean-data">Load &amp; Clean Data</a></li>
   <li><a href="#quick-look-at-the-data" id="toc-quick-look-at-the-data" class="nav-link" data-scroll-target="#quick-look-at-the-data">Quick look at the data</a></li>
   <li><a href="#questions" id="toc-questions" class="nav-link" data-scroll-target="#questions">Questions</a></li>
-  <li><a href="#metrics-to-assess" id="toc-metrics-to-assess" class="nav-link" data-scroll-target="#metrics-to-assess">Metrics to assess</a>
+  <li><a href="#metrics-to-assess" id="toc-metrics-to-assess" class="nav-link" data-scroll-target="#metrics-to-assess">Metrics to assess</a></li>
+  <li><a href="#how-to-calculate-dates-of-passage" id="toc-how-to-calculate-dates-of-passage" class="nav-link" data-scroll-target="#how-to-calculate-dates-of-passage">How to calculate dates of passage?</a>
   <ul class="collapse">
-  <li><a href="#how-to-calculate-dates-of-passage" id="toc-how-to-calculate-dates-of-passage" class="nav-link" data-scroll-target="#how-to-calculate-dates-of-passage">How to calculate dates of passage?</a></li>
   <li><a href="#steffis-suggested-approach" id="toc-steffis-suggested-approach" class="nav-link" data-scroll-target="#steffis-suggested-approach">Steffi’s suggested approach</a></li>
   </ul></li>
   <li><a href="#using-gam-based-appraoch" id="toc-using-gam-based-appraoch" class="nav-link" data-scroll-target="#using-gam-based-appraoch">Using GAM based appraoch</a>
@@ -318,8 +318,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>mean/median number of locals</li>
 </ul>
 <p>Of these, the most important starting metrics are the <strong>dates of 5%, 25%, 50%, 75%, and 95% of the kettle numbers</strong>. These dates will define migration phenology as well as local vs.&nbsp;migrating counts. All other calculations can be performed using these values and the raw data.</p>
-<section id="how-to-calculate-dates-of-passage" class="level3">
-<h3 class="anchored" data-anchor-id="how-to-calculate-dates-of-passage">How to calculate dates of passage?</h3>
+</section>
+<section id="how-to-calculate-dates-of-passage" class="level2">
+<h2 class="anchored" data-anchor-id="how-to-calculate-dates-of-passage">How to calculate dates of passage?</h2>
 <ul>
 <li>Don suggested following methodology from Allcock et al 2022
 <ul>
@@ -338,7 +339,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>I am familiar with GAMs, but have no experience with MCMC techniques to model Gaussian functions.</li>
 <li>I don’t think that Linden et al.&nbsp;really demonstrated that GAMs are ‘bad’ to use.</li>
 </ol>
-</section>
 <section id="steffis-suggested-approach" class="level3">
 <h3 class="anchored" data-anchor-id="steffis-suggested-approach">Steffi’s suggested approach</h3>
 <p>We use GAMs to model each year individually. From the predicted data we calculate the cumulative counts and the points at which these counts hit 5%, 25%, 75%, 95% of the total (I think this is what Allcock et al mean by ‘bird-days’?).</p>
@@ -421,7 +421,7 @@ Basis dimension (k) checking results. Low p-value (k-index&lt;1) may
 indicate that k is too low, especially if edf is close to k'.
 
          k'  edf k-index p-value
-s(doy) 9.00 5.48    1.01    0.73</code></pre>
+s(doy) 9.00 5.48    1.01    0.74</code></pre>
 </div>
 <details>
 <summary>Code</summary>
