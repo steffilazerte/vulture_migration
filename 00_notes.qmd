@@ -1,0 +1,40 @@
+---
+title: "Notes"
+format: html
+---
+
+GAM reference - https://noamross.github.io/gams-in-r-course/
+
+
+GAM plotting using mgcv functions:
+
+```{r}
+library(readr)
+library(mgcv)
+v <- read_csv("Data/Datasets/vultures_clean_2023.csv")
+g <- gam(count ~ s(doy, k = 10), 
+         data = filter(v, year == 2000) |> mutate(l = 3), 
+         method = "REML", family = "nb")
+summary(g)
+plot(g, shade = TRUE, trans = exp, residuals = TRUE, pch = 20, 
+     shift = coef(g)[1])
+```
+
+
+
+### Model assessment
+
+- Looks for significant patterns in residuals (check that we have given high enough basis `k` to estimate 'wiggliness')
+```{r}
+p0 <- par(mfrow = c(2,2))
+gam.check(g, pch = 19, cex = 0.5)
+par(p0)
+
+s <- DHARMa::simulateResiduals(g, plot = TRUE)
+```
+
+We want 
+- Full convergence
+- K > edf
+- High p-value
+

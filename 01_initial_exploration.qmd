@@ -1,0 +1,423 @@
+---
+title: "Initial Exploration"
+format: html
+date: today
+author: Steffi
+toc: true
+---
+
+## Background
+
+This is the initial exploration of Turkey Vulture kettling and migration behaviour
+above Rocky Point on southern Vancouver Island. 
+
+> Banding and observations start 1 hour before sunrise and commence for 6 hours. Blanks indicate no data, often because the banding station was not open at all due to rainy weather or closed early for similar reasons. In addition, the station is on Department of National Defence land, and blanks can arise when banders are excluded by DND. Unfortunately, this applies to the entire year of 2007. Zero values represent true zeros, the count was made but no vultures seen.
+
+Data values are daily estimates "of the greatest aggregation of vultures over Rocky Point that day during the station hours".
+
+## Load & Clean Data
+```{r message = FALSE}
+library(tidyverse)
+library(readxl)
+library(mgcv)
+library(patchwork)
+source("00_functions.R")
+```
+
+:::{.panel-tabset}
+
+### Load Data
+```{r}
+v <- read_excel("Data/Raw/TUVU DET updated 1998-2023.xlsx")
+```
+
+### Quick Check
+```{r}
+head(v)
+tail(v)
+```
+:::
+
+:::{.panel-tabset}
+
+### Quick Clean
+
+```{r}
+v <- v |>
+  rename(date = 1) |>
+  mutate(date = as_date(date),
+         doy = yday(date))
+```
+
+### Quick Check
+```{r}
+v
+```
+:::
+
+
+:::{.panel-tabset}
+### Re-arrange
+
+```{r}
+v <- pivot_longer(v, -c(date, doy), names_to = "year", values_to = "count")
+```
+
+### Quick Check
+```{r}
+v
+```
+:::
+
+## Quick look at the data
+
+**Too see full screen: Right-click and select "Open Image in New Tab" (or similar)**
+```{r}
+#| fig-width: 16
+#| fig-asp: 0.8
+
+ggplot(v, aes(x = date, y = count, group = year, colour = year)) +
+  theme_bw() +
+  geom_point(na.rm = TRUE) +
+  stat_smooth(method = "gam", formula = y ~ s(x, k = 10), na.rm = TRUE) +
+  facet_wrap(~year, scales = "free_y") +
+  scale_colour_viridis_d()
+```
+
+Save this formatted data for later use
+```{r}
+write_csv(v, "Data/Datasets/vultures_clean_2023.csv")
+```
+
+
+## Questions
+
+1. Has the timing of kettle formating and migration has changed over the years?
+    - If so, what is the pattern of change? (Direction and magnitude of change)
+    - If not, document temporal distribution of numbers
+
+2. Has the number of birds in the kettles changed over time?
+    - may indicate population trends
+    - complicated by accumulating birds over days when the weather conditions are not suitable for passing over the strait
+    - potentially look at weather effects...
+
+## Metrics to assess
+
+To answer these questions we need to summarize the counts into specific metrics
+representing the timing of migration.
+
+Specifically, we would like to calculate the
+
+- dates of 5%, 25%, 50%, 75%, and 95% of the kettle numbers
+- duration of passage  - No. days between 5% and 95%
+- duration of peak passage - No. days between 25% and 75%
+
+Population size (no. vultures in aggregations)
+
+- maximum
+- cumulative
+- number at peak passage (max? range? median?)
+- mean/median number of locals
+
+Of these, the most important starting metrics are the 
+**dates of 5%, 25%, 50%, 75%, and 95% of the kettle numbers**. 
+These dates will define migration phenology as well as local vs. migrating counts.
+All other calculations can be performed using these values and the raw data.
+
+
+### How to calculate dates of passage?
+
+- Don suggested following methodology from Allcock et al 2022
+  - "fit a curve to the data for each year and use it to estimate ..."
+- Allcock et al 2022 "modelled optimal Gaussian functions to describe the migration
+  phenology for each species – year combination in our dataset using
+  Markhov Chain Monte Carlo (MCMC) techniques".
+- They say that "Gaussian functions ... often outperform General Additive Models (Linden et al., 2016)"
+
+**I like this approach in general, but I'm not convinced that we can't/shouldn't use GAMs.**
+
+In [Linden et al.](https://onlinelibrary.wiley.com/doi/epdf/10.1111/jav.00994), 
+they restricted the GAM models' effective degrees of freedom (which isn't common, usually they are determined by the modelling procedure) and note that if they didn't restrict them, 
+"GAMs would have been preferred in 73% of the cases". 
+
+The argument for restricting GAMS was to make the comparison among models possible as the 
+"estimation of [effective] degrees of freedom [in a GAM] is similar to a model selection procedure".
+This would have invalidated their use of the information theoretic approach for model comparison.
+
+I still think we should use GAMs, because 
+
+1. We are using this to calculate metrics and as long as the model fits the data, is consistent and replicable, it doesn't really matter how we get there (i.e. there's no reason to not use
+  the best GAM method with built-in model selection).
+2. We are looking at a single species and so can assess each year to make sure it looks right.
+3. I am familiar with GAMs, but have no experience with MCMC techniques to model Gaussian functions.
+4. I don't think that Linden et al. really demonstrated that GAMs are 'bad' to use.
+
+### Steffi's suggested approach
+
+We use GAMs to model each year individually. 
+From the predicted data we calculate the cumulative counts and the points at 
+which these counts hit 5%, 25%, 75%, 95% of the total 
+(I think this is what Allcock et al mean by 'bird-days'?).
+
+However, we will need to think about how to handle the resident birds, 
+as they may artificially inflate the cumulative counts prior to migration. 
+
+
+## Using GAM based appraoch
+
+For illustration and exploration of this approach, we'll look at 2000. 
+
+::: {.panel-tabset}
+### Example GAM - 2000
+
+- Negative binomial model fits the count data with overdispersion
+- Use Restricted Maximum Likelihood ("Most likely to give you reliable, stable results"[^1])
+- We smooth (`s()`) over `doy` (day of year) to account for non-linear migration patterns
+- We set `k = 10` (up to 10 basis functions; we want enough to make sure we capture the patterns, but too many will slow things down).
+
+[^1]: https://noamross.github.io/gams-in-r-course/chapter1
+
+```{r}
+g <- gam(count ~ s(doy, k = 10), data = filter(v, year == 2000), 
+         method = "REML", family = "nb")
+plot(g, shade = TRUE, trans = exp, residuals = TRUE, pch = 20, 
+     shift = coef(g)[1])
+```
+
+### Model summary
+Not really necessary for us to evaluate, but the `s(doy)` value indicates that we have a signifcant
+pattern, and the fact that the `edf` value is less than our `k = 10`, is good.
+```{r}
+summary(g)
+```
+
+
+### Model evaluation
+Quick checks to ensure model is valid.
+```{r message = FALSE}
+#| code-fold: true
+
+p0 <- par(mfrow = c(2,2))
+gam.check(g, pch = 19, cex = 0.5)
+par(p0)
+
+s <- DHARMa::simulateResiduals(g, plot = TRUE)
+```
+:::
+
+### Calculating dates of passage
+
+First create data set of predicted GAM model outputs across the entire date range.
+
+```{r}
+doy <- min(g$model$doy):max(g$model$doy)
+
+p <- predict(g, newdata = list(doy = doy), type = "response", se.fit = TRUE)
+d <- data.frame(doy = doy, count = p$fit, se = p$se) |>
+  mutate(ci99_upper = count + se * 2.58,
+         ci99_lower = count - se * 2.58)
+```
+
+Next we'll calculate percentiles based on cumulative counts. 
+But there are several ways we can do this, depending how we want to account for 
+resident vultures.
+
+- Option 1: We do nothing
+- Option 2: We use the model's CI 99% to find a threshold date before which we assume all observations are of local, resident vultures, after which is migration. We would then calculate cumulative counts only on data after this threshold)[^2]
+- Option 3: We calculate the median number of residents and simply subtract that from 
+all counts before calculating our cumulative counts.
+
+[^2]: Similar to a method I used in a paper with Matt Reudink on Bluebirds and also 
+one on Swifts (companion to the one you referenced). We used this to calculate a 
+threshold for latitude to define the start and end of migration by population postition
+rather than counts, though. 
+
+### Option 1: Do not omit resident vultures
+
+- Use entire date range
+- No threshold cutoff
+- No subtraction of local counts
+- Calculate local counts from predicted data before Day 240
+
+```{r}
+#| code-fold: true
+d_sum <- mutate(d, count_sum = cumsum(count))
+
+dts <- calc_dates(d_sum)
+dts_overall <- mutate(dts, type = "Option 1: No Adjustments")
+
+local <- d |>
+  filter(doy < 240) |>
+  summarize(min = min(count), max = max(count), 
+            median = median(count), mean = mean(count)) |>
+  mutate(across(everything(), \(x) round(x, 1)))
+
+g1 <- plot_cum(d_sum = d_sum, dts = dts)
+g2 <- plot_model(d_raw = g$model, d_pred = d, dts = dts, local_cutoff = 240) +
+  labs(caption = "Local count stats calculated up to Day 240")
+g_opt1 <- g1 / g2 + plot_annotation(title = "Option 1: No adjustments")
+```
+
+### Option 2: Use a count threshold to omit dates with resident vultures
+
+- Use the *minimum* value of the *upper limit* of the CI 99% to calculate a 
+  cutoff **threshold** (only consider dates < 270 to avoid the end of migration tailing off)
+- The first date prior to migration which crosses this threshold *into migration* 
+  (i.e. avoids little blips up and down early in the year) is used as the
+  **threshold**
+- The data is filtered to include only dates *on or after this threshold*
+- Then the percentiles are calculated based on cumulative counts in this
+  subset
+
+```{r}
+thresh <- filter(d, doy < 270) |> # Only consider pre-migration
+  arrange(desc(doy)) |>
+  filter(count <= min(ci99_upper)) |>
+  slice(1) |>
+  pull(doy)
+thresh
+```
+
+```{r}
+#| code-fold: true
+#| fig-asp: 0.8
+# g1 <- ggplot(data = d, mapping = aes(x = doy, y = count)) +
+#   theme_bw() +
+#   geom_ribbon(aes(ymin = ci99_lower, ymax = ci99_upper), fill = "grey50", alpha = 0.5) +
+#   geom_point(data = g$model) +
+#   geom_line() +
+#   coord_cartesian(xlim = c(204, 270)) +
+#   labs(title = "Look only at beginning of migration")
+
+g2 <- ggplot(data = d, mapping = aes(x = doy, y = count)) +
+  theme_bw() +
+  theme(legend.position = c(0.3, 0.9), legend.title = element_blank()) +
+  geom_ribbon(aes(ymin = ci99_lower, ymax = ci99_upper), fill = "grey50", alpha = 0.3) +
+  geom_point(data = g$model, colour = "grey40") +
+  geom_line(colour = "grey60") +
+  coord_cartesian(xlim = c(204, 245), ylim = c(-5, 40)) +
+  geom_hline(linetype = 2,
+             aes(yintercept = min(d$ci99_upper), colour = "Min of upper 99% CI")) +
+  geom_vline(linetype = 2,
+             aes(xintercept = thresh, colour = "Threshold\n(first date consistently\nabove min of upper 99% CI)")) +
+  scale_colour_manual(values = c("black", "red")) +
+  labs(title = "Find thresholds based on local counts", 
+       subtitle = "Figure is model plot 'zoomed' into early season")
+g2
+```
+
+```{r}
+#| code-fold: true
+d_sum <- filter(d, doy >= thresh) |>
+  mutate(count_sum = cumsum(count))
+
+dts <- calc_dates(d_sum)
+dts_overall <- bind_rows(dts_overall, 
+                         mutate(dts, type = "Option 2: Threshold"))
+
+local <- d |>
+  filter(doy < thresh) |>
+  summarize(min = min(count), max = max(count), 
+            median = median(count), mean = mean(count)) |>
+  mutate(across(everything(), \(x) round(x, 1)))
+
+
+g1 <- plot_cum(d_sum, dts) +
+  geom_vline(xintercept = thresh, colour = "red", linetype = "dotted") +
+  annotate("text", label = "Threshold", x = thresh, y = 1000)
+g2 <- plot_model(d_raw = g$model, d_pred = d, dts = dts, local_cutoff = thresh) +
+  labs(caption = paste0("Local count stats calculated up to threshold date, ", thresh))
+  
+g_opt2 <- g1 / g2 + plot_annotation(title = "Option 2: Use only dates after threshold")
+```
+
+### Option 3: Subtract the median local count from all observations
+- Use entire date range
+- No threshold cutoff
+- Subtract the median local count from the predicted observations, prior to 
+  calculating the cumulative counts
+- Calculate local counts from predicted data before Day 240
+
+```{r}
+#| code-fold: true
+local <- d |>
+  filter(doy < 240) |>
+  summarize(min = min(count), max = max(count), 
+            median = median(count), mean = mean(count)) |>
+  mutate(across(everything(), \(x) round(x, 1)))
+
+d_sum <- mutate(d, 
+                count = count - local$median,
+                count_sum = cumsum(count))
+
+dts <- calc_dates(d_sum)
+dts_overall <- bind_rows(dts_overall, 
+                         mutate(dts, type = "Option 3: Subtraction"))
+
+g1 <- plot_cum(d_sum = d_sum, dts = dts) +
+  annotate("text", x = 225, y = 1000,
+           label = paste0("Remove ", 
+                          local$median, 
+                          " from all counts\nbefore calcuating cumuative sum"))
+g2 <- plot_model(d_raw = g$model, d_pred = d, dts = dts, local_cutoff = 240) +
+  labs(caption = "Local count stats calculated up to Day 240")
+g_opt3 <- g1 / g2 + plot_annotation(title = "Option 3: Subtract median first")
+```
+
+### Comparing our options
+
+In each figure the red dots represent the 5%, 25%, 75% and 95% dates calculated
+based on the cumulative counts (top figure, dotted lines show the percentiles). 
+
+The bottom figure shows the raw counts, with the GAM model overlaid, the pink
+windows indicate 5%-95% and 25%-75% date ranges. The arrow on the left indicates
+which predicted values were included in the local count statistics. 
+
+Note that the only two things that really change in this example are the 
+initial 5% date (becomes increasingly later with each option) and the calculation
+of the "local" population statistics (because in Option 1 and Option 2, they're
+based on the same set of data, but in Option 2, we use a threshold to define
+before and after the expected start of migration.
+
+```{r}
+g_opt1
+g_opt2
+g_opt3
+```
+
+
+However in this example (and in many that I've looked at), this only really
+affects the first, 5%, Date value.
+
+Here are the dates calculated for each percentiles using the different methods 
+in this example.
+```{r}
+dts_overall |>
+  select(-y1, -y) |>
+  pivot_wider(names_from = "perc", values_from = "x")
+```
+
+
+### Steffi's suggested approach
+
+**I suggest we use Option 3: Subtracting the median local numbers.**
+
+I think that Option 1 gives us an artifically early start to migration as it
+starts cumulating counts over resident bird observations.
+
+I think that Option 2 works, but is potentially overly complicated.
+I'm also not convinced that it completely avoids the issue of resident birds. 
+
+On the other hand I find Option 3
+
+- Reasonable
+- Easy to explain
+- Visually, it looks the most 'right' (to me at any rate)
+- It seems to result in more conservative numbers
+
+
+Other options
+
+- We could also just not use the 5% and 95% metrics
+- I could run all three methods on the full data set and we could check them 
+  all together. 
