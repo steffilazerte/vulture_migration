@@ -268,6 +268,8 @@ g_opt1 <- g1 / g2 + plot_annotation(title = "Option 1: No adjustments")
 - The data is filtered to include only dates *on or after this threshold*
 - Then the percentiles are calculated based on cumulative counts in this
   subset
+  
+
 
 ```{r}
 thresh <- filter(d, doy < 270) |> # Only consider pre-migration
@@ -277,6 +279,23 @@ thresh <- filter(d, doy < 270) |> # Only consider pre-migration
   pull(doy)
 thresh
 ```
+
+> #### What is the min of the upper limit of the CI 99%?!?!?
+>
+> In the image below...
+> 
+> - the Grey ribbon represents the 99% Confidence Interval around the GAM model (grey line)
+> - the upper limit of this *ribbon* is the upper limit of the 99% CI
+> - the *minimum* of this value is the area on the figure where the upper edge of the 
+>   ribbon is at it's lowest value (large black point)
+> - in this year/model, it's occurs on the first day
+>
+> **How do we use this value?**
+>
+> - the first value in the model (grey line) to cross this limit (dashed black line),
+>   identifies our threshold date (red dashed line)
+> - we then use only the dates *after* this threshold to calculate migration metrics
+> - we then use only the dates *before* this threshold to calculate local counts
 
 ```{r}
 #| code-fold: true
@@ -291,16 +310,20 @@ thresh
 
 g2 <- ggplot(data = d, mapping = aes(x = doy, y = count)) +
   theme_bw() +
-  theme(legend.position = c(0.3, 0.9), legend.title = element_blank()) +
+  theme(legend.position = c(0.3, 0.85), legend.title = element_blank()) +
   geom_ribbon(aes(ymin = ci99_lower, ymax = ci99_upper), fill = "grey50", alpha = 0.3) +
   geom_point(data = g$model, colour = "grey40") +
   geom_line(colour = "grey60") +
   coord_cartesian(xlim = c(204, 245), ylim = c(-5, 40)) +
+  geom_point(x = d$doy[d$ci99_upper == min(d$ci99_upper)], 
+             y = min(d$ci99_upper), size = 4, aes(colour = "Day with min 99% CI"),
+             inherit.aes = FALSE) +
   geom_hline(linetype = 2,
              aes(yintercept = min(d$ci99_upper), colour = "Min of upper 99% CI")) +
   geom_vline(linetype = 2,
              aes(xintercept = thresh, colour = "Threshold\n(first date consistently\nabove min of upper 99% CI)")) +
-  scale_colour_manual(values = c("black", "red")) +
+  scale_colour_manual(values = c("black", "black", "red")) +
+  guides(colour = guide_legend(override.aes = list(shape = c(19, 0, 0), size = c(3, 0, 0), linewidth = c(0, 0.3, 0.3), linetype = c("solid", "dashed", "dashed")))) +
   labs(title = "Find thresholds based on local counts", 
        subtitle = "Figure is model plot 'zoomed' into early season")
 g2
