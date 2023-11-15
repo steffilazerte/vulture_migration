@@ -1,0 +1,23 @@
+---
+title: "Vulture Migration on Vancouver Island"
+---
+
+## Table of Contents
+
+These are the scripts and results used in this project.
+
+```{r}
+#| echo: false
+#| message: false
+#| results: asis
+library(tidyverse)
+library(janitor)
+tibble(f = list.files(pattern = ".html")) |>
+  filter(!str_detect(f, "index")) |>
+  mutate(name = str_remove_all(f, "(\\d+)|(.html)"),
+         name = make_clean_names(name, "title"),
+         name = paste0(1:n(), ". [", name, "](", f, ")\n")) |>
+  pull(name) |>
+  cat()
+```
+
