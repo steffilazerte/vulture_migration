@@ -258,7 +258,6 @@ bit of variability, but nothing that seems especially problematic.
 ```{r}
 #| code-fold: true
 #| fig-width: 12
-#| out-width: 50%
 #| fig-align: center
 g <- lapply(c$year, \(y) plot_model(v[v$year == y, ], pred[pred$year == y, ]) +
               labs(title = y))
