@@ -1,9 +1,5 @@
 ---
 title: "Initial Exploration"
-format: html
-date: today
-author: Steffi
-toc: true
 ---
 
 ## Background
@@ -92,7 +88,7 @@ write_csv(v, "Data/Datasets/vultures_clean_2023.csv")
 
 ## Questions
 
-1. Has the timing of kettle formating and migration has changed over the years?
+1. Has the timing of kettle formation and migration has changed over the years?
     - If so, what is the pattern of change? (Direction and magnitude of change)
     - If not, document temporal distribution of numbers
 
@@ -163,7 +159,7 @@ However, we will need to think about how to handle the resident birds,
 as they may artificially inflate the cumulative counts prior to migration. 
 
 
-## Using GAM based appraoch
+## Using GAM based appraoch {#gam}
 
 For illustration and exploration of this approach, we'll look at 2000. 
 
@@ -246,14 +242,14 @@ d_sum <- mutate(d, count_sum = cumsum(count))
 dts <- calc_dates(d_sum)
 dts_overall <- mutate(dts, type = "Option 1: No Adjustments")
 
-local <- d |>
+residents <- d |>
   filter(doy < 240) |>
-  summarize(min = min(count), max = max(count), 
-            median = median(count), mean = mean(count)) |>
+  summarize(res_pop_min = min(count), res_pop_max = max(count), 
+            res_pop_median = median(count), res_pop_mean = mean(count)) |>
   mutate(across(everything(), \(x) round(x, 1)))
 
-g1 <- plot_cum(d_sum = d_sum, dts = dts)
-g2 <- plot_model(d_raw = g$model, d_pred = d, dts = dts, local_cutoff = 240) +
+g1 <- plot_cum_explore(d_sum = d_sum, dts = dts)
+g2 <- plot_model_explore(d_raw = g$model, d_pred = d, dts = dts, residents, resident_date = 240) +
   labs(caption = "Local count stats calculated up to Day 240")
 g_opt1 <- g1 / g2 + plot_annotation(title = "Option 1: No adjustments")
 ```
@@ -338,51 +334,51 @@ dts <- calc_dates(d_sum)
 dts_overall <- bind_rows(dts_overall, 
                          mutate(dts, type = "Option 2: Threshold"))
 
-local <- d |>
+residents <- d |>
   filter(doy < thresh) |>
-  summarize(min = min(count), max = max(count), 
-            median = median(count), mean = mean(count)) |>
+  summarize(res_pop_min = min(count), res_pop_max = max(count), 
+            res_pop_median = median(count), res_pop_mean = mean(count)) |>
   mutate(across(everything(), \(x) round(x, 1)))
 
 
-g1 <- plot_cum(d_sum, dts) +
+g1 <- plot_cum_explore(d_sum, dts) +
   geom_vline(xintercept = thresh, colour = "red", linetype = "dotted") +
   annotate("text", label = "Threshold", x = thresh, y = 1000)
-g2 <- plot_model(d_raw = g$model, d_pred = d, dts = dts, local_cutoff = thresh) +
-  labs(caption = paste0("Local count stats calculated up to threshold date, ", thresh))
+g2 <- plot_model_explore(d_raw = g$model, d_pred = d, dts = dts, residents, resident_date = thresh) +
+  labs(caption = paste0("Resident count stats calculated up to threshold date, ", thresh))
   
 g_opt2 <- g1 / g2 + plot_annotation(title = "Option 2: Use only dates after threshold")
 ```
 
-### Option 3: Subtract the median local count from all observations
+### Option 3: Subtract the median resident count from all observations {#option-3}
 - Use entire date range
 - No threshold cutoff
-- Subtract the median local count from the predicted observations, prior to 
+- Subtract the median resident count from the predicted observations, prior to 
   calculating the cumulative counts
-- Calculate local counts from predicted data before Day 240
+- Calculate resident counts from predicted data before Day 240
 
 ```{r}
 #| code-fold: true
-local <- d |>
+residents <- d |>
   filter(doy < 240) |>
-  summarize(min = min(count), max = max(count), 
-            median = median(count), mean = mean(count)) |>
+  summarize(res_pop_min = min(count), res_pop_max = max(count), 
+            res_pop_median = median(count), res_pop_mean = mean(count)) |>
   mutate(across(everything(), \(x) round(x, 1)))
 
 d_sum <- mutate(d, 
-                count = count - local$median,
+                count = count - residents$res_pop_median,
                 count_sum = cumsum(count))
 
 dts <- calc_dates(d_sum)
 dts_overall <- bind_rows(dts_overall, 
                          mutate(dts, type = "Option 3: Subtraction"))
 
-g1 <- plot_cum(d_sum = d_sum, dts = dts) +
+g1 <- plot_cum_explore(d_sum = d_sum, dts = dts) +
   annotate("text", x = 225, y = 1000,
            label = paste0("Remove ", 
-                          local$median, 
+                          residents$res_pop_median, 
                           " from all counts\nbefore calcuating cumuative sum"))
-g2 <- plot_model(d_raw = g$model, d_pred = d, dts = dts, local_cutoff = 240) +
+g2 <- plot_model_explore(d_raw = g$model, d_pred = d, dts = dts, residents, resident_date = 240) +
   labs(caption = "Local count stats calculated up to Day 240")
 g_opt3 <- g1 / g2 + plot_annotation(title = "Option 3: Subtract median first")
 ```
@@ -416,8 +412,8 @@ Here are the dates calculated for each percentiles using the different methods
 in this example.
 ```{r}
 dts_overall |>
-  select(-y1, -y) |>
-  pivot_wider(names_from = "perc", values_from = "x")
+  select(-contains("count")) |>
+  pivot_wider(names_from = "perc", values_from = "doy_passage")
 ```
 
 
@@ -444,3 +440,9 @@ Other options
 - We could also just not use the 5% and 95% metrics
 - I could run all three methods on the full data set and we could check them 
   all together. 
+
+## Reproducibility
+
+```{r}
+devtools::session_info()
+```
