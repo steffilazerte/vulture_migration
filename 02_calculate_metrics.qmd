@@ -1,0 +1,723 @@
+---
+title: "Calculate Metrics"
+fig-width: 8
+fig-asp: 0.7
+---
+
+## Background
+
+Having explored the data ([Initial Exploration](01_initial_exploration.html)) and 
+various ways of calculating metrics of migration timing, we will now calculate and
+explore these metrics for the entire data set.
+
+> ### We will use
+> 
+> - a [GAM approach](01_initial_exploration.html#gam)
+> to model the pattern of vulture counts
+> - percentiles based on cumulative modelled counts to assess dates of passage
+> - [Option 3](01_initial_exploration.html#option-3) to account for
+>   resident birds (subtract the predicted mean residents prior to calculating the cumulative counts)
+
+## Load Data
+```{r message = FALSE}
+library(tidyverse)
+library(mgcv)
+library(patchwork)
+library(gt)
+
+source("00_functions.R")
+
+set.seed(1234) # To make this reproducible
+
+v <- read_csv("Data/Datasets/vultures_clean_2023.csv")
+resident_date <- 240
+```
+
+## Metrics to assess
+
+To answer these [questions](01_initial_exploration.html#questions) we will summarize the counts into specific metrics
+representing the timing of migration.
+
+Specifically, we would like to calculate the
+
+- dates of 5%, 25%, 50%, 75%, and 95% of the kettle numbers
+- duration of passage  - No. days between 5% and 95%
+- duration of peak passage - No. days between 25% and 75%
+
+Population size (no. vultures in aggregations)
+
+- maximum
+- cumulative
+- number at peak passage (mean, median, range)
+- number of locals (mean, median, range)
+
+Of these, the most important starting metrics are the 
+**dates of 5%, 25%, 50%, 75%, and 95% of the kettle numbers**. 
+These dates will define migration phenology as well as local vs. migrating counts.
+All other calculations can be performed using these values and the raw data.
+
+## Proceedure
+
+The steps for calculating these metrics are as follows. 
+
+For each year we will calculate...
+
+1. A GAM
+2. The median number of residents, using day `r resident_date` as a cutoff
+3. The cumulative migration counts
+4. The dates of passage as percentiles of these cumulative counts (5%, 25%, 75%, 95%)
+5. The duration of (peak) passage from these dates
+6. The population size (max, cumulative, stats at peak passage, stats of locals)
+
+We will also create figures outlining these metrics for each year and will
+use these to assess whether anything needs to be tweaked 
+(i.e. perhaps the date `r resident_date` cutoff)
+
+## Calculate Metrics
+
+### 0. Sample sizes
+
+:::{.panel-tabset}
+
+#### Calculate
+```{r samples}
+samples <- v |>
+  group_by(year) |>
+  filter(!is.na(count)) |> # Omit missing dates
+  summarize(
+    date_min = min(date), date_max = max(date),
+    # number of dates with a count
+    n_dates_obs = n(),           
+    # number of dates in the range
+    n_dates = as.numeric(difftime(date_max, date_min, units = "days")), 
+    n_obs = sum(count))
+```
+
+#### Preview
+```{r}
+gt(samples)
+```
+
+:::
+
+### 1. GAMs
+
+As developed in our [Initial Exploration](01_initial_exploration.html#gam)
+we will use:
+
+- Negative binomial model to fit count data with overdispersion
+- Use Restricted Maximum Likelihood ("Most likely to give you reliable, stable results"[^1])
+- A smoother (`s()`) over `doy` (day of year) to account for non-linear migration patterns
+- `k = 10` (up to 10 basis functions; we want enough to make sure we capture the patterns, but too many will slow things down).
+
+[^1]: https://noamross.github.io/gams-in-r-course/chapter1
+
+
+:::{.panel-tabset}
+
+#### Models
+
+**Run GAM on each year (except 2007)**
+```{r gams}
+#| cache: true
+gams <- v |>
+  filter(year != 2007) |> # Can't model 2007 because no data
+  nest(counts = -year) |>
+  mutate(models = map(counts, \(x) gam(count ~ s(doy, k = 20), data = x, 
+                                      method = "REML", family = "nb")))
+```
+
+**Create model predictions**
+```{r}
+gams <- gams |>
+  mutate(
+    doy = map(counts, \(x) list(doy = min(x$doy):max(x$doy))),
+    pred = map2(
+      models, doy, 
+      \(x, y) predict(x, newdata = y, type = "response", se.fit = TRUE)),
+    pred = map2(
+      pred, doy,
+      \(x, y) data.frame(doy = y, count = x$fit, se = x$se) |>
+        mutate(ci99_upper = count + se * 2.58,
+               ci99_lower = count - se * 2.58)))
+
+pred <- gams |>
+  select(year, pred) |>
+  unnest(pred)
+```
+
+
+#### Model Evaluation
+Checks to ensure models are valid.
+
+Here we look for two things
+
+- first that there is full convergence
+- second that there is not a significant non-random pattern in the residuals 
+  around the smoothing term (p-value, but be aware this is an *approximation*[^2]) 
+
+If we have low p-values, we want to check and see
+
+- if the model doesn't look like it fits the data (see the model plots at the end of this script)
+- if the `k` (number of basis functions) and `edf` (effective degrees of freedom)
+  values are similar (if they are, this implies that we haven't picked a large enough `k`)
+
+[^2]: https://noamross.github.io/gams-in-r-course/chapter2
+
+```{r message = FALSE}
+#| code-fold: true
+#| cache: true
+#| cache-globals: gams
+
+checks <- gams |>
+  mutate(checks = map2(models, year, gam_check)) |>
+  invisible() |>
+  mutate(plots = map(checks, \(x) pluck(x, "plot")),
+         df = map(checks, \(x) pluck(x, "checks"))) |>
+  unnest(df) |>
+  mutate(low_k = p_value < 0.1)
+
+c <- checks |>
+  filter(low_k | !full_convergence) |>
+  select(year, param, k, edf, k_index, p_value, convergence)
+
+gt(c)
+```
+
+
+#### Model Check Plots
+
+These plots are two different ways of presenting model diagnostics. 
+
+`gam.check()` is the default check that produces both these plots as well as
+the diagnostics in the Model Evaluation tab.
+
+[DHARMa](https://cran.r-project.org/web/packages/DHARMa/vignettes/DHARMa.html)
+is a package for simulating residuals to allow model checking for all types 
+of models ([details](https://steffilazerte.ca/posts/dharma/index.html).
+
+Both these sets of plots can be interpreted similarly to general linear model
+plots. We want roughly normal residuals and constant variance.
+
+I tend to put more weight on DHARMa as it's plots are easier to interpret for
+non-Gaussian model residuals, but I have included the `gam.check()` plots for completeness.
+
+:::{.panel-tabset}
+
+##### DHARMa
+
+```{r}
+#| echo: false
+#| results: asis
+#| message: false
+#| fig-height: 12
+#| fig-asp: 0.5
+#| cache: true
+#| cache-globals: checks
+for(i in seq_len(nrow(checks))) {
+  cat("**Year: ", checks$year[i], "**\n\n")
+  cat("DHARMa's `simulateResiduals()` plot\n\n")
+  p0 <- par(mar = c(2,2,2,2))
+  DHARMa::simulateResiduals(checks$models[[i]], plot = TRUE)
+  par(p0)
+  cat("\n\n")
+}
+```
+
+
+##### `gam.check()`
+
+```{r}
+#| echo: false
+#| results: asis
+#| message: false
+#| fig-height: 12
+#| fig-asp: 0.5
+#| cache: true
+#| cache-globals: checks
+for(i in seq_len(nrow(checks))) {
+  cat("**Year: ", checks$year[i], "**\n\n")
+  cat("`gam.check()` plot\n\n")
+  cat("![](", checks$plots[[i]], ")", sep = "")
+  cat("\n\n")
+}
+```
+:::
+
+:::
+
+#### Model Validity
+
+Based on the **Model Evaluation**, there are years with lower k-indices
+and a p-value < 0.1. It may be worth double checking that these models
+don't look too unreasonable. 
+
+On the whole, there seems to be quite a 
+bit of variability, but nothing that seems especially problematic.
+
+```{r}
+#| code-fold: true
+#| fig-width: 12
+#| out-width: 50%
+#| fig-align: center
+g <- lapply(c$year, \(y) plot_model(v[v$year == y, ], pred[pred$year == y, ]) +
+              labs(title = y))
+wrap_plots(g)
+```
+
+
+Based on the **Model Check Plots**, particularly the ones with **Simulated DHARMa residuals**, 
+we have good model fit (QQ plots of residuals) throughout, but a couple examples
+of non-constant variance (e.g., 1999, 2005, 2009, 2018, 2021). However, I am 
+not very concerned about this for several reasons.
+
+1. Although DHARMa highlighted these plots as having significant quantile deviations, 
+   visually, I don't find the deviations that concerning.
+2. Heteroscedasticity can lead to issues with our Standard Errors, but since
+   we're only really interested in the predicted value (based on the estimates),
+   these problems don't really apply to us (we're not interpreting model error or significance of parameters).
+
+
+> Therefore I suggest we proceed with these models and extract the metrics 
+> we're interested in.
+
+### 2. Residents
+
+Using a resident date (`resident_date`) cutoff of `r resident_date`...
+
+
+:::{.panel-tabset}
+
+#### Calculate
+```{r residents}
+residents <- pred |>
+  filter(doy < resident_date) |>
+  group_by(year) |>
+  # Calculate resident statistics by year
+  summarize(res_pop_min = min(count), 
+            res_pop_max = max(count), 
+            res_pop_median = median(count), 
+            res_pop_mean = mean(count)) |>
+  # Round to 1 decimal place
+  mutate(across(starts_with("res"), \(x) round(x, 1)))
+```
+
+#### Preview
+```{r}
+gt(residents)
+```
+
+:::
+
+
+### 3. Cumulative counts
+
+:::{.panel-tabset}
+
+#### Calculate
+```{r cum_counts}
+cum_counts <- pred |>
+  left_join(residents, by = "year") |>
+  group_by(year) |>
+  mutate(count = count - res_pop_median, # Subtract residents from predicted counts
+         count_sum = cumsum(count)) |> # Calculate cumulative sum
+  ungroup()
+```
+
+#### Preview
+```{r}
+gt(slice(cum_counts, 1:30))
+```
+:::
+
+
+### 4. Dates of passage
+
+:::{.panel-tabset}
+
+#### Calculate
+```{r passage_dates}
+dts <- cum_counts |>
+  select(year, doy, count, count_sum) |>
+  group_by(year) |>
+  calc_dates()
+```
+
+#### Preview
+```{r}
+gt(slice(dts, 1:30))
+```
+
+:::
+
+
+### 5. Duration of passage
+
+:::{.panel-tabset}
+
+#### Calculate
+```{r passage}
+passage <- dts |>
+  group_by(year) |>
+  summarize(mig_start_doy = doy_passage[perc == "p05"],
+            mig_end_doy = doy_passage[perc == "p95"],
+            peak_start_doy = doy_passage[perc == "p25"],
+            peak_end_doy = doy_passage[perc == "p75"],
+            mig_dur_days = mig_end_doy - mig_start_doy,
+            peak_dur_days = peak_end_doy - peak_start_doy)
+            
+```
+
+#### Preview
+```{r}
+gt(passage)
+```
+:::
+
+
+### 6. Population size
+
+Here we calculate population size metrics for different stages of the migration
+
+- Residents (before resident date cutoff [DOY `r resident_date`])
+- Migrants (between migration start [5%] and migration end [95%])
+- Ambiguous (between resident date cutoff and migration start as well as after 
+migration end)
+- Peak migrants (between peak start [25%] and peak end [75%])
+- Raw counts for migrants and peak migrants (min, mean, median, max, total)
+  - But remember that total is affected by missing dates
+
+Because Migrants and Peak Migrants actually overlap (i.e a peak migrant is also a migrant).
+They are calculated separately and then joined back in together.
+
+We also calculate 'raw' counts, although we should be careful about interpreting
+the 'totals' as those will depend quite a bit on how many days of observation
+there were. I include total raw counts only for interest or for statements
+along the lines of "Observers counted over X individual vultures over 26 years and
+X days". Not for actual analysis.
+
+
+:::{.panel-tabset}
+
+#### Calculate
+```{r pop_size}
+# General stats on predicted counts of migrants, resident, and other
+pop_size <- pred |>
+  left_join(passage, by = "year") |>
+  mutate(state = case_when(doy < resident_date ~ "res",
+                           doy >= mig_start_doy & doy <= mig_end_doy ~ "mig",
+                           TRUE ~ "ambig")) |>
+  # Calculate migrant statistics by year and state
+  group_by(year, state) |>
+  summarize(pop_min = min(count), 
+            pop_max = max(count), 
+            pop_median = median(count), 
+            pop_mean = mean(count),
+            pop_total = sum(count), 
+            .groups = "drop") |>
+  pivot_longer(-c(year, state), names_to = "stat", values_to = "value") |>
+  # Omit stats we don't care about
+  filter(!(state %in% c("ambig", "res") & stat == "pop_total")) |>
+  pivot_wider(names_from = c("state", "stat")) |>
+  relocate(contains("ambig"), .after = last_col())
+
+# General stats on raw migrant counts
+raw_size <- v |>
+  filter(year != "2007") |>
+  left_join(passage, by = "year") |>
+  mutate(state = case_when(doy < resident_date ~ "res",
+                           doy >= mig_start_doy & doy <= mig_end_doy ~ "mig",
+                           TRUE ~ "ambig")) |>
+  group_by(year, state) |>
+  summarize(raw_min = min(count, na.rm = TRUE), 
+            raw_max = max(count, na.rm = TRUE), 
+            raw_median = median(count, na.rm = TRUE), 
+            raw_mean = mean(count, na.rm = TRUE), 
+            raw_total = sum(count, na.rm = TRUE),
+            .groups = "drop") |>
+  pivot_longer(-c(year, state), names_to = "stat", values_to = "value") |>
+  # Omit stats we don't care about
+  filter(!(state %in% c("ambig", "res") & stat == "raw_total")) |>
+  pivot_wider(names_from = c("state", "stat")) |>
+  relocate(contains("ambig"), .after = last_col())
+
+# General stats on peak-migration counts
+peak_size <- pred |>
+  left_join(passage, by = "year") |>
+  filter(doy >= peak_start_doy & doy <= peak_end_doy) |>
+  group_by(year) |>
+  summarize(peak_pop_min = min(count), 
+            peak_pop_max = max(count), 
+            peak_pop_median = median(count), 
+            peak_pop_mean = mean(count),
+            peak_pop_total = sum(count), 
+            .groups = "drop")
+
+peak_raw_size <- v |>
+  filter(year != "2007") |>
+  left_join(passage, by = "year") |>
+  filter(doy >= peak_start_doy & doy <= peak_end_doy) |>
+  group_by(year) |>
+  summarize(peak_raw_min = min(count, na.rm = TRUE), 
+            peak_raw_max = max(count, na.rm = TRUE), 
+            peak_raw_median = median(count, na.rm = TRUE), 
+            peak_raw_mean = mean(count, na.rm = TRUE), 
+            peak_raw_total = sum(count, na.rm = TRUE),
+            .groups = "drop")
+
+pop_size <- left_join(peak_size, pop_size, by = "year") |>
+  left_join(raw_size, by = "year") |>
+  left_join(peak_raw_size, by = "year") |>
+  # Round to 1 decimal place
+  mutate(across(matches("pop|raw"), \(x) round(x, 1)))
+```
+
+#### Preview
+```{r}
+gt(pop_size)
+```
+
+:::
+
+### Combine metrics
+
+Join together the sample sizes, the passage dates/durations as well as the 
+population sizes.
+
+
+:::{.panel-tabset}
+
+#### Calculate
+```{r final}
+final <- left_join(samples, passage, by = "year") |>
+  left_join(pop_size, by = "year")
+```
+
+#### Preview
+
+```{r}
+gt(final)
+```
+:::
+
+
+## Extra - Consider gaps
+
+In the figures below, we can see that there is sometimes a significant gap in 
+observation right before the 'start' of migration.
+
+Although migration start is calculated from the GAM, it may be worth considering
+any patterns in these gaps incase they influence the start of migration (i.e.
+if there are more missing dates, is the start later?).
+
+Therefore, let's calculate how many missing dates there are in the two weeks before
+the predicted start of migration. We should be able to compare models with and without this
+to see if it has an effect on our analysis.
+
+:::{.panel-tabset}
+
+### Calculate
+```{r}
+missing <- v |>
+  left_join(select(final, year, mig_start_doy), by = "year") |>
+  group_by(year, mig_start_doy) |>
+  summarize(n_missing = sum(is.na(count[doy < mig_start_doy & doy >= mig_start_doy - 14])), 
+            .groups = "drop")
+
+final <- left_join(final, missing, by = c("year", "mig_start_doy"))
+```
+
+### Preview
+
+```{r}
+gt(missing)
+```
+:::
+
+
+## Data
+
+We'll save the models and calculated metrics for use later.
+
+**Final** is our main data, **GAMS** and **Cumulative Counts** are for if we
+need to refer to the intermediate steps.
+
+```{r}
+write_csv(final, "Data/Datasets/vultures_final.csv")
+write_rds(gam, "Data/Datasets/vultures_gams.rds")
+write_csv(cum_counts, "Data/Datasets/vultures_cumulative_counts.csv")
+```
+
+### Details
+
+Data are organized as observations per year.
+
+**General**
+
+- `year` - Year of the data
+- `date_min` - First date with an observation
+- `date_max` - Last date with an observation
+- `n_dates_obs` - Number of dates with a count
+- `n_dates` - Number of dates in the range (min to max)
+- `n_obs` - Total number of vultures seen
+
+**Migration**
+
+- `mig`/`peak`/`res`/`amibig` - Migration period (`mig`, 5%-95%) or peak migration period (`peak`, 25%-75%), or for population counts (below), the resident period (`res`, DOY < `r resident_date`) or the ambiguous period (`ambig`) that occurs after the resident period
+but before the start of migration and after the end of migration.
+- `start_doy`/`end_doy` - Start/end day-of-year dates for a period (e.g., `mig_start_doy`).
+- `dur_days` - Duration in days of a period (e.g., `peak_dur_days`).
+
+**Population Counts**
+
+- `pop`/`raw` - Type of count, either from model predictions (`pop`) or
+`raw` data counts.
+- `min`/`max`/`median`/`mean`/`total` - Population statistic calculated (e.g, `peak_pop_mean`, `mig_raw_min`, `res_pop_median`, or `ambig_raw_max`). `total` means the total sum of daily counts. *Note:* `total` isn't a sensible metric for raw data as it is dependent on the number of observation days.
+
+**Extra**
+
+- `n_missing` - Number of days missing an observation in the two weeks before the start of migration.
+
+
+## Figures
+
+These figures are meant to be sanity checks of the models and the Resident Date
+cutoff (`r resident_date`). 
+
+Each year has two figures showing the model, one overlaid with the predicted 
+counts (determined from the model), and one overlaid with the raw counts.
+
+This way we could double check the calculations as well as the models.
+
+Note that we always expect raw counts to be greater and with more variability than
+predicted counts. Further, I do not include the sum of counts for the raw data as this is dependent on the number of observations and somewhat misleading. 
+
+> These are not particularly important plots, but we do want to have a visual 
+> of what's going on, if only to catch mistakes in the calculations.
+
+**Interpretations**
+
+
+- Black line - Predicted model
+- Grey ribbon - 99% CI around the model 
+- Yellow line (box) - Period defined as containing only residents (defined by date cutoff)
+- Purple box - Period defined as migration period (defined by 5%-95% cumulative predicted counts), showing the min, max and median counts
+- Blue box - Period defined as peak migration period (defined by 25%-75% cumulative predicted counts), showing the min, max and median counts 
+- Sum counts - Text indicating the cumulative total number of predicted counts
+  expected in that period. 
+- `n days` - the total number of days with observations for that year.
+
+```{r}
+#| code-fold: true
+#| results: asis
+
+for(y in unique(v$year)) {
+  cat("### ", y, " {#", y, "}\n\n", sep = "")
+  if(y != "2007") {
+    v1 <- filter(v, year == y)
+    p <- filter(pred, year == y)
+    c <- filter(cum_counts, year == y)
+    f <- filter(final, year == y)
+    
+    g1 <- plot_model(raw = v1, pred = p, final = f)
+    
+    pop1 <- select(f, mig_start_doy, mig_end_doy, peak_start_doy, peak_end_doy, 
+                   contains("pop"), -contains("ambig")) |>
+      pivot_longer(everything()) |>
+      mutate(type = str_extract(name, "min|max|median|mean|total|start|end"),
+             stage = str_extract(name, "mig|peak|res"),
+             stage = str_replace_all(stage, c("mig" = "Migration", 
+                                              "peak" = "Peak Migration",
+                                              "res" = "Residents"))) |>
+      select(-name) |>
+      pivot_wider(names_from = type) |>
+      mutate(start = replace_na(start, 204),
+             end = replace_na(end, resident_date))
+    
+    pop2 <- pivot_longer(pop1, cols = c("start", "end"), values_to = "doy")
+    
+    
+    g1 <- plot_model(raw = v1, pred = p, final = f) +
+      geom_rect(data = pop1, aes(xmin = start, xmax = end, ymin = min, ymax = max,
+                                 fill = stage, colour = stage),
+                inherit.aes = FALSE) +
+      geom_path(data = pop2, aes(x = doy, y = median, colour = stage), linewidth = 1) +
+      geom_text(data = filter(pop1, stage != "Residents"),
+                aes(x = (end - start)/2 + start, y = max, colour = stage,
+                    label = paste("Sum", stage, "Counts\n", total)), 
+                nudge_y = c(-60, 65), nudge_x = c(-30, 0)) +
+      scale_fill_viridis_d(end = 0.9, alpha = 0.5) +
+      scale_colour_viridis_d(end = 0.9) +
+      labs(title = paste0(y, " - Check dates and predicted population sizes"),
+           caption = "Boxes define the start date to end date (left/right), as well as population min, max, and median (bottom/top/middle)\n'Total' refers to cumulative predicted observations")
+    
+    
+    pop1 <- select(f, mig_start_doy, mig_end_doy, peak_start_doy, peak_end_doy, 
+                   contains("raw"), -contains("ambig")) |>
+      pivot_longer(everything()) |>
+      mutate(type = str_extract(name, "min|max|median|mean|total|start|end"),
+             stage = str_extract(name, "mig|peak|res"),
+             stage = str_replace_all(stage, c("mig" = "Migration", 
+                                              "peak" = "Peak Migration",
+                                              "res" = "Residents"))) |>
+      select(-name) |>
+      pivot_wider(names_from = type) |>
+      mutate(start = replace_na(start, 204),
+             end = replace_na(end, resident_date))
+    
+    pop2 <- pivot_longer(pop1, cols = c("start", "end"), values_to = "doy")
+    
+    g2 <- plot_model(raw = v1, pred = p, final = f) +
+      geom_rect(data = pop1, aes(xmin = start, xmax = end, ymin = min, ymax = max,
+                                 fill = stage, colour = stage),
+                inherit.aes = FALSE) +
+      geom_path(data = pop2, aes(x = doy, y = median, colour = stage), linewidth = 1) +
+      scale_fill_viridis_d(end = 0.9, alpha = 0.5) +
+      scale_colour_viridis_d(end = 0.9) +
+      labs(title = paste0(y, " - Check dates and raw population sizes"),
+           caption = "Boxes define the start date to end date (left/right), as well as population min, max, and median (bottom/top/middle)")
+    
+    cat(":::{.panel-tabset}\n\n")
+    cat("#### Predicted Counts\n\n")
+    print(g1)
+    cat("\n\n")
+    cat("#### Raw Counts\n\n")
+    print(g2)
+    cat("\n\n")
+    cat(":::\n\n")
+    
+    cat("\n\n")
+    
+  } else cat("No Data for 2007\n\n")
+}
+```
+
+## Reproducibility
+
+### Packages
+
+You probably only need to cite **mcgv** and **DHARMa** and possibly the **tidyverse**, 
+but you should keep track of the packages used and their versions (under General Info).
+
+**Note:** There are several papers for citing mgcv, but they recommend the 2017
+book for an overview, which I think makes the most sense.
+
+```{r}
+#| code-fold: true
+#| echo: false
+#| results: asis
+cat("#### mgcv (for GAMs)\n")
+c <- citation("mgcv") 
+print(c[[4]], "text")
+
+cat("\n#### DHARMa (for model checks)\n")
+citation("DHARMa") |> print(style = "text")
+
+cat("\n#### tidyverse (for general data management and figures)\n")
+citation("tidyverse") |> print(style = "text")
+```
+
+### General info
+```{r}
+devtools::session_info()
+```
