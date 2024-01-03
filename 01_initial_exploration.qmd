@@ -39,13 +39,12 @@ tail(v)
 ### Quick Clean
 
 ```{r}
-v <- v |>
-  rename(date = 1) |>
-  mutate(date = as_date(date),
-         doy = yday(date))
+v <- rename(v, date = 1)
 ```
 
 ### Quick Check
+Expect 2023 for all years, as original data doesn't include year and R *must* have
+a year (this is corrected below).
 ```{r}
 v
 ```
@@ -56,10 +55,15 @@ v
 ### Re-arrange
 
 ```{r}
-v <- pivot_longer(v, -c(date, doy), names_to = "year", values_to = "count")
+v <- pivot_longer(v, -date, names_to = "year", values_to = "count")
+
+year(v$date) <- as.integer(v$year)  # Fix years for each date
+
+v <- mutate(v, date = as_date(date), doy = yday(date))
 ```
 
 ### Quick Check
+Correct year on all dates now.
 ```{r}
 v
 ```
@@ -76,7 +80,7 @@ ggplot(v, aes(x = date, y = count, group = year, colour = year)) +
   theme_bw() +
   geom_point(na.rm = TRUE) +
   stat_smooth(method = "gam", formula = y ~ s(x, k = 10), na.rm = TRUE) +
-  facet_wrap(~year, scales = "free_y") +
+  facet_wrap(~year, scales = "free") +
   scale_colour_viridis_d()
 ```
 
