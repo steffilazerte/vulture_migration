@@ -425,7 +425,7 @@ Basis dimension (k) checking results. Low p-value (k-index&lt;1) may
 indicate that k is too low, especially if edf is close to k'.
 
          k'  edf k-index p-value
-s(doy) 9.00 5.48    1.01    0.78</code></pre>
+s(doy) 9.00 5.48    1.01    0.74</code></pre>
 </div>
 <details>
 <summary>Code</summary>
@@ -622,7 +622,7 @@ s(doy) 9.00 5.48    1.01    0.78</code></pre>
 </section>
 <section id="comparing-our-options" class="level3">
 <h3 class="anchored" data-anchor-id="comparing-our-options">Comparing our options</h3>
-<p>In each figure the red dots represent the 5%, 25%, 75% and 95% dates calculated based on the cumulative counts (top figure, dotted lines show the percentiles).</p>
+<p>In each figure the red dots represent the 5%, 25%, 50%, 75% and 95% dates calculated based on the cumulative counts (top figure, dotted lines show the percentiles).</p>
 <p>The bottom figure shows the raw counts, with the GAM model overlaid, the pink windows indicate 5%-95% and 25%-75% date ranges. The arrow on the left indicates which predicted values were included in the local count statistics.</p>
 <p>Note that the only two things that really change in this example are the initial 5% date (becomes increasingly later with each option) and the calculation of the “local” population statistics (because in Option 1 and Option 2, they’re based on the same set of data, but in Option 2, we use a threshold to define before and after the expected start of migration.</p>
 <div class="cell">
@@ -646,12 +646,12 @@ s(doy) 9.00 5.48    1.01    0.78</code></pre>
 <span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">contains</span>(<span class="st">"count"</span>)) <span class="sc">|&gt;</span></span>
 <span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> <span class="st">"perc"</span>, <span class="at">values_from =</span> <span class="st">"doy_passage"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 3 × 5
-  type                       p05   p25   p75   p95
-  &lt;chr&gt;                    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-1 Option 1: No Adjustments   248   262   273   281
-2 Option 2: Threshold        251   262   273   281
-3 Option 3: Subtraction      254   263   273   281</code></pre>
+<pre><code># A tibble: 3 × 6
+  type                       p05   p25   p50   p75   p95
+  &lt;chr&gt;                    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+1 Option 1: No Adjustments   248   262   268   273   281
+2 Option 2: Threshold        251   262   268   273   281
+3 Option 3: Subtraction      254   263   268   273   281</code></pre>
 </div>
 </div>
 </section>

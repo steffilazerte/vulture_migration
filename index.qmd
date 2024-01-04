@@ -13,11 +13,14 @@ These are the scripts and results used in this project.
 #| results: asis
 library(tidyverse)
 library(janitor)
+library(fs)
 tibble(f = list.files(pattern = ".html")) |>
   filter(!str_detect(f, "index")) |>
-  mutate(name = str_remove_all(f, "(\\d+)|(.html)"),
+  mutate(mod = as_date(fs::file_info(f)$modification_time),
+         name = str_remove_all(f, "(\\d+)|(.html)"),
          name = make_clean_names(name, "title"),
-         name = paste0(1:n(), ". [", name, "](", f, ")\n")) |>
+         name = paste0(1:n(), ". [", name, "](", f, ") (last modified: ", mod, ")\n"),
+         ) |>
   pull(name) |>
   cat()
 ```

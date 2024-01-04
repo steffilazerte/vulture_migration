@@ -8,6 +8,10 @@ calc_dates <- function(x) {
               p25x = doy[count_sum >= p25y1][1],
               p25y = count[count_sum >= p25y1][1],
               
+              p50y1 = 0.5 * max(count_sum),
+              p50x = doy[count_sum >= p50y1][1],
+              p50y = count[count_sum >= p50y1][1],
+              
               p75y1 = 0.75 * max(count_sum),
               p75x = doy[count_sum >= p75y1][1],
               p75y = count[count_sum >= p75y1][1],
@@ -39,7 +43,7 @@ plot_cum <- function(d_sum, dts) {
   ggplot(data = d_sum, aes(x = doy, y = count_sum)) +
     theme_bw() +
     geom_bar(stat = "identity") +
-    geom_hline(yintercept = c(0.05, 0.25, 0.75, 0.95) * max(d_sum$count_sum, na.rm = TRUE), 
+    geom_hline(yintercept = c(0.05, 0.25, 0.5, 0.75, 0.95) * max(d_sum$count_sum, na.rm = TRUE), 
                linetype = "dotted") +
     geom_point(data = dts, aes(x = doy_passage, y = count_thresh), colour = "red", size = 3) +
     scale_x_continuous(name = "Day of Year", limits = c(203, 295)) +
@@ -51,13 +55,15 @@ plot_model_explore <- function(d_raw, d_pred, dts, residents, resident_date) {
   
   ggplot(data = d_pred, mapping = aes(x = doy, y = count)) +
     theme_bw() +
-    annotate(geom = "rect", xmin = dts$doy_passage[1], xmax = dts$doy_passage[4], ymin = 0, ymax = Inf, 
+    annotate(geom = "rect", xmin = dts$doy_passage[1], xmax = dts$doy_passage[5], ymin = 0, ymax = Inf, 
              colour = NA, fill = "red", alpha = 0.1) +
-    annotate(geom = "rect", xmin = dts$doy_passage[2], xmax = dts$doy_passage[3], ymin = 0, ymax = Inf, 
+    annotate(geom = "rect", xmin = dts$doy_passage[2], xmax = dts$doy_passage[4], ymin = 0, ymax = Inf, 
              colour = NA, fill = "red", alpha = 0.3) +
-    annotate(geom = "text", x = dts$doy_passage[1] * 1.015, y = ymax * 0.9,
+    annotate(geom = "text", 
+             x = dts$doy_passage[1] * 1.015, y = ymax * 0.9,
              label = "5%-95%") +
-    annotate(geom = "text", x = dts$doy_passage[2] + (dts$doy_passage[3] - dts$doy_passage[2])/2, y = ymax * 0.9,
+    annotate(geom = "text", 
+             x = dts$doy_passage[2] + (dts$doy_passage[4] - dts$doy_passage[2])/2, y = ymax * 0.9,
              label = "25%-75%") +
     geom_ribbon(aes(ymin = ci99_lower, ymax = ci99_upper), fill = "grey50", alpha = 0.5) +
     geom_point(data = d_raw, na.rm = TRUE) +
@@ -82,7 +88,7 @@ plot_cum_explore <- function(d_sum, dts) {
   ggplot(data = d_sum, aes(x = doy, y = count_sum)) +
     theme_bw() +
     geom_bar(stat = "identity") +
-    geom_hline(yintercept = c(0.05, 0.25, 0.75, 0.95) * max(d_sum$count_sum, na.rm = TRUE), 
+    geom_hline(yintercept = c(0.05, 0.25, 0.5, 0.75, 0.95) * max(d_sum$count_sum, na.rm = TRUE), 
                linetype = "dotted") +
     geom_point(data = dts, aes(x = doy_passage, y = count_thresh), colour = "red", size = 3) +
     scale_x_continuous(name = "Day of Year", limits = c(203, 295)) +

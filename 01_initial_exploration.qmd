@@ -389,7 +389,7 @@ g_opt3 <- g1 / g2 + plot_annotation(title = "Option 3: Subtract median first")
 
 ### Comparing our options
 
-In each figure the red dots represent the 5%, 25%, 75% and 95% dates calculated
+In each figure the red dots represent the 5%, 25%, 50%, 75% and 95% dates calculated
 based on the cumulative counts (top figure, dotted lines show the percentiles). 
 
 The bottom figure shows the raw counts, with the GAM model overlaid, the pink

@@ -24,6 +24,7 @@ library(tidyverse)
 library(mgcv)
 library(patchwork)
 library(gt)
+library(moments)
 
 source("00_functions.R")
 
@@ -121,6 +122,7 @@ we will use:
 ```{r gams}
 #| cache: true
 gams <- v |>
+  mutate(count = as.integer(count)) |>
   filter(year != 2007) |> # Can't model 2007 because no data
   nest(counts = -year) |>
   mutate(models = map(counts, \(x) gam(count ~ s(doy, k = 20), data = x, 
@@ -282,7 +284,12 @@ not very concerned about this for several reasons.
 
 ### 2. Residents
 
-Using a resident date (`resident_date`) cutoff of `r resident_date`...
+Using a resident date (`resident_date`) cutoff of DOY `r resident_date`. 
+Here we calculate the min, max, mean, and median number of residents throughout
+the 'resident period' (from the start to DOY `r resident_date`).
+
+**Note:** Resident counts are fractional because they are based on the predicted
+counts from the GAM models (i.e. the smoothed curve).
 
 
 :::{.panel-tabset}
@@ -311,26 +318,107 @@ gt(residents)
 
 ### 3. Cumulative counts
 
+Here we calculate cumulative counts **after subtracting the median resident population**.
+
+As noted in our [initial exploration](01_initial_exploration.html#option-3), 
+if we calculate cumulative accounts across the whole year, we include cumulative
+counts of residents which could bias the start of migration to an earlier date.
+
+Therefore, we subtract the median number of resident birds from each daily count
+and *then* calculate the cumulative number of birds seen
+in kettles and use this cumulative curve to calculate our metrics of migration 
+(calculated in the following sections).
+
+Because we are subtracting a *median* value from the whole data range within a year
+we can occasionally get some funny counts (i.e. if the number of resident vultures
+fluctuated between 2 and 4, this would mean that subtracting a median of 3 would
+sometimes result in a negative count which in turn would mean that the cumulative
+count would sometimes go down, rather than up).
+
+**However**, after reviewing the cumulative count figures for all years,
+I've added one more rule: **we only start cumulative counts after DOY of `r resident_date`**.
+This is still very much before the start of migration, but
+avoids cumulative counts during the very clearly resident period. It helps avoid
+some of the more extreme negative cumulative counts. 
+Doing this doesn't appreciably alter the metrics calculated, but seems more reasonable.
+So gives me more peace of mind.
+
+**Overall:** I'm not concerned about minor negative cumulative count blips because 
+a) they are minor, and 
+b) they only occur during the resident phase. As soon as the birds start
+accumulating for migration, the number of birds present is above the resident
+number fluctuations and the cumulative count accumulates.
+
+**Also Note:** Counts are fractional because they are based on the predicted
+counts from the GAM models (i.e. the smoothed curve).
+
 :::{.panel-tabset}
 
 #### Calculate
 ```{r cum_counts}
 cum_counts <- pred |>
-  left_join(residents, by = "year") |>
+  left_join(select(residents, year, res_pop_median), by = "year") |>
   group_by(year) |>
-  mutate(count = count - res_pop_median, # Subtract residents from predicted counts
+  mutate(count_init = count,
+         count = count - res_pop_median, # Subtract residents from predicted counts
+         count = if_else(doy < resident_date, 0, count),
          count_sum = cumsum(count)) |> # Calculate cumulative sum
-  ungroup()
+  ungroup() |>
+  select(year, doy, res_pop_median, count_init, count, count_sum)
 ```
 
 #### Preview
+Showing only a snapshot of the middle of the year 1998.
+
+- `count_init` is the predicted daily kettle count (only included here for illustration)
+- `count` is the predicted daily kettle count after residents are removed (this means that negative counts are possible before migration starts).
+- `count_sum` is the *cumulative* sum of the `count` column (this means that it can decrease if counts are negative before migration starts).
+
+**Note:** the first couple of `count`s are zero because they take place before
+the resident date cutoff (`r resident_date`), and have been set to zero so we
+start cumulative counts on `r resident_date`.
+
+**The median number of residents for 1998 is `r cum_counts$res_pop_median[1]`**
+
 ```{r}
-gt(slice(cum_counts, 1:30))
+gt(slice(cum_counts, 35:60))
+```
+
+#### Visual
+
+These figures show the early part of the migration season with **predicted daily counts (red)**
+overlaid with the **adjusted cumulative predicted counts (grey)**.
+
+- Red bars are predicted non-cumulative initial counts (no subtractions made)
+- Grey bars are cumulative predicted counts created after subtracting resident birds from 
+each daily count. Accumulating only after `r resident_date`.
+- Note that there is a little negative cumulative blip in 2013 that evens out
+relatively quickly.
+
+
+```{r}
+#| fig-width: 12
+#| fig-height: 8
+
+ggplot(data = filter(cum_counts, doy < 265), aes(x = doy, y = count_sum)) +
+  theme_bw() +
+  geom_bar(aes(y = count_init), stat = "identity", fill = "red", alpha = 0.8) +
+  geom_bar(stat = "identity", alpha = 0.5) +
+  #geom_bar(aes(y = count), stat = "identity", fill = "blue", alpha = 0.5) +
+  facet_wrap(~ year, scales = "free_y")
 ```
 :::
 
 
 ### 4. Dates of passage
+
+Now that we have the cumulative predicted counts, we can calculate the dates at which
+a particular proportion of the migrating population had passed through.
+
+Here we look at the dates at which 5%, 25%, 50%, 75%, and 95% of the birds have
+passed through. 
+
+The 5-95% and 25-75% date rages will then be used to calculate duration of passage,  population sizes, and migration patterns in the next sections.
 
 :::{.panel-tabset}
 
@@ -343,6 +431,7 @@ dts <- cum_counts |>
 ```
 
 #### Preview
+Only showing part of the data.
 ```{r}
 gt(slice(dts, 1:30))
 ```
@@ -351,6 +440,11 @@ gt(slice(dts, 1:30))
 
 
 ### 5. Duration of passage
+
+Duration of passage is calculated as the number of days between the 5% and 95% (migration)
+and the 25% and 75% (peak migration) dates.
+
+We also organize the dates of passage into separate columns in this step.
 
 :::{.panel-tabset}
 
@@ -384,7 +478,11 @@ Here we calculate population size metrics for different stages of the migration
 migration end)
 - Peak migrants (between peak start [25%] and peak end [75%])
 - Raw counts for migrants and peak migrants (min, mean, median, max, total)
-  - But remember that total is affected by missing dates
+  - These are the counts recorded by observers in the field
+  - Remember that total is affected by missing dates
+
+**Note:** I don't expect to use the ambiguous category, but have included it for
+completeness and sanity checks as needed.
 
 Because Migrants and Peak Migrants actually overlap (i.e a peak migrant is also a migrant).
 They are calculated separately and then joined back in together.
@@ -394,6 +492,9 @@ the 'totals' as those will depend quite a bit on how many days of observation
 there were. I include total raw counts only for interest or for statements
 along the lines of "Observers counted over X individual vultures over 26 years and
 X days". Not for actual analysis.
+
+We calculate min/max/mean/median/total, but do not expect to analyse all metrics. 
+These are good for including in tables of descriptive stats and sanity checks.
 
 
 :::{.panel-tabset}
@@ -478,10 +579,38 @@ gt(pop_size)
 
 :::
 
+### 7. Skewness & Kurtosis
+
+To capture the pattern of migration, we calculate skewness (of particular interest)
+and kurtosis (not necessarily of interest, but included for completeness). 
+
+```{r}
+skew_mig <- dts |>
+  filter(perc %in% c("p05", "p95")) |>
+  select(year, perc, doy_passage) |>
+  pivot_wider(names_from = "perc", values_from = "doy_passage") |>
+  left_join(x = pred, y = _, by = "year") |>
+  filter(doy >= p05 & doy <= p95) |>
+  group_by(year) |>
+  summarize(mig_skew = skewness(count),
+            mig_kurt = kurtosis(count))
+
+skew_peak <- dts |>
+  filter(perc %in% c("p25", "p75")) |>
+  select(year, perc, doy_passage) |>
+  pivot_wider(names_from = "perc", values_from = "doy_passage") |>
+  left_join(x = pred, y = _, by = "year") |>
+  filter(doy >= p25 & doy <= p75) |>
+  group_by(year) |>
+  summarize(peak_skew = skewness(count),
+            peak_kurt = kurtosis(count))
+```
+
+
 ### Combine metrics
 
 Join together the sample sizes, the passage dates/durations as well as the 
-population sizes.
+population sizes, and migration patterns (skew/kurtosis).
 
 
 :::{.panel-tabset}
@@ -489,7 +618,9 @@ population sizes.
 #### Calculate
 ```{r final}
 final <- left_join(samples, passage, by = "year") |>
-  left_join(pop_size, by = "year")
+  left_join(pop_size, by = "year") |>
+  left_join(skew_mig, by = "year") |>
+  left_join(skew_peak, by = "year")
 ```
 
 #### Preview
@@ -566,6 +697,7 @@ Data are organized as observations per year.
 but before the start of migration and after the end of migration.
 - `start_doy`/`end_doy` - Start/end day-of-year dates for a period (e.g., `mig_start_doy`).
 - `dur_days` - Duration in days of a period (e.g., `peak_dur_days`).
+- `skew`/`kurt` - Skewness and kurtosis of the counts for a period (e.g., `mig_skew`, `peak_kurt`)
 
 **Population Counts**
 
