@@ -418,16 +418,28 @@ a particular proportion of the migrating population had passed through.
 Here we look at the dates at which 5%, 25%, 50%, 75%, and 95% of the birds have
 passed through. 
 
+We also calculate the date at which the predicted count was at it's maximum.
+
 The 5-95% and 25-75% date rages will then be used to calculate duration of passage,  population sizes, and migration patterns in the next sections.
 
 :::{.panel-tabset}
 
 #### Calculate
 ```{r passage_dates}
+max_passage <- pred |>
+  group_by(year) |> 
+  # Keep first max count
+  slice_max(count, with_ties = FALSE) |>
+  mutate(measure = "max") |>
+  select(year, measure, doy_passage = doy)
+
 dts <- cum_counts |>
   select(year, doy, count, count_sum) |>
   group_by(year) |>
-  calc_dates()
+  calc_dates() |>
+  rename("measure" = "perc") |>
+  bind_rows(max_passage) |>
+  arrange(year, measure)
 ```
 
 #### Preview
@@ -452,10 +464,12 @@ We also organize the dates of passage into separate columns in this step.
 ```{r passage}
 passage <- dts |>
   group_by(year) |>
-  summarize(mig_start_doy = doy_passage[perc == "p05"],
-            mig_end_doy = doy_passage[perc == "p95"],
-            peak_start_doy = doy_passage[perc == "p25"],
-            peak_end_doy = doy_passage[perc == "p75"],
+  summarize(mig_start_doy = doy_passage[measure == "p05"],
+            mig_end_doy = doy_passage[measure == "p95"],
+            peak_start_doy = doy_passage[measure == "p25"],
+            peak_end_doy = doy_passage[measure == "p75"],
+            p50_doy = doy_passage[measure == "p50"],
+            max_doy = doy_passage[measure == "max"],
             mig_dur_days = mig_end_doy - mig_start_doy,
             peak_dur_days = peak_end_doy - peak_start_doy)
             
@@ -556,8 +570,9 @@ peak_size <- pred |>
 peak_raw_size <- v |>
   filter(year != "2007") |>
   left_join(passage, by = "year") |>
+  mutate(abs_raw_max = max(count, na.rm = TRUE), .by = "year") |>
   filter(doy >= peak_start_doy & doy <= peak_end_doy) |>
-  group_by(year) |>
+  group_by(year, abs_raw_max) |>
   summarize(peak_raw_min = min(count, na.rm = TRUE), 
             peak_raw_max = max(count, na.rm = TRUE), 
             peak_raw_median = median(count, na.rm = TRUE), 
@@ -570,6 +585,17 @@ pop_size <- left_join(peak_size, pop_size, by = "year") |>
   left_join(peak_raw_size, by = "year") |>
   # Round to 1 decimal place
   mutate(across(matches("pop|raw"), \(x) round(x, 1)))
+
+# Verify that max predicted populations are the same for peak and mig 
+# Verify that max raw populations are the same for overall and mig (otherwise
+#  we have missed the peak migration period...)
+#
+# Then remove the duplication - Keep one max count for predicted, one for raw
+
+pop_size <- pop_size |>
+  verify(mig_pop_max == peak_pop_max) |>
+  verify(mig_raw_max == abs_raw_max) |>
+  select(-peak_pop_max, -abs_raw_max, -peak_raw_max)
 ```
 
 #### Preview
@@ -584,26 +610,30 @@ gt(pop_size)
 To capture the pattern of migration, we calculate skewness (of particular interest)
 and kurtosis (not necessarily of interest, but included for completeness). 
 
+Note: We substract 3 from kurtosis to make it a measure of *Excess Kurtosis* 
+which is centred on zero.
+A normal distribution has a kurtosis 3, but an excess kurtosis of 0.
+
 ```{r}
 skew_mig <- dts |>
-  filter(perc %in% c("p05", "p95")) |>
-  select(year, perc, doy_passage) |>
-  pivot_wider(names_from = "perc", values_from = "doy_passage") |>
+  filter(measure %in% c("p05", "p95")) |>
+  select(year, measure, doy_passage) |>
+  pivot_wider(names_from = "measure", values_from = "doy_passage") |>
   left_join(x = pred, y = _, by = "year") |>
   filter(doy >= p05 & doy <= p95) |>
   group_by(year) |>
   summarize(mig_skew = skewness(count),
-            mig_kurt = kurtosis(count))
+            mig_kurt = kurtosis(count) - 3)
 
 skew_peak <- dts |>
-  filter(perc %in% c("p25", "p75")) |>
-  select(year, perc, doy_passage) |>
-  pivot_wider(names_from = "perc", values_from = "doy_passage") |>
+  filter(measure %in% c("p25", "p75")) |>
+  select(year, measure, doy_passage) |>
+  pivot_wider(names_from = "measure", values_from = "doy_passage") |>
   left_join(x = pred, y = _, by = "year") |>
   filter(doy >= p25 & doy <= p75) |>
   group_by(year) |>
   summarize(peak_skew = skewness(count),
-            peak_kurt = kurtosis(count))
+            peak_kurt = kurtosis(count) - 3)
 ```
 
 
