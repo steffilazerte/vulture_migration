@@ -1,0 +1,866 @@
+---
+title: "Analysis"
+fig-asp: 0.5
+fig-width: 10
+code-fold: true
+
+---
+
+## Setup 
+
+```{r}
+#| include: false
+knitr::opts_chunk$set(audodep = TRUE)
+```
+
+
+```{r}
+#| message: false
+#| code-fold: false
+library(tidyverse)
+library(gt)
+library(DHARMa)
+library(patchwork)
+library(broom)
+
+source("XX_functions.R")
+
+v <- read_csv("Data/Datasets/vultures_final.csv") |>
+  # Round non-integer values of population counts
+  mutate(across(c(contains("pop"), contains("raw")), round)) 
+raw <- read_csv("Data/Datasets/vultures_clean_2023.csv")
+```
+
+Set plotting defaults
+```{r}
+#| code-fold: false
+y_breaks <- seq(200, 300, by = 5)
+```
+
+## Using This Report
+
+This report contains all the stats and analyses for the final data set. 
+
+Each section (e.g., "Timing of kettle formation") contains the analysis for 
+a particular type of data. 
+
+These analyses have several parts
+
+1. **Descriptive statistics** - min, max, median, etc.
+2. **Model results** - results of linear or general linear models, depending on the measures
+3. **Figures** - visualizing the models on top of the data
+4. **Model Checks** - DHARMa plots assessing model fit and assumptions
+5. **Sensitivity** - Checking influential observations
+6. **Full Model Results** - the raw summary output of the models, for completeness
+
+### Models
+
+Most models are standard linear regressions.
+
+Some, involving the count data (number of birds) are either Negative binomial or
+Poisson generalized linear models.
+
+The Patterns of migration (skew and kurtosis) are linear models without
+predictors (intercept only), which effectively makes them t-tests 
+(they produce the exact same estimates and statistics), but allow us to use DHARMA
+for model checking, etc.
+
+
+### Model Results
+
+Model results are presented in a tabulated form, which is also saved to CSV
+as `Data/Tables/table_MEASURE.csv`. 
+
+They are also presented as the "Full Model Results".
+This is the output of using `summary(model)` in R and is just a complete version
+of the output in case anything needs to be inspected at a
+later date. In short, I don't think you'll need it, but I've included it just in
+case.
+
+The tabulated results contain both estimates and P values, as well as overall 
+model R2 values for linear models (but not for general linear models, as they
+don't really apply). **I could also add confidence intervals as well if that's useful**.
+
+R2 values are presented as regular and adjusted. The adjusted values take into
+account samples sizes and the number of predictors.
+
+We can interpret the Estimates directly, especially in linear models. 
+
+For example, if there is a significant effect of `year` on `mig_start_doy`, and
+the estimate is 0.176 we can say:
+
+> "There was a significant effect of year on the start date of kettle formations,
+> such that the start date increased by 0.176 days per year (t = XXX; P-value = XXX).
+> Thus kettle formations started ~4.4 days later at the end of the study compared to the start."
+
+Considering that there are 25 years in this study.
+
+For Negative Binomial or Poisson models, we will transform the estimates to 
+"Incident Rate Ratios" by exponentiating the estimate. 
+
+For example, if there is a significant effect of `year` on `mig_pop_max` in
+a generalized linear model with the negative binomial family, and the estimate
+is 0.03625499, we can first calculate the exponential:
+
+```{r}
+#| code-fold: false
+exp(0.03625499)
+```
+
+Then we can say: 
+
+> "There was a significant effect of year on the maximum number of vultures 
+> predicted in a kettle (Est = 0.0363; t = XXX; P-value = XXX), 
+> such that the number of birds increased by 3% per year."
+
+If our exponentiated result was 3, we would say a "300% increase", or a "3-fold" 
+increase.
+
+These exponentiated estimates are included in the outputs as well as "Estimate Exp"
+
+### Variables
+
+All variables are generally referred to by their name in the data set, 
+e.g., `mig_start_doy`. 
+
+See the glossary of variables names in the 
+[Calculate Metrics > Data Details](02_calculate_metrics.html#details)
+section.
+
+### Figures
+
+You can click on any figure expand it out.
+
+These figures are here to demostrate the patterns we're seeing in the data and 
+the stats. I imagine you would want different figures for publication,
+so just let me know what they should look like!
+
+
+### DHARMa plots
+
+[DHARMa](https://cran.r-project.org/web/packages/DHARMa/vignettes/DHARMa.html)
+is a package for simulating residuals to allow model checking for all types 
+of models ([details](https://steffilazerte.ca/posts/dharma/index.html)).
+
+Generally these plots can be interpreted similarly to interpreting QQ Normal and Residual 
+plots for linear models (although technically they're using simulated residuals, not
+model residuals). 
+
+
+**For context...**
+
+For example, we would interpret the following plot as showing decent model fit 
+and assumptions. 
+
+The QQ plot on the left is nearly straight, there are no tests that flag problems
+in the distribution (KS test), Dispersion or Outliers. We also see no pattern 
+in the residuals and no problems have been highlighted.
+```{r}
+#| echo: false
+s <- simulateResiduals(lm(mig_start_doy ~ year, data = v), plot = TRUE)
+```
+
+Similarly, I wouldn't be unduly worried about the scary red line in this plot, 
+as I don't really find the residuals to show much pattern and there are no other 
+problems highlighted, except that one outlier (the red asterisk).
+```{r}
+#| echo: false
+s <- simulateResiduals(lm(max_doy ~ year, data = v), plot = TRUE)
+```
+
+This one starts to look a bit problematic...
+```{r}
+#| echo: false
+s <- simulateResiduals(lm(mig_pop_max ~ year, data = v), plot = TRUE)
+```
+
+This one is awful!
+```{r}
+#| echo: false
+s <- simulateResiduals(glm(mig_pop_max ~ year, data = v, family = "poisson"), plot = TRUE)
+```
+
+### Sensitivity
+
+The DHARMa model checks will usually catch outlier problems, but out of an abundance of caution, we'll do a quick review of any high Cook's D values and will rerun the 
+models without certain data points to ensure they're still acceptable.
+
+These sections first calculate and show the Cook's D for all observations in 
+each model. In these tables, values highlighted in red are more than 4/25 (a standard Cook's D cutoff 4/sample size). 
+These indicate potential influential data points for a particular model.
+
+Then I run a comparison of the model before and the after removing that point.
+
+In every case here the pattern was either strengthened or weakened by the removal, 
+but the overall pattern did not change (no Estimate signs changed, and significance
+changed from sig to non-sig or vice versa).
+
+- Strengthened patterns showed greater Estimates and smaller P values
+- Weakened patterns showed smaller Estimates and greater P values
+
+Tables with coefficients for both original and new model are shown, with
+colour intensity showing strength in the pattern.
+
+
+## Timing of kettle formation
+
+**When do kettles form? Has this timing changed over the years?**
+
+- Look for changes in the DOY of the 5%, 25%, 50%, 75%, 95%, of passage 
+  as well as the DOY with the highest predicted count.
+- `mig_start_doy`, `peak_start_doy`, `p50_doy`, `peak_end_doy`, `mig_end_doy`, `max_doy`
+
+#### Descriptive stats
+
+```{r}
+v |> 
+  select(contains("start_doy"), contains("50_doy"), contains("end_doy"), "max_doy") |>
+  desc_stats()
+```
+
+:::{.panel-tabset}
+
+### Models
+
+Here we look at **linear regressions** of year by kettle timing dates.
+
+```{r}
+#| code-fold: false
+
+m1 <- lm(mig_start_doy ~ year, data = v)
+m2 <- lm(peak_start_doy ~ year, data = v)
+m3 <- lm(p50_doy ~ year, data = v)
+m4 <- lm(peak_end_doy ~ year, data = v)
+m5 <- lm(mig_end_doy ~ year, data = v)
+m6 <- lm(max_doy ~ year, data = v)
+
+models <- list(m1, m2, m3, m4, m5, m6)
+```
+
+**Tabulated Model Results**
+
+All show a significant increase in doy except `mig_end_doy`. 
+Data saved to `r d <- "Data/Datasets/table_timing.csv"; d`
+
+```{r}
+t <- get_table(models)
+write_csv(t, d)
+fmt_table(t)
+```
+
+### Figures
+
+**Note:** Lines without Std Error ribbons are not significant
+
+```{r}
+#| fig-asp: 0.8
+doy_figs <- v |>
+  select(year, contains("doy")) |>
+  pivot_longer(-year, names_to = "measure", values_to = "doy") |>
+  left_join(mutate(t, measure = str_trim(str_extract(model, "^[^~]*")), sig = p_value <= 0.05) |> 
+              filter(term == "year") |>
+              select(measure, sig), by = "measure")
+
+ggplot(doy_figs, aes(x = year, y = doy, group = measure, colour = measure, fill = sig)) +
+  theme_bw() +
+  geom_point() +
+  geom_smooth(method = "lm", se = TRUE) +
+  scale_y_continuous(breaks = y_breaks) +
+  scale_colour_viridis_d() +
+  scale_fill_manual(values = c("TRUE" = "grey60", "FALSE" = "#FFFFFF00"), guide = "none") +
+  labs(caption = "Lines without Std Error ribbons represent non-significant models")
+```
+
+
+### Model Checks
+
+```{r}
+model_check_figs(models)
+```
+
+
+### Sensitivity
+
+The DHARMa model checks don't highlight any particular outlier problems, but out of an abundance of caution, we'll do a quick review of any high Cook's D values. 
+
+Values highlighted in red are less than 4/25, a standard Cook's D cutoff (4/sample size). These indicate potential influential data points for a particular model.
+
+
+```{r}
+get_cooks(models) |>
+  gt_cooks(width = "80%")
+```
+
+
+#### Check influential points
+Now let's see what happens if we were to omit these years from the respective analyses.
+
+Tables with coefficients for both original and new model are shown, with
+colour intensity showing strength in the pattern.
+
+For the start of migration, if we omit 1999, the pattern is stronger, 
+but the same.
+```{r}
+compare(m1, 1999)
+```
+
+For the start of peak migration, the date of 50% passage and the end of peak migration, if we omit 2020, the pattern is weaker, but the same.
+```{r}
+compare(m2, 2020)
+compare(m3, 2020)
+compare(m4, 2020)
+```
+
+:::{.callout-tip}
+Therefore I wouldn't be concerned
+:::
+
+### Full Model Results
+
+```{r}
+map(models, summary)
+```
+
+:::
+
+
+
+
+## Duration of migration
+
+**How long is migration? Has it changed in length? **
+
+- Look for changes in the number of days over which migration and peak migration occur
+- `mig_dur_days`, `peak_dur_days`
+
+#### Descriptive stats
+
+```{r}
+v |> 
+  select(contains("dur")) |>
+  desc_stats()
+```
+
+
+:::{.panel-tabset}
+
+### Models
+```{r}
+#| code-fold: false
+m1 <- lm(mig_dur_days ~ year, data = v)
+m2 <- lm(peak_dur_days ~ year, data = v)
+
+models <- list(m1, m2)
+```
+
+**Tabulated Results**
+
+No significant results
+
+```{r}
+t <- get_table(models)
+write_csv(t, "Data/Datasets/table_duration.csv")
+fmt_table(t)
+```
+
+### Figures
+
+**Note:** Lines without Std Error ribbons are not significant
+
+```{r}
+dur_figs <- v |>
+  select(year, contains("dur")) |>
+  pivot_longer(-year, names_to = "measure", values_to = "dur")
+
+ggplot(dur_figs, aes(x = year, y = dur, group = measure, colour = measure)) +
+  theme_bw() +
+  geom_point() +
+  stat_smooth(method = "lm", se = FALSE) +
+  #scale_y_continuous(breaks = y_breaks) +
+  scale_colour_viridis_d()+
+  labs(caption = "Lines without Std Error ribbons represent non-significant models")
+```
+
+### Model Checks
+```{r}
+model_check_figs(models)
+```
+
+### Sensitivity
+
+The DHARMa model checks don't highlight any particular outlier problems, but out of an abundance of caution, we'll do a quick review of any high Cook's D values. 
+
+Values highlighted in red are less than 4/25, a standard Cook's D cutoff (4/sample size). These indicate potential influential data points for a particular model.
+
+```{r}
+get_cooks(models) |>
+  gt_cooks()
+```
+
+#### Check influential points
+Now let's see what happens if we were to omit these years from the respective analyses.
+
+Tables with coefficients for both original and new model are shown, with
+colour intensity showing strength in the pattern.
+
+For the number of days in peak migration, if we omit 1999, the pattern is stronger, but the same (i.e. not significant).
+```{r}
+compare(m2, 1999)
+```
+
+:::{.callout-tip}
+Therefore I wouldn't be concerned
+:::
+
+
+### Full Model Results
+```{r}
+map(models, summary)
+```
+
+:::
+
+
+## Number of birds in kettles
+
+**What is the maximum kettle count? Has this changed?**
+
+- Look for changes in the maximum predicted count and in the maximum observed count
+- variables `mig_pop_max`, `mig_raw_max`
+- In both cases, these values represent the maximum population counts for the migration period (25%-75%), but also correspond the the maximum population count overall.
+
+#### Descriptive stats
+
+```{r}
+v |> 
+  select("mig_pop_max", "mig_raw_max") |>
+  desc_stats()
+```
+
+
+:::{.panel-tabset}
+
+### Models
+
+:::{.callout-note} 
+Here we use a **Negative Binomial Generalized Linear Model**. 
+
+- The linear regression was a bit iffy (especially for the raw counts which are more volatile),
+  although a log transformation helped. 
+- However, since the data is technically count data (i.e. kettle counts, predicted and raw),
+theoretically is it Poisson distributed data. 
+- So I tried Poisson models, but they were overdispersed
+- Therefore, I use a Negative Binomial distribution to model the dispersion directly
+- This ends up with very similar results to log-transformed linear regression, but is a more
+  appropriate given the type of data.
+  
+**However we can easily present log10 models if you think that's simpler to present.**
+
+:::
+
+:::{.panel-tabset}
+#### Negative-Binomial
+
+- I also ran a third NB model (`m2b`), which omitted some of the really large raw kettle 
+counts (see the Figure), because these really large counts resulted in some problems in the model residual figure (see Model Checks)
+- Removing the counts resulted in better model fit, and didn't really change the 
+interpretations (see the results under `mig_raw_max` where the sample size is only 23. 
+- Therefore, I think I wouldn't worry about the model checks and would 
+ keep model `m2` (the results saved to file only include the first two models).
+
+```{r}
+#| code-fold: false
+m1 <- MASS::glm.nb(mig_pop_max ~ year, data = v)
+m2 <- MASS::glm.nb(mig_raw_max ~ year, data = v)
+m2b <- MASS::glm.nb(mig_raw_max ~ year, data = filter(v, mig_raw_max < 1500))
+
+models <- list(m1, m2, m2b)
+```
+
+#### Alternative Distributions
+
+**Not used, but included for completeness**
+
+```{r}
+#| code-fold: false
+
+x1 <- lm(log10(mig_pop_max) ~ year, data = v)
+x2 <- lm(log10(mig_raw_max) ~ year, data = v)
+
+y1 <- glm(mig_pop_max ~ year, family = "poisson", data = v)
+y2 <- glm(mig_raw_max ~ year, family = "poisson", data = v)
+
+s <- simulateResiduals(x1, plot = TRUE)
+title("log10 - mig_pop_max ~ year")
+
+s <- simulateResiduals(x2, plot = TRUE)
+title("log10 - mig_raw_max ~ year")
+
+s <- simulateResiduals(y1, plot = TRUE)
+title("Poisson - mig_pop_max ~ year")
+
+s <- simulateResiduals(y2, plot = TRUE)
+title("Poisson - mig_raw_max ~ year")
+```
+:::
+
+**Tabulated Results**
+
+All the measures are significant. There was an increase in the maximum number of 
+birds in kettles in both the raw counts as well as the predicted max.
+```{r}
+t <- get_table(models)
+write_csv(filter(t, n != 23), "Data/Datasets/table_pop_mig.csv")
+fmt_table(t)
+```
+
+
+### Figures
+```{r}
+pop_figs <- v |>
+  select(year, mig_pop_max, mig_raw_max) |>
+  pivot_longer(-year, names_to = "measure", values_to = "pop")
+
+ggplot(pop_figs, aes(x = year, y = pop, group = measure, colour = measure)) +
+  theme_bw() +
+  geom_point() +
+  stat_smooth(method = MASS::glm.nb) +
+  scale_colour_viridis_d(end = 0.8)
+```
+
+### Model Checks
+```{r}
+model_check_figs(models)
+```
+
+### Sensitivity
+
+The DHARMa model checks don't highlight any particular outlier problems, but out of an abundance of caution, we'll do a quick review of any high Cook's D values. 
+
+Values highlighted in red are less than 4/25, a standard Cook's D cutoff (4/sample size). These indicate potential influential data points for a particular model.
+
+```{r}
+get_cooks(models[-3]) |>
+  gt_cooks()
+```
+
+#### Check influential points
+Now let's see what happens if we were to omit these years from the respective analyses.
+
+Tables with coefficients for both original and new model are shown, with
+colour intensity showing strength in the pattern.
+
+For the maximum population recorded during migration based on both predicted counts *and* raw counts, if we omit 1999, the patterns are stronger, but the same.
+```{r}
+compare(m1, 1999)
+compare(m2, 1999)
+```
+
+If we omit 2022, the patterns are weaker, but still the same.
+```{r}
+compare(m1, 2022)
+compare(m2, 2022)
+```
+
+:::{.callout-tip}
+Therefore I wouldn't be concerned
+:::
+
+### Full Model Results
+```{r}
+map(models, summary)
+```
+:::
+
+
+## Number of residents 
+
+**How many resident vultures are there? Has this changed?**
+
+- Look for changes in the median number of residents
+- `res_pop_median`, `res_raw_median`
+
+#### Descriptive stats
+
+```{r}
+v |> 
+  select("res_pop_median", "res_raw_median") |>
+  desc_stats()
+```
+
+::::{.panel-tabset}
+
+### Models
+
+:::{.callout-note} 
+Here we use a Poisson Generalized Linear Model. 
+
+- This yields similar results to a linear regression with log transformed values. 
+- However, since the data is technically count data (i.e. kettle counts, predicted and raw),
+theoretically is it Poisson distributed data. 
+- It is not overdispersed so we stick with Poisson (rather than Negative Binomial as we did above)
+:::
+
+:::{.panel-tabset}
+
+#### Poisson
+
+```{r}
+#| code-fold: false
+m1 <- glm(res_pop_median ~ year, family = "poisson", data = v)
+m2 <- glm(res_raw_median ~ year, family = "poisson", data = v)
+
+models <- list(m1, m2)
+```
+
+#### Alternative distributions
+**Not used, but included for completeness**
+
+```{r}
+#| code-fold: false
+
+x1 <- lm(log10(res_pop_median) ~ year, data = v)
+x2 <- lm(log10(res_raw_median) ~ year, data = v)
+
+s <- simulateResiduals(x1, plot = TRUE)
+title("log10 - res_pop_median ~ year")
+
+s <- simulateResiduals(x2, plot = TRUE)
+title("log10 - res_raw_median ~ year")
+```
+
+:::
+
+**Tabulated Results**
+
+All measures are significant, there is an increase in the number of resident
+birds over the years.
+
+```{r}
+t <- get_table(models)
+write_csv(t, "Data/Datasets/table_pop_res.csv")
+fmt_table(t)
+```
+
+
+### Figures
+```{r}
+res_figs <- v |>
+  select(year, res_pop_max, res_raw_max) |>
+  pivot_longer(-year, names_to = "measure", values_to = "pop")
+
+ggplot(pop_figs, aes(x = year, y = pop, group = measure, colour = measure)) +
+  theme_bw() +
+  geom_point() +
+  geom_smooth(method = "glm", method.args = list(family = "poisson")) +
+  scale_colour_viridis_d(end = 0.8)
+```
+
+### Model Checks
+```{r}
+model_check_figs(models)
+```
+
+### Sensitivity
+
+The DHARMa model checks don't highlight any particular outlier problems, but out of an abundance of caution, we'll do a quick review of any high Cook's D values. 
+
+Values highlighted in red are less than 4/25, a standard Cook's D cutoff (4/sample size). These indicate potential influential data points for a particular model.
+
+```{r}
+get_cooks(models) |>
+  gt_cooks()
+```
+
+#### Check influential points
+Now let's see what happens if we were to omit these years from the respective analyses.
+
+Tables with coefficients for both original and new model are shown, with
+colour intensity showing strength in the pattern.
+
+For the daily median number of resident birds based on both predicted counts *and* raw counts, if we omit 2001, the patterns are stronger, but the same.
+```{r}
+compare(m1, 2001)
+compare(m2, 2001)
+```
+
+If we omit 2020, the patterns are weaker, but still the same.
+```{r}
+compare(m1, 2020)
+```
+
+:::{.callout-tip}
+Therefore I wouldn't be concerned
+:::
+
+
+### Full Model Results
+```{r}
+map(models, summary)
+```
+
+::::
+
+## Patterns of migration
+
+**Is the timing of migration skewed to earlier or later in the season?**
+**Is this distribution of migration flattened and wide (high kurtosis) or peaked (high kurosis)**
+**Are these patterns consistent over the years?**
+
+*Kurtosis can be used to  indicates if all the birds pass through in a relatively quick 'clump' (short-tailed, lower kurtosis), or whether the migration stretches out over a longer period of time (long-tailed, higher kurtosis). Possible implications for conservation or future survey designs?*
+
+- Look for significant skew and kurtosis in migration (5-95%) and peak migration (25-75%)
+- `mig_skew`, `peak_skew`, `mig_kurt`, `peak_kurt`
+
+#### Descriptive stats
+
+```{r}
+v |> 
+  select(contains("skew"), contains("kurt")) |>
+  desc_stats()
+```
+
+:::{.panel-tabset}
+
+### Models
+
+Here we look at skew and *excess* kurtosis only against the intercept. 
+This allows us to test for differences from 0.
+
+- Skew of 0 is normal, but below or above are considered left- and right-skewed
+- A normal distribution has an excess kurtosis of 0.
+
+:::{.callout-tip}
+So here, we are not asking if skew or kurtosis changes over the years, 
+just whether it is different from normal (0).
+:::
+
+```{r}
+#| code-fold: false
+m1 <- lm(mig_skew ~ 1, data = v)
+m2 <- lm(peak_skew ~ 1, data = v)
+m3 <- lm(mig_kurt ~ 1, data = v)
+m4 <- lm(peak_kurt ~ 1, data = v)
+
+models <- list(m1, m2, m3, m4)
+```
+
+**Tabulated Results**
+
+Skew is significantly different from zero in the peak migration period, but not
+in the whole migration period.
+
+Kurtosis is significantly different from zero in all periods. 
+
+In each case Skew and Kurtosis are negative, corresponding to **left-skewed**, 
+**short-tailed** distributions.
+
+
+```{r}
+t <- get_table(models)
+write_csv(t, "Data/Datasets/table_skew.csv")
+fmt_table(t)
+```
+
+
+### Figures
+
+This is figure showing the statistics.
+```{r}
+dist_figs <- v |>
+  select(year, contains("skew"), contains("kurt")) |>
+  mutate(across(contains("kurt"), \(x) x - 3)) |>
+  pivot_longer(cols = -year, names_to = "measure", values_to = "statistic")
+
+ggplot(filter(dist_figs, year != 2001), aes(x = statistic, y = measure, fill = measure)) +
+  theme_bw() +
+  geom_vline(xintercept = 0, colour = "grey20", linetype = "dotted") +
+  geom_boxplot() +
+  scale_fill_viridis_d()
+```
+
+This figure shows the distributions in each year over top a normal distribution, 
+for illustration.
+
+I also find this figure demonstrates how the timing is shifting slightly to later
+in the season.
+
+```{r}
+#| message: false
+normal <- data.frame(doy = as.integer(rnorm(mean = median(v$max_doy) + 2, sd = 10, n = 30000)))|>
+  summarize(count = n(), .by = doy)
+
+ggplot(raw, aes(x = doy, y = count)) + 
+  theme_bw() +
+  geom_smooth(data = normal, method = "gam", colour = "black", linewidth = 2) +
+  geom_point(size = 1, aes(colour = year), na.rm = TRUE) +
+  geom_smooth(method = "gam", aes(group = year, colour = year), se = FALSE, na.rm = TRUE) +
+  scale_colour_viridis_c()
+```
+
+### Model Checks
+```{r}
+model_check_figs(models)
+```
+
+### Sensitivity
+
+The DHARMa model checks don't highlight any particular outlier problems, but out of an abundance of caution, we'll do a quick review of any high Cook's D values. 
+
+Values highlighted in red are less than 4/25, a standard Cook's D cutoff (4/sample size). These indicate potential influential data points for a particular model.
+
+```{r}
+get_cooks(models) |>
+  gt_cooks()
+```
+
+#### Check influential points
+Now let's see what happens if we were to omit these years from the respective analyses.
+
+Tables with coefficients for both original and new model are shown, with
+colour intensity showing strength in the pattern.
+
+For skew of the counts during the migration period, if we omit 2002, the patterns are stronger, but the same (i.e., not significant).
+```{r}
+compare(m1, 2002)
+```
+
+For kurtosis during the migration period, if we omit 2002, the patterns don't really 
+change. 
+```{r}
+compare(m3, 2002)
+```
+
+For skew of the counts during the migration period, if we omit 2015, the patterns are stronger, but the same (i.e., not significant).
+```{r}
+compare(m1, 2015)
+```
+
+For skew of the counts during the migration period, if we omit 2018, the patterns are even weaker (i.e., not significant).
+```{r}
+compare(m1, 2018)
+```
+
+
+For kurtosis during the migration period *and* during the peak migration period, 
+if we omit 2018, the patterns are stronger.
+
+```{r}
+compare(m3, 2018)
+compare(m4, 2018)
+```
+
+:::{.callout-tip}
+Therefore I wouldn't be concerned
+:::
+
+
+### Full Model Results
+```{r}
+map(models, summary)
+```
+:::
+
+
+
+{{< include _reproducibility.qmd >}}
