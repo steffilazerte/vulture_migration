@@ -375,41 +375,154 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-118"><a href="#cb1-118" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(<span class="at">plot =</span> f, <span class="at">checks =</span> t)</span>
 <span id="cb1-119"><a href="#cb1-119" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb1-120"><a href="#cb1-120" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-121"><a href="#cb1-121" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-122"><a href="#cb1-122" aria-hidden="true" tabindex="-1"></a>get_table <span class="ot">&lt;-</span> <span class="cf">function</span>(models) {</span>
-<span id="cb1-123"><a href="#cb1-123" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map</span>(models, \(x) <span class="fu">bind_cols</span>(<span class="at">model =</span> <span class="fu">as.character</span>(x<span class="sc">$</span>call)[<span class="dv">2</span>], </span>
-<span id="cb1-124"><a href="#cb1-124" aria-hidden="true" tabindex="-1"></a>                             <span class="fu">tidy</span>(x),</span>
-<span id="cb1-125"><a href="#cb1-125" aria-hidden="true" tabindex="-1"></a>                             <span class="fu">select</span>(<span class="fu">glance</span>(x), <span class="at">n =</span> nobs, <span class="fu">contains</span>(<span class="st">"r.squ"</span>), </span>
-<span id="cb1-126"><a href="#cb1-126" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">model_f =</span> statistic, <span class="at">model_p =</span> p.value))) <span class="sc">|&gt;</span></span>
-<span id="cb1-127"><a href="#cb1-127" aria-hidden="true" tabindex="-1"></a>    <span class="fu">bind_rows</span>() <span class="sc">|&gt;</span></span>
-<span id="cb1-128"><a href="#cb1-128" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rename_with</span>(\(x) <span class="fu">str_replace_all</span>(x, <span class="st">"</span><span class="sc">\\</span><span class="st">."</span>, <span class="st">"_"</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb1-129"><a href="#cb1-129" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rename_with</span>(\(x) <span class="fu">str_replace</span>(x, <span class="st">"^(r_|adj_r)"</span>, <span class="st">"model_</span><span class="sc">\\</span><span class="st">1"</span>)) </span>
-<span id="cb1-130"><a href="#cb1-130" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb1-131"><a href="#cb1-131" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-132"><a href="#cb1-132" aria-hidden="true" tabindex="-1"></a>fmt_table <span class="ot">&lt;-</span> <span class="cf">function</span>(t) {</span>
-<span id="cb1-133"><a href="#cb1-133" aria-hidden="true" tabindex="-1"></a>  t <span class="sc">|&gt;</span></span>
-<span id="cb1-134"><a href="#cb1-134" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
-<span id="cb1-135"><a href="#cb1-135" aria-hidden="true" tabindex="-1"></a>      <span class="at">model_p =</span> <span class="fu">round</span>(model_p, <span class="dv">3</span>),</span>
-<span id="cb1-136"><a href="#cb1-136" aria-hidden="true" tabindex="-1"></a>      <span class="at">model_p =</span> <span class="fu">if_else</span>(model_p <span class="sc">&lt;=</span> <span class="fl">0.05</span>, <span class="fu">paste0</span>(<span class="st">"&lt;strong&gt;"</span>, model_p, <span class="st">"&lt;/strong&gt;"</span>), <span class="fu">as.character</span>(model_p)),</span>
-<span id="cb1-137"><a href="#cb1-137" aria-hidden="true" tabindex="-1"></a>      <span class="at">row_group =</span> <span class="fu">md</span>(<span class="fu">paste0</span>(<span class="st">"&lt;strong&gt;"</span>, model, <span class="st">"&lt;/strong&gt;"</span>, </span>
-<span id="cb1-138"><a href="#cb1-138" aria-hidden="true" tabindex="-1"></a>                            <span class="st">" &lt;small&gt;("</span>,</span>
-<span id="cb1-139"><a href="#cb1-139" aria-hidden="true" tabindex="-1"></a>                            <span class="co">#"&lt;br&gt;&lt;small&gt;(F = ", round(model_f, 2), "; ",</span></span>
-<span id="cb1-140"><a href="#cb1-140" aria-hidden="true" tabindex="-1"></a>                            <span class="co">#"P = ", model_p, "; ",</span></span>
-<span id="cb1-141"><a href="#cb1-141" aria-hidden="true" tabindex="-1"></a>                            <span class="st">"R2 = "</span>, <span class="fu">round</span>(model_r_squared, <span class="dv">2</span>), <span class="st">"; "</span>,</span>
-<span id="cb1-142"><a href="#cb1-142" aria-hidden="true" tabindex="-1"></a>                            <span class="st">"R2-adj = "</span>, <span class="fu">round</span>(model_adj_r_squared, <span class="dv">2</span>), </span>
-<span id="cb1-143"><a href="#cb1-143" aria-hidden="true" tabindex="-1"></a>                            <span class="st">")&lt;/small&gt;"</span>))) <span class="sc">|&gt;</span></span>
-<span id="cb1-144"><a href="#cb1-144" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(<span class="sc">-</span><span class="fu">starts_with</span>(<span class="st">"model"</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb1-145"><a href="#cb1-145" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(row_group) <span class="sc">|&gt;</span></span>
-<span id="cb1-146"><a href="#cb1-146" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rename_with</span>(\(x) <span class="fu">str_replace_all</span>(x, <span class="st">"</span><span class="sc">\\</span><span class="st">.|</span><span class="sc">\\</span><span class="st">_"</span>, <span class="st">" "</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb1-147"><a href="#cb1-147" aria-hidden="true" tabindex="-1"></a>    <span class="fu">gt</span>() <span class="sc">|&gt;</span></span>
-<span id="cb1-148"><a href="#cb1-148" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tab_style</span>(<span class="fu">cell_text</span>(<span class="at">transform =</span> <span class="st">"capitalize"</span>, <span class="at">weight =</span> <span class="st">"bold"</span>), </span>
-<span id="cb1-149"><a href="#cb1-149" aria-hidden="true" tabindex="-1"></a>              <span class="at">locations =</span> <span class="fu">cells_column_labels</span>()) <span class="sc">|&gt;</span></span>
-<span id="cb1-150"><a href="#cb1-150" aria-hidden="true" tabindex="-1"></a>    <span class="fu">text_transform</span>(<span class="at">locations =</span> <span class="fu">cells_row_groups</span>(), <span class="at">fn =</span> \(x) <span class="fu">map</span>(x, html)) <span class="sc">|&gt;</span></span>
-<span id="cb1-151"><a href="#cb1-151" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fmt_number</span>(<span class="at">columns =</span> <span class="sc">-</span><span class="dv">1</span>, <span class="at">decimals =</span> <span class="dv">3</span>) <span class="sc">|&gt;</span></span>
-<span id="cb1-152"><a href="#cb1-152" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tab_style</span>(<span class="at">style =</span> <span class="fu">cell_text</span>(<span class="at">weight =</span> <span class="st">"bold"</span>), </span>
-<span id="cb1-153"><a href="#cb1-153" aria-hidden="true" tabindex="-1"></a>              <span class="at">locations =</span> <span class="fu">cells_body</span>(</span>
-<span id="cb1-154"><a href="#cb1-154" aria-hidden="true" tabindex="-1"></a>                <span class="at">columns =</span> <span class="st">`</span><span class="at">p value</span><span class="st">`</span>, <span class="at">rows =</span> <span class="st">`</span><span class="at">p value</span><span class="st">`</span> <span class="sc">&lt;=</span> <span class="fl">0.05</span>))</span>
-<span id="cb1-155"><a href="#cb1-155" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-121"><a href="#cb1-121" aria-hidden="true" tabindex="-1"></a>lm_coefs <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
+<span id="cb1-122"><a href="#cb1-122" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(<span class="at">model =</span> <span class="fu">as.character</span>(x<span class="sc">$</span>call)[<span class="dv">2</span>], </span>
+<span id="cb1-123"><a href="#cb1-123" aria-hidden="true" tabindex="-1"></a>            <span class="fu">tidy</span>(x),</span>
+<span id="cb1-124"><a href="#cb1-124" aria-hidden="true" tabindex="-1"></a>            <span class="fu">select</span>(<span class="fu">glance</span>(x), <span class="at">n =</span> nobs, <span class="fu">contains</span>(<span class="st">"r.squ"</span>), </span>
+<span id="cb1-125"><a href="#cb1-125" aria-hidden="true" tabindex="-1"></a>                   <span class="at">model_f =</span> statistic, <span class="at">model_p =</span> p.value))</span>
+<span id="cb1-126"><a href="#cb1-126" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-127"><a href="#cb1-127" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-128"><a href="#cb1-128" aria-hidden="true" tabindex="-1"></a>glm_coefs <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
+<span id="cb1-129"><a href="#cb1-129" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(<span class="at">model =</span> <span class="fu">as.character</span>(x<span class="sc">$</span>call)[<span class="dv">2</span>], </span>
+<span id="cb1-130"><a href="#cb1-130" aria-hidden="true" tabindex="-1"></a>            <span class="fu">tidy</span>(x),</span>
+<span id="cb1-131"><a href="#cb1-131" aria-hidden="true" tabindex="-1"></a>            <span class="fu">select</span>(<span class="fu">glance</span>(x), <span class="at">n =</span> nobs)) <span class="sc">|&gt;</span></span>
+<span id="cb1-132"><a href="#cb1-132" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">estimate_exp =</span> <span class="fu">exp</span>(estimate)) <span class="sc">|&gt;</span></span>
+<span id="cb1-133"><a href="#cb1-133" aria-hidden="true" tabindex="-1"></a>    <span class="fu">relocate</span>(estimate_exp, <span class="at">.after =</span> estimate)</span>
+<span id="cb1-134"><a href="#cb1-134" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-135"><a href="#cb1-135" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-136"><a href="#cb1-136" aria-hidden="true" tabindex="-1"></a>get_table <span class="ot">&lt;-</span> <span class="cf">function</span>(models) {</span>
+<span id="cb1-137"><a href="#cb1-137" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="fu">inherits</span>(models[[<span class="dv">1</span>]], <span class="st">"glm"</span>)) f <span class="ot">&lt;-</span> glm_coefs <span class="cf">else</span> f <span class="ot">&lt;-</span> lm_coefs</span>
+<span id="cb1-138"><a href="#cb1-138" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map</span>(models, f) <span class="sc">|&gt;</span></span>
+<span id="cb1-139"><a href="#cb1-139" aria-hidden="true" tabindex="-1"></a>    <span class="fu">bind_rows</span>() <span class="sc">|&gt;</span></span>
+<span id="cb1-140"><a href="#cb1-140" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rename_with</span>(\(x) <span class="fu">str_replace_all</span>(x, <span class="st">"</span><span class="sc">\\</span><span class="st">."</span>, <span class="st">"_"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb1-141"><a href="#cb1-141" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rename_with</span>(\(x) <span class="fu">str_replace</span>(x, <span class="st">"^(r_|adj_r)"</span>, <span class="st">"model_</span><span class="sc">\\</span><span class="st">1"</span>)) </span>
+<span id="cb1-142"><a href="#cb1-142" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-143"><a href="#cb1-143" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-144"><a href="#cb1-144" aria-hidden="true" tabindex="-1"></a>fmt_table <span class="ot">&lt;-</span> <span class="cf">function</span>(t) {</span>
+<span id="cb1-145"><a href="#cb1-145" aria-hidden="true" tabindex="-1"></a>  ft <span class="ot">&lt;-</span> t <span class="sc">|&gt;</span></span>
+<span id="cb1-146"><a href="#cb1-146" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
+<span id="cb1-147"><a href="#cb1-147" aria-hidden="true" tabindex="-1"></a>      <span class="co">#model_p = round(model_p, 3),</span></span>
+<span id="cb1-148"><a href="#cb1-148" aria-hidden="true" tabindex="-1"></a>      <span class="co">#model_p = if_else(model_p &lt;= 0.05, paste0("&lt;strong&gt;", model_p, "&lt;/strong&gt;"), as.character(model_p)),</span></span>
+<span id="cb1-149"><a href="#cb1-149" aria-hidden="true" tabindex="-1"></a>      <span class="at">row_group =</span> <span class="fu">md</span>(<span class="fu">paste0</span>(<span class="st">"&lt;strong&gt;"</span>, model, <span class="st">"&lt;/strong&gt;"</span>)))</span>
+<span id="cb1-150"><a href="#cb1-150" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-151"><a href="#cb1-151" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="st">"model_r_squared"</span> <span class="sc">%in%</span> <span class="fu">names</span>(t)) {</span>
+<span id="cb1-152"><a href="#cb1-152" aria-hidden="true" tabindex="-1"></a>    ft <span class="ot">&lt;-</span> ft <span class="sc">|&gt;</span></span>
+<span id="cb1-153"><a href="#cb1-153" aria-hidden="true" tabindex="-1"></a>      <span class="fu">mutate</span>(<span class="at">row_group =</span> <span class="fu">md</span>(<span class="fu">paste0</span>(row_group, </span>
+<span id="cb1-154"><a href="#cb1-154" aria-hidden="true" tabindex="-1"></a>                                   <span class="st">" &lt;small&gt;("</span>,</span>
+<span id="cb1-155"><a href="#cb1-155" aria-hidden="true" tabindex="-1"></a>                                   <span class="co">#"&lt;br&gt;&lt;small&gt;(F = ", round(model_f, 2), "; ",</span></span>
+<span id="cb1-156"><a href="#cb1-156" aria-hidden="true" tabindex="-1"></a>                                   <span class="co">#"P = ", model_p, "; ",</span></span>
+<span id="cb1-157"><a href="#cb1-157" aria-hidden="true" tabindex="-1"></a>                                   <span class="st">"R2 = "</span>, <span class="fu">round</span>(model_r_squared, <span class="dv">2</span>), <span class="st">"; "</span>,</span>
+<span id="cb1-158"><a href="#cb1-158" aria-hidden="true" tabindex="-1"></a>                                   <span class="st">"R2-adj = "</span>, <span class="fu">round</span>(model_adj_r_squared, <span class="dv">2</span>), </span>
+<span id="cb1-159"><a href="#cb1-159" aria-hidden="true" tabindex="-1"></a>                                   <span class="st">")&lt;/small&gt;"</span>)))</span>
+<span id="cb1-160"><a href="#cb1-160" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb1-161"><a href="#cb1-161" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-162"><a href="#cb1-162" aria-hidden="true" tabindex="-1"></a>  ft <span class="sc">|&gt;</span> </span>
+<span id="cb1-163"><a href="#cb1-163" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(<span class="sc">-</span><span class="fu">starts_with</span>(<span class="st">"model"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb1-164"><a href="#cb1-164" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(row_group) <span class="sc">|&gt;</span></span>
+<span id="cb1-165"><a href="#cb1-165" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rename_with</span>(\(x) <span class="fu">str_replace_all</span>(x, <span class="st">"</span><span class="sc">\\</span><span class="st">.|</span><span class="sc">\\</span><span class="st">_"</span>, <span class="st">" "</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb1-166"><a href="#cb1-166" aria-hidden="true" tabindex="-1"></a>    <span class="fu">gt</span>() <span class="sc">|&gt;</span></span>
+<span id="cb1-167"><a href="#cb1-167" aria-hidden="true" tabindex="-1"></a>    <span class="fu">gt_theme</span>() <span class="sc">|&gt;</span></span>
+<span id="cb1-168"><a href="#cb1-168" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tab_style</span>(<span class="fu">cell_text</span>(<span class="at">transform =</span> <span class="st">"capitalize"</span>, <span class="at">weight =</span> <span class="st">"bold"</span>), </span>
+<span id="cb1-169"><a href="#cb1-169" aria-hidden="true" tabindex="-1"></a>              <span class="at">locations =</span> <span class="fu">cells_column_labels</span>()) <span class="sc">|&gt;</span></span>
+<span id="cb1-170"><a href="#cb1-170" aria-hidden="true" tabindex="-1"></a>    <span class="fu">text_transform</span>(<span class="at">locations =</span> <span class="fu">cells_row_groups</span>(), <span class="at">fn =</span> \(x) <span class="fu">map</span>(x, html)) <span class="sc">|&gt;</span></span>
+<span id="cb1-171"><a href="#cb1-171" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fmt_number</span>(<span class="at">columns =</span> <span class="sc">-</span><span class="dv">1</span>, <span class="at">decimals =</span> <span class="dv">3</span>) <span class="sc">|&gt;</span></span>
+<span id="cb1-172"><a href="#cb1-172" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fmt_number</span>(<span class="at">columns =</span> <span class="st">"n"</span>, <span class="at">decimals =</span> <span class="dv">0</span>) <span class="sc">|&gt;</span></span>
+<span id="cb1-173"><a href="#cb1-173" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tab_style</span>(<span class="at">style =</span> <span class="fu">cell_text</span>(<span class="at">weight =</span> <span class="st">"bold"</span>), </span>
+<span id="cb1-174"><a href="#cb1-174" aria-hidden="true" tabindex="-1"></a>              <span class="at">locations =</span> <span class="fu">cells_body</span>(</span>
+<span id="cb1-175"><a href="#cb1-175" aria-hidden="true" tabindex="-1"></a>                <span class="at">columns =</span> <span class="st">`</span><span class="at">p value</span><span class="st">`</span>, <span class="at">rows =</span> <span class="st">`</span><span class="at">p value</span><span class="st">`</span> <span class="sc">&lt;=</span> <span class="fl">0.05</span>))</span>
+<span id="cb1-176"><a href="#cb1-176" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-177"><a href="#cb1-177" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-178"><a href="#cb1-178" aria-hidden="true" tabindex="-1"></a>gt_theme <span class="ot">&lt;-</span> <span class="cf">function</span>(data, ...) {</span>
+<span id="cb1-179"><a href="#cb1-179" aria-hidden="true" tabindex="-1"></a>  data <span class="sc">|&gt;</span></span>
+<span id="cb1-180"><a href="#cb1-180" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tab_options</span>(</span>
+<span id="cb1-181"><a href="#cb1-181" aria-hidden="true" tabindex="-1"></a>      <span class="at">table.border.top.width =</span> <span class="fu">px</span>(<span class="dv">3</span>), </span>
+<span id="cb1-182"><a href="#cb1-182" aria-hidden="true" tabindex="-1"></a>      <span class="at">table.width =</span> <span class="st">"80%"</span>,</span>
+<span id="cb1-183"><a href="#cb1-183" aria-hidden="true" tabindex="-1"></a>      <span class="at">column_labels.font.weight =</span> <span class="st">"bold"</span>,</span>
+<span id="cb1-184"><a href="#cb1-184" aria-hidden="true" tabindex="-1"></a>      <span class="at">column_labels.border.bottom.width =</span> <span class="fu">px</span>(<span class="dv">3</span>),</span>
+<span id="cb1-185"><a href="#cb1-185" aria-hidden="true" tabindex="-1"></a>      <span class="at">data_row.padding =</span> <span class="fu">px</span>(<span class="dv">7</span>),</span>
+<span id="cb1-186"><a href="#cb1-186" aria-hidden="true" tabindex="-1"></a>      ...</span>
+<span id="cb1-187"><a href="#cb1-187" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb1-188"><a href="#cb1-188" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-189"><a href="#cb1-189" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-190"><a href="#cb1-190" aria-hidden="true" tabindex="-1"></a>gt_cooks <span class="ot">&lt;-</span> <span class="cf">function</span>(cooks, <span class="at">width =</span> <span class="st">"40%"</span>) {</span>
+<span id="cb1-191"><a href="#cb1-191" aria-hidden="true" tabindex="-1"></a>  col <span class="ot">&lt;-</span> <span class="fu">names</span>(cooks)[<span class="sc">-</span><span class="dv">1</span>]</span>
+<span id="cb1-192"><a href="#cb1-192" aria-hidden="true" tabindex="-1"></a>  g <span class="ot">&lt;-</span> <span class="fu">gt</span>(cooks) <span class="sc">|&gt;</span></span>
+<span id="cb1-193"><a href="#cb1-193" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fmt_number</span>(<span class="sc">-</span><span class="st">"year"</span>, <span class="at">decimals =</span> <span class="dv">2</span>)</span>
+<span id="cb1-194"><a href="#cb1-194" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-195"><a href="#cb1-195" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(i <span class="cf">in</span> col) {</span>
+<span id="cb1-196"><a href="#cb1-196" aria-hidden="true" tabindex="-1"></a>    g <span class="ot">&lt;-</span> <span class="fu">tab_style</span>(g, <span class="at">style =</span> <span class="fu">list</span>(<span class="fu">cell_fill</span>(<span class="at">color =</span> <span class="st">"#F9E3D6"</span>)),</span>
+<span id="cb1-197"><a href="#cb1-197" aria-hidden="true" tabindex="-1"></a>                   <span class="fu">cells_body</span>(<span class="at">columns =</span> <span class="fu">contains</span>(i), </span>
+<span id="cb1-198"><a href="#cb1-198" aria-hidden="true" tabindex="-1"></a>                              <span class="at">rows =</span> .data[[i]] <span class="sc">&gt;</span> <span class="dv">4</span><span class="sc">/</span><span class="dv">25</span>))</span>
+<span id="cb1-199"><a href="#cb1-199" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb1-200"><a href="#cb1-200" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-201"><a href="#cb1-201" aria-hidden="true" tabindex="-1"></a>  g <span class="sc">|&gt;</span></span>
+<span id="cb1-202"><a href="#cb1-202" aria-hidden="true" tabindex="-1"></a>    <span class="fu">gt_theme</span>() <span class="sc">|&gt;</span></span>
+<span id="cb1-203"><a href="#cb1-203" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tab_header</span>(<span class="st">"Cook's Distances"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb1-204"><a href="#cb1-204" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tab_options</span>(<span class="at">table.width =</span> width)</span>
+<span id="cb1-205"><a href="#cb1-205" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-206"><a href="#cb1-206" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-207"><a href="#cb1-207" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-208"><a href="#cb1-208" aria-hidden="true" tabindex="-1"></a>get_cooks <span class="ot">&lt;-</span> <span class="cf">function</span>(models) {</span>
+<span id="cb1-209"><a href="#cb1-209" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cbind</span>(</span>
+<span id="cb1-210"><a href="#cb1-210" aria-hidden="true" tabindex="-1"></a>    <span class="at">year =</span> v<span class="sc">$</span>year,</span>
+<span id="cb1-211"><a href="#cb1-211" aria-hidden="true" tabindex="-1"></a>    <span class="fu">map</span>(models, \(x) {</span>
+<span id="cb1-212"><a href="#cb1-212" aria-hidden="true" tabindex="-1"></a>      <span class="fu">data.frame</span>(<span class="at">cooks =</span> <span class="fu">cooks.distance</span>(x)) <span class="sc">|&gt;</span></span>
+<span id="cb1-213"><a href="#cb1-213" aria-hidden="true" tabindex="-1"></a>        <span class="fu">rename_with</span>(<span class="sc">~</span> <span class="fu">str_remove</span>(<span class="fu">as.character</span>(x<span class="sc">$</span>call)[<span class="dv">2</span>], <span class="st">" ~ year"</span>))</span>
+<span id="cb1-214"><a href="#cb1-214" aria-hidden="true" tabindex="-1"></a>    }) <span class="sc">|&gt;</span><span class="fu">list_cbind</span>()</span>
+<span id="cb1-215"><a href="#cb1-215" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb1-216"><a href="#cb1-216" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-217"><a href="#cb1-217" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-218"><a href="#cb1-218" aria-hidden="true" tabindex="-1"></a>compare <span class="ot">&lt;-</span> <span class="cf">function</span>(model, y) {</span>
+<span id="cb1-219"><a href="#cb1-219" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-220"><a href="#cb1-220" aria-hidden="true" tabindex="-1"></a>  pal <span class="ot">&lt;-</span> RColorBrewer<span class="sc">::</span><span class="fu">brewer.pal</span>(<span class="at">n =</span> <span class="dv">9</span>, <span class="st">"Greens"</span>)[<span class="sc">-</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">9</span>)]</span>
+<span id="cb1-221"><a href="#cb1-221" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-222"><a href="#cb1-222" aria-hidden="true" tabindex="-1"></a>  m <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="fu">c</span>(<span class="st">"Original - "</span>, <span class="fu">paste0</span>(<span class="st">"Drop "</span>, y, <span class="st">" - "</span>)), </span>
+<span id="cb1-223"><a href="#cb1-223" aria-hidden="true" tabindex="-1"></a>              <span class="fu">str_remove</span>(<span class="fu">as.character</span>(model<span class="sc">$</span>call)[<span class="dv">2</span>], <span class="st">" ~ year"</span>))</span>
+<span id="cb1-224"><a href="#cb1-224" aria-hidden="true" tabindex="-1"></a>  c <span class="ot">&lt;-</span> <span class="fu">rbind</span>(</span>
+<span id="cb1-225"><a href="#cb1-225" aria-hidden="true" tabindex="-1"></a>    <span class="fu">as.data.frame</span>(<span class="fu">coef</span>(<span class="fu">summary</span>(model)))<span class="sc">|&gt;</span></span>
+<span id="cb1-226"><a href="#cb1-226" aria-hidden="true" tabindex="-1"></a>      <span class="fu">rownames_to_column</span>(<span class="st">"parameter"</span>),</span>
+<span id="cb1-227"><a href="#cb1-227" aria-hidden="true" tabindex="-1"></a>    <span class="fu">as.data.frame</span>(<span class="fu">coef</span>(<span class="fu">summary</span>(<span class="fu">update</span>(model, <span class="at">data =</span> <span class="fu">filter</span>(v, year <span class="sc">!=</span> y))))) <span class="sc">|&gt;</span></span>
+<span id="cb1-228"><a href="#cb1-228" aria-hidden="true" tabindex="-1"></a>      <span class="fu">rownames_to_column</span>(<span class="st">"parameter"</span>)</span>
+<span id="cb1-229"><a href="#cb1-229" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb1-230"><a href="#cb1-230" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="sc">-</span><span class="st">"parameter"</span>, \(x) <span class="fu">round</span>(x, <span class="at">digits =</span> <span class="dv">3</span>)))</span>
+<span id="cb1-231"><a href="#cb1-231" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cbind</span>(<span class="at">model =</span> <span class="fu">sort</span>(<span class="fu">rep</span>(m, <span class="fu">nrow</span>(c)<span class="sc">/</span><span class="dv">2</span>), <span class="at">decreasing =</span> <span class="cn">TRUE</span>), c) <span class="sc">|&gt;</span></span>
+<span id="cb1-232"><a href="#cb1-232" aria-hidden="true" tabindex="-1"></a>    <span class="fu">arrange</span>(parameter) <span class="sc">|&gt;</span></span>
+<span id="cb1-233"><a href="#cb1-233" aria-hidden="true" tabindex="-1"></a>    <span class="fu">gt</span>() <span class="sc">|&gt;</span></span>
+<span id="cb1-234"><a href="#cb1-234" aria-hidden="true" tabindex="-1"></a>    <span class="fu">gt_theme</span>() <span class="sc">|&gt;</span></span>
+<span id="cb1-235"><a href="#cb1-235" aria-hidden="true" tabindex="-1"></a>    <span class="fu">data_color</span>(<span class="at">columns =</span> <span class="fu">matches</span>(<span class="st">"Estimate"</span>),</span>
+<span id="cb1-236"><a href="#cb1-236" aria-hidden="true" tabindex="-1"></a>               <span class="at">rows =</span> <span class="fu">c</span>(<span class="fu">last_col</span>() <span class="sc">-</span> <span class="dv">1</span>, <span class="fu">last_col</span>()),</span>
+<span id="cb1-237"><a href="#cb1-237" aria-hidden="true" tabindex="-1"></a>               <span class="at">palette =</span> pal, <span class="at">reverse =</span> c<span class="sc">$</span>Estimate[<span class="fu">nrow</span>(c)] <span class="sc">&lt;</span> <span class="dv">0</span>) <span class="sc">|&gt;</span></span>
+<span id="cb1-238"><a href="#cb1-238" aria-hidden="true" tabindex="-1"></a>    <span class="fu">data_color</span>(<span class="at">columns =</span> <span class="fu">matches</span>(<span class="st">"Pr"</span>),</span>
+<span id="cb1-239"><a href="#cb1-239" aria-hidden="true" tabindex="-1"></a>               <span class="at">rows =</span> <span class="fu">c</span>(<span class="fu">last_col</span>() <span class="sc">-</span> <span class="dv">1</span>, <span class="fu">last_col</span>()), <span class="at">reverse =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb1-240"><a href="#cb1-240" aria-hidden="true" tabindex="-1"></a>               <span class="at">palette =</span> pal)</span>
+<span id="cb1-241"><a href="#cb1-241" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-242"><a href="#cb1-242" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-243"><a href="#cb1-243" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-244"><a href="#cb1-244" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-245"><a href="#cb1-245" aria-hidden="true" tabindex="-1"></a>model_check_figs <span class="ot">&lt;-</span> <span class="cf">function</span>(models) {</span>
+<span id="cb1-246"><a href="#cb1-246" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(i <span class="cf">in</span> models) {</span>
+<span id="cb1-247"><a href="#cb1-247" aria-hidden="true" tabindex="-1"></a>    p0 <span class="ot">&lt;-</span> <span class="fu">par</span>(<span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">0</span>))</span>
+<span id="cb1-248"><a href="#cb1-248" aria-hidden="true" tabindex="-1"></a>    t <span class="ot">&lt;-</span> <span class="fu">as.character</span>(i<span class="sc">$</span>call)[<span class="dv">2</span>]</span>
+<span id="cb1-249"><a href="#cb1-249" aria-hidden="true" tabindex="-1"></a>    <span class="fu">simulateResiduals</span>(i, <span class="at">plot =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1-250"><a href="#cb1-250" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mtext</span>(t, <span class="at">line =</span> <span class="dv">1</span>, <span class="at">at =</span> <span class="sc">-</span><span class="fl">0.1</span>)</span>
+<span id="cb1-251"><a href="#cb1-251" aria-hidden="true" tabindex="-1"></a>    <span class="fu">par</span>(p0)</span>
+<span id="cb1-252"><a href="#cb1-252" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb1-253"><a href="#cb1-253" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-254"><a href="#cb1-254" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-255"><a href="#cb1-255" aria-hidden="true" tabindex="-1"></a>desc_stats <span class="ot">&lt;-</span> <span class="cf">function</span>(data) {</span>
+<span id="cb1-256"><a href="#cb1-256" aria-hidden="true" tabindex="-1"></a>  data <span class="sc">|&gt;</span></span>
+<span id="cb1-257"><a href="#cb1-257" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">everything</span>(), <span class="at">names_to =</span> <span class="st">"measure"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb1-258"><a href="#cb1-258" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarize</span>(<span class="at">mean =</span> <span class="fu">mean</span>(value), </span>
+<span id="cb1-259"><a href="#cb1-259" aria-hidden="true" tabindex="-1"></a>              <span class="at">sd =</span> <span class="fu">sd</span>(value),</span>
+<span id="cb1-260"><a href="#cb1-260" aria-hidden="true" tabindex="-1"></a>              <span class="at">min =</span> <span class="fu">min</span>(value),</span>
+<span id="cb1-261"><a href="#cb1-261" aria-hidden="true" tabindex="-1"></a>              <span class="at">median =</span> <span class="fu">median</span>(value),</span>
+<span id="cb1-262"><a href="#cb1-262" aria-hidden="true" tabindex="-1"></a>              <span class="at">max =</span> <span class="fu">max</span>(value),</span>
+<span id="cb1-263"><a href="#cb1-263" aria-hidden="true" tabindex="-1"></a>              <span class="at">n =</span> <span class="fu">n</span>(),</span>
+<span id="cb1-264"><a href="#cb1-264" aria-hidden="true" tabindex="-1"></a>              <span class="at">.by =</span> <span class="st">"measure"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb1-265"><a href="#cb1-265" aria-hidden="true" tabindex="-1"></a>    <span class="fu">gt</span>() <span class="sc">|&gt;</span></span>
+<span id="cb1-266"><a href="#cb1-266" aria-hidden="true" tabindex="-1"></a>    <span class="fu">gt_theme</span>() <span class="sc">|&gt;</span></span>
+<span id="cb1-267"><a href="#cb1-267" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fmt_number</span>(<span class="at">columns =</span> <span class="fu">c</span>(mean, sd), <span class="at">decimals =</span> <span class="dv">2</span>)</span>
+<span id="cb1-268"><a href="#cb1-268" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 
 

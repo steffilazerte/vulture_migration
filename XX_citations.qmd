@@ -9,7 +9,6 @@ You probably only need to cite
 - **mcgv** for gam models
 - **DHARMa** for model diagnostics
 - **MASS** for negative binomial GLM models
-
 - possibly the **tidyverse** for general data manipulation
 
 but you should keep track of the packages used and their versions 
