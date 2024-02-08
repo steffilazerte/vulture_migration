@@ -1,0 +1,39 @@
+---
+title: "Citations"
+---
+
+### Packages
+
+You probably only need to cite 
+
+- **mcgv** for gam models
+- **DHARMa** for model diagnostics
+- **MASS** for negative binomial GLM models
+
+- possibly the **tidyverse** for general data manipulation
+
+but you should keep track of the packages used and their versions 
+(see General Info, but note that if an workflow step was updated separately, see
+the most up-to-date package versions under that pages "General Info").
+
+**Note:** There are several papers for citing mgcv, but they recommend the 2017
+book for an overview, which I think makes the most sense.
+
+```{r}
+#| code-fold: true
+#| echo: false
+#| results: asis
+cat("#### mgcv (for GAMs)\n")
+c <- citation("mgcv") 
+print(c[[4]], "text")
+
+cat("\n#### DHARMa (for model checks)\n")
+citation("DHARMa") |> print(style = "text")
+
+cat("\n#### tidyverse (for general data management and figures)\n")
+citation("tidyverse") |> print(style = "text")
+```
+
+
+
+{{< include _reproducibility.qmd >}}

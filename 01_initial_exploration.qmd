@@ -17,7 +17,7 @@ library(tidyverse)
 library(readxl)
 library(mgcv)
 library(patchwork)
-source("00_functions.R")
+source("XX_functions.R")
 ```
 
 :::{.panel-tabset}
@@ -445,8 +445,5 @@ Other options
 - I could run all three methods on the full data set and we could check them 
   all together. 
 
-## Reproducibility
 
-```{r}
-devtools::session_info()
-```
+{{< include _reproducibility.qmd >}}

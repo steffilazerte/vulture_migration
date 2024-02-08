@@ -25,8 +25,9 @@ library(mgcv)
 library(patchwork)
 library(gt)
 library(moments)
+library(assertr)
 
-source("00_functions.R")
+source("XX_functions.R")
 
 set.seed(1234) # To make this reproducible
 
@@ -196,7 +197,7 @@ the diagnostics in the Model Evaluation tab.
 
 [DHARMa](https://cran.r-project.org/web/packages/DHARMa/vignettes/DHARMa.html)
 is a package for simulating residuals to allow model checking for all types 
-of models ([details](https://steffilazerte.ca/posts/dharma/index.html).
+of models ([details](https://steffilazerte.ca/posts/dharma/index.html)).
 
 Both these sets of plots can be interpreted similarly to general linear model
 plots. We want roughly normal residuals and constant variance.
@@ -853,32 +854,6 @@ for(y in unique(v$year)) {
 }
 ```
 
-## Reproducibility
 
-### Packages
 
-You probably only need to cite **mcgv** and **DHARMa** and possibly the **tidyverse**, 
-but you should keep track of the packages used and their versions (under General Info).
-
-**Note:** There are several papers for citing mgcv, but they recommend the 2017
-book for an overview, which I think makes the most sense.
-
-```{r}
-#| code-fold: true
-#| echo: false
-#| results: asis
-cat("#### mgcv (for GAMs)\n")
-c <- citation("mgcv") 
-print(c[[4]], "text")
-
-cat("\n#### DHARMa (for model checks)\n")
-citation("DHARMa") |> print(style = "text")
-
-cat("\n#### tidyverse (for general data management and figures)\n")
-citation("tidyverse") |> print(style = "text")
-```
-
-### General info
-```{r}
-devtools::session_info()
-```
+{{< include _reproducibility.qmd >}}

@@ -1,30 +1,11 @@
----
-title: "Vulture Migration on Vancouver Island"
-toc: false
----
 
-## Table of Contents
+# Vulture Migration
 
-These are the scripts and results used in this project.
+<!-- badges: start -->
+<!-- badges: end -->
 
-```{r}
-#| echo: false
-#| message: false
-#| results: asis
-library(tidyverse)
-library(janitor)
-library(fs)
-tibble(f = list.files(pattern = ".html")) |>
-  filter(!str_detect(f, "index")) |>
-  mutate(mod = as_date(fs::file_info(f)$modification_time),
-         name = str_remove_all(f, "(\\d+)|(.html)"),
-         name = make_clean_names(name, "title"),
-         name = paste0(1:n(), ". [", name, "](", f, ") (last modified: ", mod, ")\n"),
-         ) |>
-  pull(name) |>
-  cat()
-```
+Directed by *Don Kramer* and *Daniel Donnecke*, coded by *Steffi LaZerte*
 
----
+This is the data exploration and analysis of Turkey Vulture kettling and migration behaviour
+above Rocky Point on southern Vancouver Island. 
 
-*[Scripts on GitHub ](https://github.com/steffilazerte/vulture_migration)*

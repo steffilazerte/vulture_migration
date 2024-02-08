@@ -1,9 +1,40 @@
 project:
+  type: website
+  output-dir: docs
   title: "Vulture Migration on Vancouver Island"
   
-format: html
-date: today
-author: Steffi
-toc: true
+website: 
+  sidebar: 
+    style: "floating"
+    search: true
+    contents: 
+      - section: Workflow
+        contents: 
+          - auto: "[!X]*.qmd"
+      - section: Appendicies
+        contents: 
+          - "XX_setup.qmd"
+          - "XX_citations.qmd"
+          - "XX_notes.qmd"
+    tools:
+      - icon: github
+        href: https://github.com/steffilazerte/vulture_migration
+  back-to-top-navigation: true
+  page-navigation: true
+  repo-url: https://github.com/steffilazerte/vulture_migration
+  repo-actions: [edit, issue]
+
+format:
+  html:
+    author: "Steffi LaZerte"
+    date: today
+    toc: true
+    toc-depth: 3
+    toc-expand: true
+    lightbox: auto
+    callout-icon: false
+    callout-appearance: minimal
+
+
 
 

@@ -1,0 +1,10 @@
+---
+title: Setup
+---
+
+## Functions
+These functions are sourced from `XX_functions.R`
+```{r}
+#| file: XX_functions.R
+```
+
