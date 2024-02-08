@@ -29,6 +29,9 @@ print(c[[4]], "text")
 cat("\n#### DHARMa (for model checks)\n")
 citation("DHARMa") |> print(style = "text")
 
+cat("\n#### MASS (for negative binomial GLM)\n")
+citation("MASS") |> print(style = "text")
+
 cat("\n#### tidyverse (for general data management and figures)\n")
 citation("tidyverse") |> print(style = "text")
 ```
