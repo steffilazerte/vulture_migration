@@ -652,7 +652,7 @@ fmt_table(t)
 ### Figures
 ```{r}
 res_figs <- v |>
-  select(year, res_pop_max, res_raw_max) |>
+  select(year, res_pop_median, res_raw_median) |>
   pivot_longer(-year, names_to = "measure", values_to = "pop")
 
 ggplot(res_figs, aes(x = year, y = pop, group = measure, colour = measure)) +
