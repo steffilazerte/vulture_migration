@@ -615,16 +615,61 @@ Note: We substract 3 from kurtosis to make it a measure of *Excess Kurtosis*
 which is centred on zero.
 A normal distribution has a kurtosis 3, but an excess kurtosis of 0.
 
+:::{.callout-tip}
+Why the `skew_all`?
+
+Skewness and kurtosis will differ depending on the range of data we include. 
+
+If for example, we looked at the entire pattern of migration (including the 
+very long tail of pre-migration data), we'd probably calculate that the distribution
+was very left-skewed and the skew would be negative. 
+
+So we need to look just at the migration period itself.
+
+But if we use the 5-95% dates, which are good cutoffs, we might end up influencing
+kurtosis which is affected by how thick or thin the tails are. Any truncating
+will make those tails seem thicker.
+
+So what do we do?
+
+I suggest an additional period to look at. In this period, we will choose the 
+date of the 50% of passage (i.e. when 50% of the birds have passed, `p50_doy`) as the
+center of the distribution. Then we'll count symmetric dates out to either side
+of that to 'cut' out the migration pattern. Because we're truncated on the fall
+side, we'll count the number of days from `p50_doy` to the end (`p50_to_end`), and for each
+year will include the dates between `p50_doy - p50_to_end` and the end of the 
+date range (which is also `p50_doy + p50_to_end`).
+
+This snap shot should give us a good look at skew, for sure, and possibly a
+look at kurtosis. Although if we find negative kurtosis, it might be that the
+date range isn't long enough. 
+:::
+
+
 ```{r}
+skew_all <- dts |>
+  filter(measure %in% "p50") |>
+  select(year, measure, doy_passage) |>
+  pivot_wider(names_from = "measure", values_from = "doy_passage") |>
+  left_join(x = pred, y = _, by = "year") |>
+  mutate(p50_to_end = n_distinct(doy[doy >= p50]), .by = "year") |>
+  filter(doy >= p50 - p50_to_end) |>
+  summarize(doy = list(rep(doy, round(count))), .by = c("year", "p50_to_end")) |>
+  mutate(all_skew = map_dbl(doy, skewness),
+         all_kurt = map_dbl(doy, \(x) kurtosis(x) - 3)) |>
+  select(-doy)
+
+
 skew_mig <- dts |>
   filter(measure %in% c("p05", "p95")) |>
   select(year, measure, doy_passage) |>
   pivot_wider(names_from = "measure", values_from = "doy_passage") |>
   left_join(x = pred, y = _, by = "year") |>
   filter(doy >= p05 & doy <= p95) |>
-  group_by(year) |>
-  summarize(mig_skew = skewness(count),
-            mig_kurt = kurtosis(count) - 3)
+  summarize(doy = list(rep(doy, round(count))), .by = "year") |>
+  mutate(mig_skew = map_dbl(doy, skewness),
+         mig_kurt = map_dbl(doy, \(x) kurtosis(x) - 3)) |>
+  select(-doy)
 
 skew_peak <- dts |>
   filter(measure %in% c("p25", "p75")) |>
@@ -632,9 +677,10 @@ skew_peak <- dts |>
   pivot_wider(names_from = "measure", values_from = "doy_passage") |>
   left_join(x = pred, y = _, by = "year") |>
   filter(doy >= p25 & doy <= p75) |>
-  group_by(year) |>
-  summarize(peak_skew = skewness(count),
-            peak_kurt = kurtosis(count) - 3)
+  summarize(doy = list(rep(doy, round(count))), .by = "year") |>
+  mutate(peak_skew = map_dbl(doy, skewness),
+         peak_kurt = map_dbl(doy, \(x) kurtosis(x) - 3)) |>
+  select(-doy)
 ```
 
 
@@ -651,7 +697,8 @@ population sizes, and migration patterns (skew/kurtosis).
 final <- left_join(samples, passage, by = "year") |>
   left_join(pop_size, by = "year") |>
   left_join(skew_mig, by = "year") |>
-  left_join(skew_peak, by = "year")
+  left_join(skew_peak, by = "year") |>
+  left_join(skew_all, by = "year")
 ```
 
 #### Preview
@@ -705,7 +752,8 @@ need to refer to the intermediate steps.
 
 ```{r}
 write_csv(final, "Data/Datasets/vultures_final.csv")
-write_rds(gam, "Data/Datasets/vultures_gams.rds")
+write_rds(gams, "Data/Datasets/vultures_gams.rds")
+write_csv(pred, "Data/Datasets/vultures_gams_pred.csv")
 write_csv(cum_counts, "Data/Datasets/vultures_cumulative_counts.csv")
 ```
 

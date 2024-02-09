@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Steffi LaZerte">
-<meta name="dcterms.date" content="2024-02-08">
+<meta name="dcterms.date" content="2024-02-09">
 
 <title>Vulture Migration on Vancouver Island - Calculate Metrics</title>
 <style>
@@ -292,7 +292,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">February 8, 2024</p>
+      <p class="date">February 9, 2024</p>
     </div>
   </div>
   
@@ -6195,26 +6195,58 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="skewness-kurtosis">7. Skewness &amp; Kurtosis</h3>
 <p>To capture the pattern of migration, we calculate skewness (of particular interest) and kurtosis (not necessarily of interest, but included for completeness).</p>
 <p>Note: We substract 3 from kurtosis to make it a measure of <em>Excess Kurtosis</em> which is centred on zero. A normal distribution has a kurtosis 3, but an excess kurtosis of 0.</p>
+<div class="callout callout-style-simple callout-tip no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>Why the <code>skew_all</code>?</p>
+<p>Skewness and kurtosis will differ depending on the range of data we include.</p>
+<p>If for example, we looked at the entire pattern of migration (including the very long tail of pre-migration data), we’d probably calculate that the distribution was very left-skewed and the skew would be negative.</p>
+<p>So we need to look just at the migration period itself.</p>
+<p>But if we use the 5-95% dates, which are good cutoffs, we might end up influencing kurtosis which is affected by how thick or thin the tails are. Any truncating will make those tails seem thicker.</p>
+<p>So what do we do?</p>
+<p>I suggest an additional period to look at. In this period, we will choose the date of the 50% of passage (i.e.&nbsp;when 50% of the birds have passed, <code>p50_doy</code>) as the center of the distribution. Then we’ll count symmetric dates out to either side of that to ‘cut’ out the migration pattern. Because we’re truncated on the fall side, we’ll count the number of days from <code>p50_doy</code> to the end (<code>p50_to_end</code>), and for each year will include the dates between <code>p50_doy - p50_to_end</code> and the end of the date range (which is also <code>p50_doy + p50_to_end</code>).</p>
+<p>This snap shot should give us a good look at skew, for sure, and possibly a look at kurtosis. Although if we find negative kurtosis, it might be that the date range isn’t long enough.</p>
+</div>
+</div>
+</div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>skew_mig <span class="ot">&lt;-</span> dts <span class="sc">|&gt;</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(measure <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"p05"</span>, <span class="st">"p95"</span>)) <span class="sc">|&gt;</span></span>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>skew_all <span class="ot">&lt;-</span> dts <span class="sc">|&gt;</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(measure <span class="sc">%in%</span> <span class="st">"p50"</span>) <span class="sc">|&gt;</span></span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(year, measure, doy_passage) <span class="sc">|&gt;</span></span>
 <span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> <span class="st">"measure"</span>, <span class="at">values_from =</span> <span class="st">"doy_passage"</span>) <span class="sc">|&gt;</span></span>
 <span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(<span class="at">x =</span> pred, <span class="at">y =</span> _, <span class="at">by =</span> <span class="st">"year"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(doy <span class="sc">&gt;=</span> p05 <span class="sc">&amp;</span> doy <span class="sc">&lt;=</span> p95) <span class="sc">|&gt;</span></span>
-<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(year) <span class="sc">|&gt;</span></span>
-<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">mig_skew =</span> <span class="fu">skewness</span>(count),</span>
-<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>            <span class="at">mig_kurt =</span> <span class="fu">kurtosis</span>(count) <span class="sc">-</span> <span class="dv">3</span>)</span>
-<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>skew_peak <span class="ot">&lt;-</span> dts <span class="sc">|&gt;</span></span>
-<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(measure <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"p25"</span>, <span class="st">"p75"</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(year, measure, doy_passage) <span class="sc">|&gt;</span></span>
-<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> <span class="st">"measure"</span>, <span class="at">values_from =</span> <span class="st">"doy_passage"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(<span class="at">x =</span> pred, <span class="at">y =</span> _, <span class="at">by =</span> <span class="st">"year"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(doy <span class="sc">&gt;=</span> p25 <span class="sc">&amp;</span> doy <span class="sc">&lt;=</span> p75) <span class="sc">|&gt;</span></span>
-<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(year) <span class="sc">|&gt;</span></span>
-<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">peak_skew =</span> <span class="fu">skewness</span>(count),</span>
-<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a>            <span class="at">peak_kurt =</span> <span class="fu">kurtosis</span>(count) <span class="sc">-</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">p50_to_end =</span> <span class="fu">n_distinct</span>(doy[doy <span class="sc">&gt;=</span> p50]), <span class="at">.by =</span> <span class="st">"year"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(doy <span class="sc">&gt;=</span> p50 <span class="sc">-</span> p50_to_end) <span class="sc">|&gt;</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">doy =</span> <span class="fu">list</span>(<span class="fu">rep</span>(doy, <span class="fu">round</span>(count))), <span class="at">.by =</span> <span class="fu">c</span>(<span class="st">"year"</span>, <span class="st">"p50_to_end"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">all_skew =</span> <span class="fu">map_dbl</span>(doy, skewness),</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>         <span class="at">all_kurt =</span> <span class="fu">map_dbl</span>(doy, \(x) <span class="fu">kurtosis</span>(x) <span class="sc">-</span> <span class="dv">3</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>doy)</span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>skew_mig <span class="ot">&lt;-</span> dts <span class="sc">|&gt;</span></span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(measure <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"p05"</span>, <span class="st">"p95"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(year, measure, doy_passage) <span class="sc">|&gt;</span></span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> <span class="st">"measure"</span>, <span class="at">values_from =</span> <span class="st">"doy_passage"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(<span class="at">x =</span> pred, <span class="at">y =</span> _, <span class="at">by =</span> <span class="st">"year"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(doy <span class="sc">&gt;=</span> p05 <span class="sc">&amp;</span> doy <span class="sc">&lt;=</span> p95) <span class="sc">|&gt;</span></span>
+<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">doy =</span> <span class="fu">list</span>(<span class="fu">rep</span>(doy, <span class="fu">round</span>(count))), <span class="at">.by =</span> <span class="st">"year"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">mig_skew =</span> <span class="fu">map_dbl</span>(doy, skewness),</span>
+<span id="cb19-22"><a href="#cb19-22" aria-hidden="true" tabindex="-1"></a>         <span class="at">mig_kurt =</span> <span class="fu">map_dbl</span>(doy, \(x) <span class="fu">kurtosis</span>(x) <span class="sc">-</span> <span class="dv">3</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb19-23"><a href="#cb19-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>doy)</span>
+<span id="cb19-24"><a href="#cb19-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-25"><a href="#cb19-25" aria-hidden="true" tabindex="-1"></a>skew_peak <span class="ot">&lt;-</span> dts <span class="sc">|&gt;</span></span>
+<span id="cb19-26"><a href="#cb19-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(measure <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"p25"</span>, <span class="st">"p75"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb19-27"><a href="#cb19-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(year, measure, doy_passage) <span class="sc">|&gt;</span></span>
+<span id="cb19-28"><a href="#cb19-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> <span class="st">"measure"</span>, <span class="at">values_from =</span> <span class="st">"doy_passage"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb19-29"><a href="#cb19-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(<span class="at">x =</span> pred, <span class="at">y =</span> _, <span class="at">by =</span> <span class="st">"year"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb19-30"><a href="#cb19-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(doy <span class="sc">&gt;=</span> p25 <span class="sc">&amp;</span> doy <span class="sc">&lt;=</span> p75) <span class="sc">|&gt;</span></span>
+<span id="cb19-31"><a href="#cb19-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">doy =</span> <span class="fu">list</span>(<span class="fu">rep</span>(doy, <span class="fu">round</span>(count))), <span class="at">.by =</span> <span class="st">"year"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb19-32"><a href="#cb19-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">peak_skew =</span> <span class="fu">map_dbl</span>(doy, skewness),</span>
+<span id="cb19-33"><a href="#cb19-33" aria-hidden="true" tabindex="-1"></a>         <span class="at">peak_kurt =</span> <span class="fu">map_dbl</span>(doy, \(x) <span class="fu">kurtosis</span>(x) <span class="sc">-</span> <span class="dv">3</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb19-34"><a href="#cb19-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>doy)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="combine-metrics" class="level3">
@@ -6228,7 +6260,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>final <span class="ot">&lt;-</span> <span class="fu">left_join</span>(samples, passage, <span class="at">by =</span> <span class="st">"year"</span>) <span class="sc">|&gt;</span></span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(pop_size, <span class="at">by =</span> <span class="st">"year"</span>) <span class="sc">|&gt;</span></span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(skew_mig, <span class="at">by =</span> <span class="st">"year"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(skew_peak, <span class="at">by =</span> <span class="st">"year"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(skew_peak, <span class="at">by =</span> <span class="st">"year"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(skew_all, <span class="at">by =</span> <span class="st">"year"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <div id="tabset-9-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-9-2-tab">
@@ -6731,6 +6764,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <th id="mig_kurt" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">mig_kurt</th>
 <th id="peak_skew" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">peak_skew</th>
 <th id="peak_kurt" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">peak_kurt</th>
+<th id="p50_to_end" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">p50_to_end</th>
+<th id="all_skew" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">all_skew</th>
+<th id="all_kurt" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">all_kurt</th>
 </tr>
 </thead>
 <tbody class="gt_table_body">
@@ -6783,10 +6819,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td class="gt_row gt_right" headers="peak_raw_median">206.0</td>
 <td class="gt_row gt_right" headers="peak_raw_mean">206.0</td>
 <td class="gt_row gt_right" headers="peak_raw_total">412</td>
-<td class="gt_row gt_right" headers="mig_skew">-0.03350915</td>
-<td class="gt_row gt_right" headers="mig_kurt">-1.434513</td>
-<td class="gt_row gt_right" headers="peak_skew">-0.4591125</td>
-<td class="gt_row gt_right" headers="peak_kurt">-1.1575740</td>
+<td class="gt_row gt_right" headers="mig_skew">0.0224952937</td>
+<td class="gt_row gt_right" headers="mig_kurt">-0.6713095</td>
+<td class="gt_row gt_right" headers="peak_skew">0.0229692826</td>
+<td class="gt_row gt_right" headers="peak_kurt">-1.113116</td>
+<td class="gt_row gt_right" headers="p50_to_end">24</td>
+<td class="gt_row gt_right" headers="all_skew">-0.040315534</td>
+<td class="gt_row gt_right" headers="all_kurt">0.41042617</td>
 </tr>
 <tr class="even">
 <td class="gt_row gt_right" headers="year">1999</td>
@@ -6837,10 +6876,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td class="gt_row gt_right" headers="peak_raw_median">635.0</td>
 <td class="gt_row gt_right" headers="peak_raw_mean">661.6</td>
 <td class="gt_row gt_right" headers="peak_raw_total">5293</td>
-<td class="gt_row gt_right" headers="mig_skew">0.03812895</td>
-<td class="gt_row gt_right" headers="mig_kurt">-1.428675</td>
-<td class="gt_row gt_right" headers="peak_skew">-0.4020506</td>
-<td class="gt_row gt_right" headers="peak_kurt">-1.2694762</td>
+<td class="gt_row gt_right" headers="mig_skew">0.0668830493</td>
+<td class="gt_row gt_right" headers="mig_kurt">-0.6284030</td>
+<td class="gt_row gt_right" headers="peak_skew">-0.0006279026</td>
+<td class="gt_row gt_right" headers="peak_kurt">-1.123637</td>
+<td class="gt_row gt_right" headers="p50_to_end">24</td>
+<td class="gt_row gt_right" headers="all_skew">0.018359875</td>
+<td class="gt_row gt_right" headers="all_kurt">0.77951212</td>
 </tr>
 <tr class="odd">
 <td class="gt_row gt_right" headers="year">2000</td>
@@ -6891,10 +6933,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td class="gt_row gt_right" headers="peak_raw_median">130.0</td>
 <td class="gt_row gt_right" headers="peak_raw_mean">139.7</td>
 <td class="gt_row gt_right" headers="peak_raw_total">1257</td>
-<td class="gt_row gt_right" headers="mig_skew">-0.06542641</td>
-<td class="gt_row gt_right" headers="mig_kurt">-1.428674</td>
-<td class="gt_row gt_right" headers="peak_skew">-0.8092386</td>
-<td class="gt_row gt_right" headers="peak_kurt">-0.4305554</td>
+<td class="gt_row gt_right" headers="mig_skew">-0.1294127499</td>
+<td class="gt_row gt_right" headers="mig_kurt">-0.6986208</td>
+<td class="gt_row gt_right" headers="peak_skew">-0.0661457758</td>
+<td class="gt_row gt_right" headers="peak_kurt">-1.137142</td>
+<td class="gt_row gt_right" headers="p50_to_end">28</td>
+<td class="gt_row gt_right" headers="all_skew">-0.256755651</td>
+<td class="gt_row gt_right" headers="all_kurt">0.39545325</td>
 </tr>
 <tr class="even">
 <td class="gt_row gt_right" headers="year">2001</td>
@@ -6945,10 +6990,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td class="gt_row gt_right" headers="peak_raw_median">180.0</td>
 <td class="gt_row gt_right" headers="peak_raw_mean">193.6</td>
 <td class="gt_row gt_right" headers="peak_raw_total">1742</td>
-<td class="gt_row gt_right" headers="mig_skew">0.09736490</td>
-<td class="gt_row gt_right" headers="mig_kurt">-1.507846</td>
-<td class="gt_row gt_right" headers="peak_skew">-0.9850598</td>
-<td class="gt_row gt_right" headers="peak_kurt">-0.1106974</td>
+<td class="gt_row gt_right" headers="mig_skew">-0.4117553899</td>
+<td class="gt_row gt_right" headers="mig_kurt">-0.3796830</td>
+<td class="gt_row gt_right" headers="peak_skew">-0.0748311318</td>
+<td class="gt_row gt_right" headers="peak_kurt">-1.129771</td>
+<td class="gt_row gt_right" headers="p50_to_end">25</td>
+<td class="gt_row gt_right" headers="all_skew">-0.423741791</td>
+<td class="gt_row gt_right" headers="all_kurt">0.40142068</td>
 </tr>
 <tr class="odd">
 <td class="gt_row gt_right" headers="year">2002</td>
@@ -6999,10 +7047,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td class="gt_row gt_right" headers="peak_raw_median">200.0</td>
 <td class="gt_row gt_right" headers="peak_raw_mean">223.9</td>
 <td class="gt_row gt_right" headers="peak_raw_total">2687</td>
-<td class="gt_row gt_right" headers="mig_skew">0.44246345</td>
-<td class="gt_row gt_right" headers="mig_kurt">-1.165698</td>
-<td class="gt_row gt_right" headers="peak_skew">-0.2862484</td>
-<td class="gt_row gt_right" headers="peak_kurt">-1.4549162</td>
+<td class="gt_row gt_right" headers="mig_skew">0.3820434010</td>
+<td class="gt_row gt_right" headers="mig_kurt">-0.7249736</td>
+<td class="gt_row gt_right" headers="peak_skew">0.2880288071</td>
+<td class="gt_row gt_right" headers="peak_kurt">-1.033750</td>
+<td class="gt_row gt_right" headers="p50_to_end">27</td>
+<td class="gt_row gt_right" headers="all_skew">0.152286748</td>
+<td class="gt_row gt_right" headers="all_kurt">-0.01868869</td>
 </tr>
 <tr class="even">
 <td class="gt_row gt_right" headers="year">2003</td>
@@ -7053,10 +7104,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td class="gt_row gt_right" headers="peak_raw_median">280.0</td>
 <td class="gt_row gt_right" headers="peak_raw_mean">265.9</td>
 <td class="gt_row gt_right" headers="peak_raw_total">2925</td>
-<td class="gt_row gt_right" headers="mig_skew">-0.20712008</td>
-<td class="gt_row gt_right" headers="mig_kurt">-1.319126</td>
-<td class="gt_row gt_right" headers="peak_skew">-0.7357294</td>
-<td class="gt_row gt_right" headers="peak_kurt">-0.6537013</td>
+<td class="gt_row gt_right" headers="mig_skew">0.1312336371</td>
+<td class="gt_row gt_right" headers="mig_kurt">-0.8131903</td>
+<td class="gt_row gt_right" headers="peak_skew">0.0910576817</td>
+<td class="gt_row gt_right" headers="peak_kurt">-1.149585</td>
+<td class="gt_row gt_right" headers="p50_to_end">24</td>
+<td class="gt_row gt_right" headers="all_skew">0.076608106</td>
+<td class="gt_row gt_right" headers="all_kurt">-0.05455030</td>
 </tr>
 <tr class="odd">
 <td class="gt_row gt_right" headers="year">2004</td>
@@ -7107,10 +7161,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td class="gt_row gt_right" headers="peak_raw_median">600.0</td>
 <td class="gt_row gt_right" headers="peak_raw_mean">523.6</td>
 <td class="gt_row gt_right" headers="peak_raw_total">5760</td>
-<td class="gt_row gt_right" headers="mig_skew">0.13969300</td>
-<td class="gt_row gt_right" headers="mig_kurt">-1.442964</td>
-<td class="gt_row gt_right" headers="peak_skew">-0.8151838</td>
-<td class="gt_row gt_right" headers="peak_kurt">-0.4896543</td>
+<td class="gt_row gt_right" headers="mig_skew">0.3783186957</td>
+<td class="gt_row gt_right" headers="mig_kurt">-0.4418543</td>
+<td class="gt_row gt_right" headers="peak_skew">0.1210075333</td>
+<td class="gt_row gt_right" headers="peak_kurt">-1.082930</td>
+<td class="gt_row gt_right" headers="p50_to_end">23</td>
+<td class="gt_row gt_right" headers="all_skew">0.371925923</td>
+<td class="gt_row gt_right" headers="all_kurt">0.21956496</td>
 </tr>
 <tr class="even">
 <td class="gt_row gt_right" headers="year">2005</td>
@@ -7161,10 +7218,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td class="gt_row gt_right" headers="peak_raw_median">330.0</td>
 <td class="gt_row gt_right" headers="peak_raw_mean">299.5</td>
 <td class="gt_row gt_right" headers="peak_raw_total">2995</td>
-<td class="gt_row gt_right" headers="mig_skew">0.10008084</td>
-<td class="gt_row gt_right" headers="mig_kurt">-1.409147</td>
-<td class="gt_row gt_right" headers="peak_skew">-0.4181637</td>
-<td class="gt_row gt_right" headers="peak_kurt">-1.1888391</td>
+<td class="gt_row gt_right" headers="mig_skew">-0.0292359035</td>
+<td class="gt_row gt_right" headers="mig_kurt">-0.6328078</td>
+<td class="gt_row gt_right" headers="peak_skew">0.0091185677</td>
+<td class="gt_row gt_right" headers="peak_kurt">-1.112292</td>
+<td class="gt_row gt_right" headers="p50_to_end">25</td>
+<td class="gt_row gt_right" headers="all_skew">-0.042300644</td>
+<td class="gt_row gt_right" headers="all_kurt">0.19578706</td>
 </tr>
 <tr class="odd">
 <td class="gt_row gt_right" headers="year">2006</td>
@@ -7215,10 +7275,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td class="gt_row gt_right" headers="peak_raw_median">350.0</td>
 <td class="gt_row gt_right" headers="peak_raw_mean">323.9</td>
 <td class="gt_row gt_right" headers="peak_raw_total">3563</td>
-<td class="gt_row gt_right" headers="mig_skew">0.07286596</td>
-<td class="gt_row gt_right" headers="mig_kurt">-1.404168</td>
-<td class="gt_row gt_right" headers="peak_skew">-0.7799124</td>
-<td class="gt_row gt_right" headers="peak_kurt">-0.5131186</td>
+<td class="gt_row gt_right" headers="mig_skew">0.2471289542</td>
+<td class="gt_row gt_right" headers="mig_kurt">-0.6450929</td>
+<td class="gt_row gt_right" headers="peak_skew">0.0987637452</td>
+<td class="gt_row gt_right" headers="peak_kurt">-1.103051</td>
+<td class="gt_row gt_right" headers="p50_to_end">24</td>
+<td class="gt_row gt_right" headers="all_skew">0.237589162</td>
+<td class="gt_row gt_right" headers="all_kurt">-0.24870544</td>
 </tr>
 <tr class="even">
 <td class="gt_row gt_right" headers="year">2008</td>
@@ -7269,10 +7332,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td class="gt_row gt_right" headers="peak_raw_median">250.0</td>
 <td class="gt_row gt_right" headers="peak_raw_mean">281.3</td>
 <td class="gt_row gt_right" headers="peak_raw_total">2532</td>
-<td class="gt_row gt_right" headers="mig_skew">-0.05225051</td>
-<td class="gt_row gt_right" headers="mig_kurt">-1.403864</td>
-<td class="gt_row gt_right" headers="peak_skew">-0.7184289</td>
-<td class="gt_row gt_right" headers="peak_kurt">-0.5960695</td>
+<td class="gt_row gt_right" headers="mig_skew">-0.2290201422</td>
+<td class="gt_row gt_right" headers="mig_kurt">-0.6202011</td>
+<td class="gt_row gt_right" headers="peak_skew">-0.0631823253</td>
+<td class="gt_row gt_right" headers="peak_kurt">-1.117553</td>
+<td class="gt_row gt_right" headers="p50_to_end">26</td>
+<td class="gt_row gt_right" headers="all_skew">-0.344749439</td>
+<td class="gt_row gt_right" headers="all_kurt">0.36177342</td>
 </tr>
 <tr class="odd">
 <td class="gt_row gt_right" headers="year">2009</td>
@@ -7323,10 +7389,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td class="gt_row gt_right" headers="peak_raw_median">306.0</td>
 <td class="gt_row gt_right" headers="peak_raw_mean">359.4</td>
 <td class="gt_row gt_right" headers="peak_raw_total">2516</td>
-<td class="gt_row gt_right" headers="mig_skew">-0.14956218</td>
-<td class="gt_row gt_right" headers="mig_kurt">-1.394020</td>
-<td class="gt_row gt_right" headers="peak_skew">-0.4216134</td>
-<td class="gt_row gt_right" headers="peak_kurt">-1.2758509</td>
+<td class="gt_row gt_right" headers="mig_skew">-0.0569232616</td>
+<td class="gt_row gt_right" headers="mig_kurt">-0.7245350</td>
+<td class="gt_row gt_right" headers="peak_skew">0.0134393477</td>
+<td class="gt_row gt_right" headers="peak_kurt">-1.134582</td>
+<td class="gt_row gt_right" headers="p50_to_end">26</td>
+<td class="gt_row gt_right" headers="all_skew">-0.195413001</td>
+<td class="gt_row gt_right" headers="all_kurt">2.45809100</td>
 </tr>
 <tr class="even">
 <td class="gt_row gt_right" headers="year">2010</td>
@@ -7377,10 +7446,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td class="gt_row gt_right" headers="peak_raw_median">255.0</td>
 <td class="gt_row gt_right" headers="peak_raw_mean">540.4</td>
 <td class="gt_row gt_right" headers="peak_raw_total">4864</td>
-<td class="gt_row gt_right" headers="mig_skew">-0.11482534</td>
-<td class="gt_row gt_right" headers="mig_kurt">-1.363331</td>
-<td class="gt_row gt_right" headers="peak_skew">-0.5231990</td>
-<td class="gt_row gt_right" headers="peak_kurt">-0.9284903</td>
+<td class="gt_row gt_right" headers="mig_skew">-0.0646430642</td>
+<td class="gt_row gt_right" headers="mig_kurt">-0.7398209</td>
+<td class="gt_row gt_right" headers="peak_skew">-0.0827335380</td>
+<td class="gt_row gt_right" headers="peak_kurt">-1.138708</td>
+<td class="gt_row gt_right" headers="p50_to_end">23</td>
+<td class="gt_row gt_right" headers="all_skew">-0.172021480</td>
+<td class="gt_row gt_right" headers="all_kurt">0.54001217</td>
 </tr>
 <tr class="odd">
 <td class="gt_row gt_right" headers="year">2011</td>
@@ -7431,10 +7503,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td class="gt_row gt_right" headers="peak_raw_median">337.5</td>
 <td class="gt_row gt_right" headers="peak_raw_mean">337.5</td>
 <td class="gt_row gt_right" headers="peak_raw_total">675</td>
-<td class="gt_row gt_right" headers="mig_skew">-0.05300893</td>
-<td class="gt_row gt_right" headers="mig_kurt">-1.377542</td>
-<td class="gt_row gt_right" headers="peak_skew">-0.7739163</td>
-<td class="gt_row gt_right" headers="peak_kurt">-0.7668754</td>
+<td class="gt_row gt_right" headers="mig_skew">-0.2522814892</td>
+<td class="gt_row gt_right" headers="mig_kurt">-0.7678423</td>
+<td class="gt_row gt_right" headers="peak_skew">-0.1378555674</td>
+<td class="gt_row gt_right" headers="peak_kurt">-1.131840</td>
+<td class="gt_row gt_right" headers="p50_to_end">19</td>
+<td class="gt_row gt_right" headers="all_skew">-0.234951830</td>
+<td class="gt_row gt_right" headers="all_kurt">-0.34672718</td>
 </tr>
 <tr class="even">
 <td class="gt_row gt_right" headers="year">2012</td>
@@ -7485,10 +7560,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td class="gt_row gt_right" headers="peak_raw_median">380.0</td>
 <td class="gt_row gt_right" headers="peak_raw_mean">356.8</td>
 <td class="gt_row gt_right" headers="peak_raw_total">3211</td>
-<td class="gt_row gt_right" headers="mig_skew">0.08524144</td>
-<td class="gt_row gt_right" headers="mig_kurt">-1.427590</td>
-<td class="gt_row gt_right" headers="peak_skew">-0.4551115</td>
-<td class="gt_row gt_right" headers="peak_kurt">-1.1418853</td>
+<td class="gt_row gt_right" headers="mig_skew">-0.0278960097</td>
+<td class="gt_row gt_right" headers="mig_kurt">-0.6119416</td>
+<td class="gt_row gt_right" headers="peak_skew">-0.0229712104</td>
+<td class="gt_row gt_right" headers="peak_kurt">-1.122762</td>
+<td class="gt_row gt_right" headers="p50_to_end">24</td>
+<td class="gt_row gt_right" headers="all_skew">0.050115620</td>
+<td class="gt_row gt_right" headers="all_kurt">0.38736439</td>
 </tr>
 <tr class="odd">
 <td class="gt_row gt_right" headers="year">2013</td>
@@ -7539,10 +7617,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td class="gt_row gt_right" headers="peak_raw_median">256.0</td>
 <td class="gt_row gt_right" headers="peak_raw_mean">311.6</td>
 <td class="gt_row gt_right" headers="peak_raw_total">1558</td>
-<td class="gt_row gt_right" headers="mig_skew">-0.13628168</td>
-<td class="gt_row gt_right" headers="mig_kurt">-1.377484</td>
-<td class="gt_row gt_right" headers="peak_skew">-0.4659804</td>
-<td class="gt_row gt_right" headers="peak_kurt">-1.1637026</td>
+<td class="gt_row gt_right" headers="mig_skew">0.0008979828</td>
+<td class="gt_row gt_right" headers="mig_kurt">-0.7952244</td>
+<td class="gt_row gt_right" headers="peak_skew">-0.0135491805</td>
+<td class="gt_row gt_right" headers="peak_kurt">-1.126270</td>
+<td class="gt_row gt_right" headers="p50_to_end">21</td>
+<td class="gt_row gt_right" headers="all_skew">0.002994512</td>
+<td class="gt_row gt_right" headers="all_kurt">-0.26920320</td>
 </tr>
 <tr class="even">
 <td class="gt_row gt_right" headers="year">2014</td>
@@ -7593,10 +7674,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td class="gt_row gt_right" headers="peak_raw_median">385.0</td>
 <td class="gt_row gt_right" headers="peak_raw_mean">409.8</td>
 <td class="gt_row gt_right" headers="peak_raw_total">4098</td>
-<td class="gt_row gt_right" headers="mig_skew">0.09042572</td>
-<td class="gt_row gt_right" headers="mig_kurt">-1.411110</td>
-<td class="gt_row gt_right" headers="peak_skew">-0.4185676</td>
-<td class="gt_row gt_right" headers="peak_kurt">-1.2108762</td>
+<td class="gt_row gt_right" headers="mig_skew">0.0161864275</td>
+<td class="gt_row gt_right" headers="mig_kurt">-0.6297044</td>
+<td class="gt_row gt_right" headers="peak_skew">0.0076658366</td>
+<td class="gt_row gt_right" headers="peak_kurt">-1.120494</td>
+<td class="gt_row gt_right" headers="p50_to_end">21</td>
+<td class="gt_row gt_right" headers="all_skew">0.025305290</td>
+<td class="gt_row gt_right" headers="all_kurt">-0.16025152</td>
 </tr>
 <tr class="odd">
 <td class="gt_row gt_right" headers="year">2015</td>
@@ -7647,10 +7731,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td class="gt_row gt_right" headers="peak_raw_median">250.0</td>
 <td class="gt_row gt_right" headers="peak_raw_mean">390.2</td>
 <td class="gt_row gt_right" headers="peak_raw_total">3512</td>
-<td class="gt_row gt_right" headers="mig_skew">0.51373071</td>
-<td class="gt_row gt_right" headers="mig_kurt">-1.249276</td>
-<td class="gt_row gt_right" headers="peak_skew">-0.7807259</td>
-<td class="gt_row gt_right" headers="peak_kurt">-0.5553140</td>
+<td class="gt_row gt_right" headers="mig_skew">0.5067799293</td>
+<td class="gt_row gt_right" headers="mig_kurt">-0.1280714</td>
+<td class="gt_row gt_right" headers="peak_skew">0.1303439237</td>
+<td class="gt_row gt_right" headers="peak_kurt">-1.071614</td>
+<td class="gt_row gt_right" headers="p50_to_end">24</td>
+<td class="gt_row gt_right" headers="all_skew">0.381640565</td>
+<td class="gt_row gt_right" headers="all_kurt">0.23945515</td>
 </tr>
 <tr class="even">
 <td class="gt_row gt_right" headers="year">2016</td>
@@ -7701,10 +7788,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td class="gt_row gt_right" headers="peak_raw_median">438.0</td>
 <td class="gt_row gt_right" headers="peak_raw_mean">439.2</td>
 <td class="gt_row gt_right" headers="peak_raw_total">3514</td>
-<td class="gt_row gt_right" headers="mig_skew">-0.09223563</td>
-<td class="gt_row gt_right" headers="mig_kurt">-1.443637</td>
-<td class="gt_row gt_right" headers="peak_skew">-0.8949594</td>
-<td class="gt_row gt_right" headers="peak_kurt">-0.2335102</td>
+<td class="gt_row gt_right" headers="mig_skew">0.1439753561</td>
+<td class="gt_row gt_right" headers="mig_kurt">-0.6981477</td>
+<td class="gt_row gt_right" headers="peak_skew">0.0642899728</td>
+<td class="gt_row gt_right" headers="peak_kurt">-1.128823</td>
+<td class="gt_row gt_right" headers="p50_to_end">26</td>
+<td class="gt_row gt_right" headers="all_skew">0.150624330</td>
+<td class="gt_row gt_right" headers="all_kurt">0.15760339</td>
 </tr>
 <tr class="odd">
 <td class="gt_row gt_right" headers="year">2017</td>
@@ -7755,10 +7845,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td class="gt_row gt_right" headers="peak_raw_median">500.0</td>
 <td class="gt_row gt_right" headers="peak_raw_mean">463.6</td>
 <td class="gt_row gt_right" headers="peak_raw_total">2318</td>
-<td class="gt_row gt_right" headers="mig_skew">-0.13930674</td>
-<td class="gt_row gt_right" headers="mig_kurt">-1.406035</td>
-<td class="gt_row gt_right" headers="peak_skew">-0.8114165</td>
-<td class="gt_row gt_right" headers="peak_kurt">-0.4509153</td>
+<td class="gt_row gt_right" headers="mig_skew">-0.1592480069</td>
+<td class="gt_row gt_right" headers="mig_kurt">-0.7158155</td>
+<td class="gt_row gt_right" headers="peak_skew">-0.0795803763</td>
+<td class="gt_row gt_right" headers="peak_kurt">-1.132266</td>
+<td class="gt_row gt_right" headers="p50_to_end">24</td>
+<td class="gt_row gt_right" headers="all_skew">-0.273144664</td>
+<td class="gt_row gt_right" headers="all_kurt">0.73703862</td>
 </tr>
 <tr class="even">
 <td class="gt_row gt_right" headers="year">2018</td>
@@ -7809,10 +7902,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td class="gt_row gt_right" headers="peak_raw_median">245.0</td>
 <td class="gt_row gt_right" headers="peak_raw_mean">248.2</td>
 <td class="gt_row gt_right" headers="peak_raw_total">2234</td>
-<td class="gt_row gt_right" headers="mig_skew">-0.60064068</td>
-<td class="gt_row gt_right" headers="mig_kurt">-1.071594</td>
-<td class="gt_row gt_right" headers="peak_skew">-1.0198218</td>
-<td class="gt_row gt_right" headers="peak_kurt">0.1485449</td>
+<td class="gt_row gt_right" headers="mig_skew">0.0535846199</td>
+<td class="gt_row gt_right" headers="mig_kurt">-0.9329652</td>
+<td class="gt_row gt_right" headers="peak_skew">0.0419922170</td>
+<td class="gt_row gt_right" headers="peak_kurt">-1.188355</td>
+<td class="gt_row gt_right" headers="p50_to_end">23</td>
+<td class="gt_row gt_right" headers="all_skew">0.006998443</td>
+<td class="gt_row gt_right" headers="all_kurt">-0.24641922</td>
 </tr>
 <tr class="odd">
 <td class="gt_row gt_right" headers="year">2019</td>
@@ -7863,10 +7959,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td class="gt_row gt_right" headers="peak_raw_median">265.0</td>
 <td class="gt_row gt_right" headers="peak_raw_mean">365.8</td>
 <td class="gt_row gt_right" headers="peak_raw_total">3658</td>
-<td class="gt_row gt_right" headers="mig_skew">-0.22297747</td>
-<td class="gt_row gt_right" headers="mig_kurt">-1.339507</td>
-<td class="gt_row gt_right" headers="peak_skew">-0.4647856</td>
-<td class="gt_row gt_right" headers="peak_kurt">-1.1592191</td>
+<td class="gt_row gt_right" headers="mig_skew">0.0723129060</td>
+<td class="gt_row gt_right" headers="mig_kurt">-0.8107342</td>
+<td class="gt_row gt_right" headers="peak_skew">0.0269621604</td>
+<td class="gt_row gt_right" headers="peak_kurt">-1.136540</td>
+<td class="gt_row gt_right" headers="p50_to_end">24</td>
+<td class="gt_row gt_right" headers="all_skew">-0.254477296</td>
+<td class="gt_row gt_right" headers="all_kurt">0.55165823</td>
 </tr>
 <tr class="even">
 <td class="gt_row gt_right" headers="year">2020</td>
@@ -7917,10 +8016,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td class="gt_row gt_right" headers="peak_raw_median">850.0</td>
 <td class="gt_row gt_right" headers="peak_raw_mean">710.5</td>
 <td class="gt_row gt_right" headers="peak_raw_total">7105</td>
-<td class="gt_row gt_right" headers="mig_skew">-0.07984844</td>
-<td class="gt_row gt_right" headers="mig_kurt">-1.380720</td>
-<td class="gt_row gt_right" headers="peak_skew">-0.6737681</td>
-<td class="gt_row gt_right" headers="peak_kurt">-0.6723579</td>
+<td class="gt_row gt_right" headers="mig_skew">-0.1108202356</td>
+<td class="gt_row gt_right" headers="mig_kurt">-0.7095091</td>
+<td class="gt_row gt_right" headers="peak_skew">-0.0474589870</td>
+<td class="gt_row gt_right" headers="peak_kurt">-1.136934</td>
+<td class="gt_row gt_right" headers="p50_to_end">19</td>
+<td class="gt_row gt_right" headers="all_skew">-0.064047515</td>
+<td class="gt_row gt_right" headers="all_kurt">-0.20573570</td>
 </tr>
 <tr class="odd">
 <td class="gt_row gt_right" headers="year">2021</td>
@@ -7971,10 +8073,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td class="gt_row gt_right" headers="peak_raw_median">442.0</td>
 <td class="gt_row gt_right" headers="peak_raw_mean">462.2</td>
 <td class="gt_row gt_right" headers="peak_raw_total">4622</td>
-<td class="gt_row gt_right" headers="mig_skew">-0.29642610</td>
-<td class="gt_row gt_right" headers="mig_kurt">-1.300687</td>
-<td class="gt_row gt_right" headers="peak_skew">-0.8175523</td>
-<td class="gt_row gt_right" headers="peak_kurt">-0.4170293</td>
+<td class="gt_row gt_right" headers="mig_skew">-0.1449912074</td>
+<td class="gt_row gt_right" headers="mig_kurt">-0.7812370</td>
+<td class="gt_row gt_right" headers="peak_skew">-0.0393816072</td>
+<td class="gt_row gt_right" headers="peak_kurt">-1.162953</td>
+<td class="gt_row gt_right" headers="p50_to_end">24</td>
+<td class="gt_row gt_right" headers="all_skew">-0.192544659</td>
+<td class="gt_row gt_right" headers="all_kurt">0.15413079</td>
 </tr>
 <tr class="even">
 <td class="gt_row gt_right" headers="year">2022</td>
@@ -8025,10 +8130,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td class="gt_row gt_right" headers="peak_raw_median">1100.0</td>
 <td class="gt_row gt_right" headers="peak_raw_mean">1158.3</td>
 <td class="gt_row gt_right" headers="peak_raw_total">10425</td>
-<td class="gt_row gt_right" headers="mig_skew">-0.20428330</td>
-<td class="gt_row gt_right" headers="mig_kurt">-1.365509</td>
-<td class="gt_row gt_right" headers="peak_skew">-0.8085492</td>
-<td class="gt_row gt_right" headers="peak_kurt">-0.4789309</td>
+<td class="gt_row gt_right" headers="mig_skew">-0.0926814829</td>
+<td class="gt_row gt_right" headers="mig_kurt">-0.7666577</td>
+<td class="gt_row gt_right" headers="peak_skew">-0.0800418285</td>
+<td class="gt_row gt_right" headers="peak_kurt">-1.151993</td>
+<td class="gt_row gt_right" headers="p50_to_end">20</td>
+<td class="gt_row gt_right" headers="all_skew">-0.204737359</td>
+<td class="gt_row gt_right" headers="all_kurt">0.10719914</td>
 </tr>
 <tr class="odd">
 <td class="gt_row gt_right" headers="year">2023</td>
@@ -8079,10 +8187,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td class="gt_row gt_right" headers="peak_raw_median">261.0</td>
 <td class="gt_row gt_right" headers="peak_raw_mean">648.1</td>
 <td class="gt_row gt_right" headers="peak_raw_total">7129</td>
-<td class="gt_row gt_right" headers="mig_skew">-0.02285483</td>
-<td class="gt_row gt_right" headers="mig_kurt">-1.382308</td>
-<td class="gt_row gt_right" headers="peak_skew">-0.4662744</td>
-<td class="gt_row gt_right" headers="peak_kurt">-1.0902832</td>
+<td class="gt_row gt_right" headers="mig_skew">-0.0673564649</td>
+<td class="gt_row gt_right" headers="mig_kurt">-0.7132596</td>
+<td class="gt_row gt_right" headers="peak_skew">-0.0361381179</td>
+<td class="gt_row gt_right" headers="peak_kurt">-1.130459</td>
+<td class="gt_row gt_right" headers="p50_to_end">22</td>
+<td class="gt_row gt_right" headers="all_skew">-0.012238180</td>
+<td class="gt_row gt_right" headers="all_kurt">-0.14218174</td>
 </tr>
 </tbody>
 </table>
@@ -8714,8 +8825,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><strong>Final</strong> is our main data, <strong>GAMS</strong> and <strong>Cumulative Counts</strong> are for if we need to refer to the intermediate steps.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(final, <span class="st">"Data/Datasets/vultures_final.csv"</span>)</span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(gam, <span class="st">"Data/Datasets/vultures_gams.rds"</span>)</span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(cum_counts, <span class="st">"Data/Datasets/vultures_cumulative_counts.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(gams, <span class="st">"Data/Datasets/vultures_gams.rds"</span>)</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(pred, <span class="st">"Data/Datasets/vultures_gams_pred.csv"</span>)</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(cum_counts, <span class="st">"Data/Datasets/vultures_cumulative_counts.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <section id="details" class="level3">
 <h3 class="anchored" data-anchor-id="details">Details</h3>
@@ -9305,7 +9417,7 @@ Session Info
  collate  en_CA.UTF-8
  ctype    en_CA.UTF-8
  tz       America/Winnipeg
- date     2024-02-08
+ date     2024-02-09
  pandoc   3.1.1 @ /usr/lib/rstudio/resources/app/bin/quarto/bin/tools/ (via rmarkdown)
 
 ─ Packages ───────────────────────────────────────────────────────────────────
@@ -9818,7 +9930,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   </div>
 </nav>
 </div> <!-- /content -->
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/steffilazerte/vulture_migration/edit/main/02_calculate_metrics.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/steffilazerte/vulture_migration/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer><script>var lightboxQuarto = GLightbox({"loop":false,"descPosition":"bottom","closeEffect":"zoom","selector":".lightbox","openEffect":"zoom"});
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/steffilazerte/vulture_migration/edit/main/02_calculate_metrics.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/steffilazerte/vulture_migration/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer><script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","selector":".lightbox","loop":false,"descPosition":"bottom","openEffect":"zoom"});
 window.onload = () => {
   lightboxQuarto.on('slide_before_load', (data) => {
     const { slideIndex, slideNode, slideConfig, player, trigger } = data;

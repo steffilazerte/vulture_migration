@@ -25,10 +25,16 @@ library(broom)
 
 source("XX_functions.R")
 
+# Metrics
 v <- read_csv("Data/Datasets/vultures_final.csv") |>
   # Round non-integer values of population counts
   mutate(across(c(contains("pop"), contains("raw")), round)) 
+
+# Raw counts
 raw <- read_csv("Data/Datasets/vultures_clean_2023.csv")
+
+# Predicted GAM models
+pred <- read_csv("Data/Datasets/vultures_gams_pred.csv")
 ```
 
 Set plotting defaults
@@ -649,7 +655,7 @@ res_figs <- v |>
   select(year, res_pop_max, res_raw_max) |>
   pivot_longer(-year, names_to = "measure", values_to = "pop")
 
-ggplot(pop_figs, aes(x = year, y = pop, group = measure, colour = measure)) +
+ggplot(res_figs, aes(x = year, y = pop, group = measure, colour = measure)) +
   theme_bw() +
   geom_point() +
   geom_smooth(method = "glm", method.args = list(family = "poisson")) +
@@ -704,10 +710,10 @@ map(models, summary)
 ## Patterns of migration
 
 **Is the timing of migration skewed to earlier or later in the season?**
-**Is this distribution of migration flattened and wide (high kurtosis) or peaked (high kurosis)**
+**Is this distribution of migration flattened and wide (low kurtosis) or peaked (high kurtosis)**
 **Are these patterns consistent over the years?**
 
-*Kurtosis can be used to  indicates if all the birds pass through in a relatively quick 'clump' (short-tailed, lower kurtosis), or whether the migration stretches out over a longer period of time (long-tailed, higher kurtosis). Possible implications for conservation or future survey designs?*
+*Kurtosis can be used to  indicates if all the birds pass through in a relatively quick 'clump' (thick-tailed, lower kurtosis), or whether the migration stretches out over a longer period of time (long-tailed, higher kurtosis). Possible implications for conservation or future survey designs?*
 
 - Look for significant skew and kurtosis in migration (5-95%) and peak migration (25-75%)
 - `mig_skew`, `peak_skew`, `mig_kurt`, `peak_kurt`
@@ -739,22 +745,24 @@ just whether it is different from normal (0).
 #| code-fold: false
 m1 <- lm(mig_skew ~ 1, data = v)
 m2 <- lm(peak_skew ~ 1, data = v)
-m3 <- lm(mig_kurt ~ 1, data = v)
-m4 <- lm(peak_kurt ~ 1, data = v)
+m3 <- lm(all_skew ~ 1, data = v)
+m4 <- lm(mig_kurt ~ 1, data = v)
+m5 <- lm(peak_kurt ~ 1, data = v)
+m6 <- lm(all_kurt ~ 1, data = v)
 
-models <- list(m1, m2, m3, m4)
+models <- list(m1, m2, m3, m4, m5, m6)
 ```
 
 **Tabulated Results**
 
-Skew is significantly different from zero in the peak migration period, but not
-in the whole migration period.
+Skew is not significantly different from zero in any period.
 
 Kurtosis is significantly different from zero in all periods. 
 
-In each case Skew and Kurtosis are negative, corresponding to **left-skewed**, 
-**short-tailed** distributions.
+In the migration and peak migration periods, Kurtosis is negative, corresponding to **thick-tailed** distributions, squat distributions (closer to a uniform distribution).
 
+However, in the 'all' period, kurtosis is actually significantly positive, 
+corresponding to relatively more narrow, **thin-tailed** distributions. 
 
 ```{r}
 t <- get_table(models)
@@ -762,6 +770,22 @@ write_csv(t, "Data/Datasets/table_skew.csv")
 fmt_table(t)
 ```
 
+**The periods**
+
+The "all" period is defined individually as being the dates centred on the 
+date at the 50% percentile passage is reached and includes all dates from this
+date to the end of the year, and that same number of dates prior to the p50 date.
+See the [Skewness & Kurtosis](02_calculate_metrics.html#skewness-kurtosis) section in the
+last report.
+
+By definition, the migration period (5-95%) and the peak migration period (25-75%)
+are truncated distributions, so I don't think we can really interpret kurtosis
+for these subsets. With the "all" period, I have attempted to subset the 
+data to get a good measure of the migration period only, but **honestly, kurtosis
+depends so much on where *I* define the cutoffs I'm not really sure that we can
+accurately measure it. Looking at the figures, I'd say they're narrower than normal
+(so positive kurtosis, which does align with the stats for the "all" period), 
+but that's just a visual estimate.**
 
 ### Figures
 
@@ -769,7 +793,6 @@ This is figure showing the statistics.
 ```{r}
 dist_figs <- v |>
   select(year, contains("skew"), contains("kurt")) |>
-  mutate(across(contains("kurt"), \(x) x - 3)) |>
   pivot_longer(cols = -year, names_to = "measure", values_to = "statistic")
 
 ggplot(filter(dist_figs, year != 2001), aes(x = statistic, y = measure, fill = measure)) +
@@ -782,19 +805,46 @@ ggplot(filter(dist_figs, year != 2001), aes(x = statistic, y = measure, fill = m
 This figure shows the distributions in each year over top a normal distribution, 
 for illustration.
 
-I also find this figure demonstrates how the timing is shifting slightly to later
-in the season.
+I *think* this shows positive kurtosis.
 
 ```{r}
-#| message: false
-normal <- data.frame(doy = as.integer(rnorm(mean = median(v$max_doy) + 2, sd = 10, n = 30000)))|>
-  summarize(count = n(), .by = doy)
+#| fig-asp: 0.6
+#| fig-width: 10
+normal <- v |>
+  select(year, p50_doy, mig_pop_total) |>
+  left_join(summarize(pred, sd = sd(rep(doy, round(count))), .by = "year"), 
+            by = "year") |>
+  mutate(doy = pmap(list(p50_doy, sd, mig_pop_total),
+                    \(x, y, z) as.integer(rnorm(mean = x, sd = y, n = z)))) |>
+  unnest(doy) |>
+  count(year, doy, name = "count")
 
 ggplot(raw, aes(x = doy, y = count)) + 
   theme_bw() +
   geom_smooth(data = normal, method = "gam", colour = "black", linewidth = 2) +
-  geom_point(size = 1, aes(colour = year), na.rm = TRUE) +
-  geom_smooth(method = "gam", aes(group = year, colour = year), se = FALSE, na.rm = TRUE) +
+  geom_point(size = 1, aes(colour = year), na.rm = TRUE) + 
+  geom_line(data = pred, linewidth = 1, aes(group = year, colour = year), na.rm = TRUE) +
+  scale_colour_viridis_c() +
+  facet_wrap(~year, scales = "free")
+```
+
+Here is a scaled view (counts are divided by the yearly standard deviation)
+of the patterns of migration using our GAM models from the "Calculate Metrics" step.
+
+```{r}
+raw_scaled <- raw |>
+  mutate(across(c(count), \(x) scale(x, center = FALSE)),
+         .by = "year")
+
+pred_scaled <- pred |>
+  mutate(across(c(count, ci99_upper, ci99_lower), \(x) scale(x, center = FALSE)),
+         .by = "year")
+           
+ggplot(raw_scaled, aes(x = doy, y = count)) + 
+  theme_bw() +
+  geom_point(aes(colour = year), na.rm = TRUE) +
+  geom_line(data = pred_scaled, aes(colour = year, group = year), 
+            size = 1, na.rm = TRUE) +
   scale_colour_viridis_c()
 ```
 
@@ -820,27 +870,55 @@ Now let's see what happens if we were to omit these years from the respective an
 Tables with coefficients for both original and new model are shown, with
 colour intensity showing strength in the pattern.
 
-For skew of the counts during the migration period, if we omit 2002, the patterns are stronger, but the same (i.e., not significant).
+For skew of the counts during the migration period, if we omit 2001, the patterns
+don't really change (i.e., stay non-significant).
 ```{r}
 compare(m1, 2002)
 ```
 
-For kurtosis during the migration period, if we omit 2002, the patterns don't really 
+For skew of the counts during the peak migration period, if we omit 2002, the patterns
+don't really change (i.e., stay non-significant).
+```{r}
+compare(m2, 2002)
+```
+
+For kurtosis during the peak migration period, if we omit 2002, the patterns don't really 
 change. 
 ```{r}
-compare(m3, 2002)
+compare(m5, 2002)
 ```
 
-For skew of the counts during the migration period, if we omit 2015, the patterns are stronger, but the same (i.e., not significant).
+For skew of the counts during the "all" period, if we omit 2004, the patterns
+are stronger, and nearly show a trend, but are still non-significant.
+```{r}
+compare(m3, 2004)
+```
+
+For kurtosis during the "all" migration period, if we omit 2009, the patterns 
+are less strong, but the same.
+```{r}
+compare(m6, 2009)
+```
+
+
+For skew of the counts during the migration period and during the "all" period if we omit 2015, the patterns are stronger, but the same (i.e., not significant).
 ```{r}
 compare(m1, 2015)
+compare(m3, 2015)
 ```
 
-For skew of the counts during the migration period, if we omit 2018, the patterns are even weaker (i.e., not significant).
+
+For kurtosis during the migration period, if we omit 2015, the patterns are stronger, 
+but the same.
 ```{r}
-compare(m1, 2018)
+compare(m4, 2015)
 ```
 
+
+For kurtosis during the peak migration period, if we omit 2018, the patterns don't really change.
+```{r}
+compare(m5, 2018)
+```
 
 For kurtosis during the migration period *and* during the peak migration period, 
 if we omit 2018, the patterns are stronger.
