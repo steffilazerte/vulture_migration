@@ -805,23 +805,26 @@ ggplot(filter(dist_figs, year != 2001), aes(x = statistic, y = measure, fill = m
 This figure shows the distributions in each year over top a normal distribution, 
 for illustration.
 
-I *think* this shows positive kurtosis.
+I *think* this shows positive kurtosis. 
+The black lines are simulated normal distributions simulated using the mean,
+SD and counts from the data. 
+
 
 ```{r}
 #| fig-asp: 0.6
-#| fig-width: 10
+#| fig-width: 17
 normal <- v |>
-  select(year, p50_doy, mig_pop_total) |>
-  left_join(summarize(pred, sd = sd(rep(doy, round(count))), .by = "year"), 
+  select(year, max_doy, mig_pop_total) |>
+  left_join(summarize(filter(pred, doy > 240), sd = sd(rep(doy, round(count))), .by = "year"), 
             by = "year") |>
-  mutate(doy = pmap(list(p50_doy, sd, mig_pop_total),
+  mutate(doy = pmap(list(max_doy, sd, mig_pop_total),
                     \(x, y, z) as.integer(rnorm(mean = x, sd = y, n = z)))) |>
   unnest(doy) |>
   count(year, doy, name = "count")
 
 ggplot(raw, aes(x = doy, y = count)) + 
   theme_bw() +
-  geom_smooth(data = normal, method = "gam", colour = "black", linewidth = 2) +
+  geom_smooth(data = normal, method = "gam", colour = "black", linewidth = 1.5) +
   geom_point(size = 1, aes(colour = year), na.rm = TRUE) + 
   geom_line(data = pred, linewidth = 1, aes(group = year, colour = year), na.rm = TRUE) +
   scale_colour_viridis_c() +
