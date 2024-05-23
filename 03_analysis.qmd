@@ -256,7 +256,7 @@ fmt_table(t)
 
 ### Figures
 
-**Note:** Lines without Std Error ribbons are not significant
+**Note:** Lines without CI ribbons are not significant
 
 ```{r}
 #| fig-asp: 0.8
@@ -274,7 +274,7 @@ ggplot(doy_figs, aes(x = year, y = doy, group = measure, colour = measure, fill 
   scale_y_continuous(breaks = y_breaks) +
   scale_colour_viridis_d() +
   scale_fill_manual(values = c("TRUE" = "grey60", "FALSE" = "#FFFFFF00"), guide = "none") +
-  labs(caption = "Lines without Std Error ribbons represent non-significant models")
+  labs(caption = "Lines without CI Error ribbons represent non-significant models")
 ```
 
 
