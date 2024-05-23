@@ -1,0 +1,73 @@
+---
+title: "Manuscript Figure"
+---
+
+This is the final figure for the manuscript.
+
+## Setup 
+
+```{r}
+#| include: false
+knitr::opts_chunk$set(audodep = TRUE)
+```
+
+
+```{r}
+#| message: false
+#| code-fold: false
+library(tidyverse)
+library(patchwork)
+
+source("XX_functions.R")
+
+# Metrics
+v <- read_csv("Data/Datasets/vultures_final.csv") |>
+  # Round non-integer values of population counts
+  mutate(across(c(contains("pop"), contains("raw")), round)) 
+
+# Raw counts
+raw <- read_csv("Data/Datasets/vultures_clean_2023.csv")
+
+# Predicted GAM models
+pred <- read_csv("Data/Datasets/vultures_gams_pred.csv")
+```
+
+
+```{r}
+v <- v |> 
+  mutate(date = as_date(p50_doy))
+
+g1 <- ggplot(v, aes(x = year, y = date)) +
+  theme_bw() +
+  theme(axis.title.x = element_blank()) +
+  geom_point() +
+  geom_smooth(method = "lm", se = TRUE) +
+  labs(y = "Date of peak migration", x = "")
+
+g2 <- ggplot(v, aes(x = year, y = mig_raw_max)) +
+  theme_bw() +
+  geom_point() +
+  stat_smooth(method = MASS::glm.nb) +
+  labs(y = "Maximum observed count", x = "Year")
+
+g <- g1 / g2 + plot_annotation(tag_levels = "A")
+#ggsave("fig1_quick.png", dpi = 1000, width = 8, height = 7)
+```
+
+## Big version
+```{r}
+#| fig-asp: 1
+#| fig-width: 8
+#| fig-height: 9
+g
+```
+
+## Small version
+```{r}
+#| fig-asp: 1
+#| fig-width: 5
+#| fig-height: 6
+g
+```
+
+
