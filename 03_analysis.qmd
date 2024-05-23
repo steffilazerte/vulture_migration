@@ -254,6 +254,30 @@ write_csv(t, d)
 fmt_table(t)
 ```
 
+### Quick look at slopes
+
+We were wondering if we could say anything about whether the magnitude of change
+in slope was significant, but probably not, simply because there isn't a 
+significant interaction, so that means we can't really say that the magnitude 
+is changing.
+
+```{r}
+v1 <- select(v, ends_with("doy"), year) |>
+  pivot_longer(-year, names_to = "measure", values_to = "doy")
+
+m0a <- lm(doy ~ measure * year, data = v1)
+m0b <- lm(doy ~ measure + year, data = v1)
+
+car::Anova(m0a, type = "III")
+car::Anova(m0b, type = "III")
+
+emmeans::emtrends(m0a, ~ year | measure, var = "year")
+
+simulateResiduals(m0a, plot = TRUE)
+simulateResiduals(m0b, plot = TRUE)
+```
+
+
 ### Figures
 
 **Note:** Lines without CI ribbons are not significant
