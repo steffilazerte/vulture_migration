@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Steffi LaZerte">
-<meta name="dcterms.date" content="2024-05-23">
+<meta name="dcterms.date" content="2024-07-10">
 
 <title>Vulture Migration on Vancouver Island - Setup</title>
 <style>
@@ -245,7 +245,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">May 23, 2024</p>
+      <p class="date">July 10, 2024</p>
     </div>
   </div>
   
@@ -432,7 +432,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-169"><a href="#cb1-169" aria-hidden="true" tabindex="-1"></a>              <span class="at">locations =</span> <span class="fu">cells_column_labels</span>()) <span class="sc">|&gt;</span></span>
 <span id="cb1-170"><a href="#cb1-170" aria-hidden="true" tabindex="-1"></a>    <span class="fu">text_transform</span>(<span class="at">locations =</span> <span class="fu">cells_row_groups</span>(), <span class="at">fn =</span> \(x) <span class="fu">map</span>(x, html)) <span class="sc">|&gt;</span></span>
 <span id="cb1-171"><a href="#cb1-171" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fmt_number</span>(<span class="at">columns =</span> <span class="sc">-</span><span class="dv">1</span>, <span class="at">decimals =</span> <span class="dv">3</span>) <span class="sc">|&gt;</span></span>
-<span id="cb1-172"><a href="#cb1-172" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fmt_number</span>(<span class="at">columns =</span> <span class="st">"n"</span>, <span class="at">decimals =</span> <span class="dv">0</span>) <span class="sc">|&gt;</span></span>
+<span id="cb1-172"><a href="#cb1-172" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fmt_number</span>(<span class="at">columns =</span> <span class="fu">any_of</span>(<span class="fu">c</span>(<span class="st">"n"</span>, <span class="st">"df"</span>)), <span class="at">decimals =</span> <span class="dv">0</span>) <span class="sc">|&gt;</span></span>
 <span id="cb1-173"><a href="#cb1-173" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tab_style</span>(<span class="at">style =</span> <span class="fu">cell_text</span>(<span class="at">weight =</span> <span class="st">"bold"</span>), </span>
 <span id="cb1-174"><a href="#cb1-174" aria-hidden="true" tabindex="-1"></a>              <span class="at">locations =</span> <span class="fu">cells_body</span>(</span>
 <span id="cb1-175"><a href="#cb1-175" aria-hidden="true" tabindex="-1"></a>                <span class="at">columns =</span> <span class="st">`</span><span class="at">p value</span><span class="st">`</span>, <span class="at">rows =</span> <span class="st">`</span><span class="at">p value</span><span class="st">`</span> <span class="sc">&lt;=</span> <span class="fl">0.05</span>))</span>
@@ -528,7 +528,46 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-265"><a href="#cb1-265" aria-hidden="true" tabindex="-1"></a>    <span class="fu">gt</span>() <span class="sc">|&gt;</span></span>
 <span id="cb1-266"><a href="#cb1-266" aria-hidden="true" tabindex="-1"></a>    <span class="fu">gt_theme</span>() <span class="sc">|&gt;</span></span>
 <span id="cb1-267"><a href="#cb1-267" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fmt_number</span>(<span class="at">columns =</span> <span class="fu">c</span>(mean, sd), <span class="at">decimals =</span> <span class="dv">2</span>)</span>
-<span id="cb1-268"><a href="#cb1-268" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-268"><a href="#cb1-268" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-269"><a href="#cb1-269" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-270"><a href="#cb1-270" aria-hidden="true" tabindex="-1"></a>fmt_anova <span class="ot">&lt;-</span> <span class="cf">function</span>(m) {</span>
+<span id="cb1-271"><a href="#cb1-271" aria-hidden="true" tabindex="-1"></a>  car<span class="sc">::</span><span class="fu">Anova</span>(m, <span class="at">type =</span> <span class="st">"III"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb1-272"><a href="#cb1-272" aria-hidden="true" tabindex="-1"></a>    <span class="fu">as_tibble</span>(<span class="at">rownames =</span> <span class="st">"Parameter"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb1-273"><a href="#cb1-273" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rename</span>(<span class="st">"P"</span> <span class="ot">=</span> <span class="st">"Pr(&gt;F)"</span>, <span class="st">"F"</span> <span class="ot">=</span> <span class="st">"F value"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb1-274"><a href="#cb1-274" aria-hidden="true" tabindex="-1"></a>    <span class="fu">gt</span>() <span class="sc">|&gt;</span></span>
+<span id="cb1-275"><a href="#cb1-275" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tab_style</span>(<span class="at">style =</span> <span class="fu">cell_text</span>(<span class="at">weight =</span> <span class="st">"bold"</span>), </span>
+<span id="cb1-276"><a href="#cb1-276" aria-hidden="true" tabindex="-1"></a>              <span class="at">locations =</span> <span class="fu">cells_body</span>(</span>
+<span id="cb1-277"><a href="#cb1-277" aria-hidden="true" tabindex="-1"></a>                <span class="at">columns =</span> P, <span class="at">rows =</span> P <span class="sc">&lt;=</span> <span class="fl">0.05</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb1-278"><a href="#cb1-278" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fmt_number</span>(<span class="at">columns =</span> <span class="sc">-</span>Df, <span class="at">decimals =</span> <span class="dv">3</span>)</span>
+<span id="cb1-279"><a href="#cb1-279" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-280"><a href="#cb1-280" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-281"><a href="#cb1-281" aria-hidden="true" tabindex="-1"></a>fmt_summary <span class="ot">&lt;-</span> <span class="cf">function</span>(m) {</span>
+<span id="cb1-282"><a href="#cb1-282" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summary</span>(m) <span class="sc">|&gt;</span></span>
+<span id="cb1-283"><a href="#cb1-283" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coef</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb1-284"><a href="#cb1-284" aria-hidden="true" tabindex="-1"></a>    <span class="fu">as_tibble</span>(<span class="at">rownames =</span> <span class="st">"Parameter"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb1-285"><a href="#cb1-285" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rename</span>(<span class="st">"P"</span> <span class="ot">=</span> <span class="fu">starts_with</span>(<span class="st">"Pr"</span>),</span>
+<span id="cb1-286"><a href="#cb1-286" aria-hidden="true" tabindex="-1"></a>           <span class="st">"T"</span> <span class="ot">=</span> <span class="fu">any_of</span>(<span class="st">"t value"</span>),</span>
+<span id="cb1-287"><a href="#cb1-287" aria-hidden="true" tabindex="-1"></a>           <span class="st">"Z"</span> <span class="ot">=</span> <span class="fu">any_of</span>(<span class="st">"z value"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb1-288"><a href="#cb1-288" aria-hidden="true" tabindex="-1"></a>    <span class="fu">gt</span>() <span class="sc">|&gt;</span></span>
+<span id="cb1-289"><a href="#cb1-289" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tab_style</span>(<span class="at">style =</span> <span class="fu">cell_text</span>(<span class="at">weight =</span> <span class="st">"bold"</span>), </span>
+<span id="cb1-290"><a href="#cb1-290" aria-hidden="true" tabindex="-1"></a>              <span class="at">locations =</span> <span class="fu">cells_body</span>(</span>
+<span id="cb1-291"><a href="#cb1-291" aria-hidden="true" tabindex="-1"></a>                <span class="at">columns =</span> P, <span class="at">rows =</span> P <span class="sc">&lt;=</span> <span class="fl">0.05</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb1-292"><a href="#cb1-292" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fmt_number</span>(<span class="at">decimals =</span> <span class="dv">3</span>)</span>
+<span id="cb1-293"><a href="#cb1-293" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-294"><a href="#cb1-294" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-295"><a href="#cb1-295" aria-hidden="true" tabindex="-1"></a>fmt_emmeans <span class="ot">&lt;-</span> <span class="cf">function</span>(m, <span class="at">adjust =</span> <span class="st">"FDR"</span>) {</span>
+<span id="cb1-296"><a href="#cb1-296" aria-hidden="true" tabindex="-1"></a>  emmeans<span class="sc">::</span><span class="fu">emtrends</span>(m, <span class="sc">~</span> measure, <span class="at">var =</span> <span class="st">"year"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb1-297"><a href="#cb1-297" aria-hidden="true" tabindex="-1"></a>    emmeans<span class="sc">::</span><span class="fu">test</span>(<span class="at">adjust =</span> adjust) <span class="sc">|&gt;</span></span>
+<span id="cb1-298"><a href="#cb1-298" aria-hidden="true" tabindex="-1"></a>    <span class="fu">as_tibble</span>() <span class="sc">|&gt;</span></span>
+<span id="cb1-299"><a href="#cb1-299" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rename</span>(<span class="at">slope =</span> year.trend, <span class="at">P =</span> p.value, <span class="st">`</span><span class="at">T</span><span class="st">`</span> <span class="ot">=</span> t.ratio) <span class="sc">|&gt;</span></span>
+<span id="cb1-300"><a href="#cb1-300" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rename_with</span>(tools<span class="sc">::</span>toTitleCase) <span class="sc">|&gt;</span></span>
+<span id="cb1-301"><a href="#cb1-301" aria-hidden="true" tabindex="-1"></a>    <span class="fu">gt</span>() <span class="sc">|&gt;</span></span>
+<span id="cb1-302"><a href="#cb1-302" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tab_style</span>(<span class="at">style =</span> <span class="fu">cell_text</span>(<span class="at">weight =</span> <span class="st">"bold"</span>), </span>
+<span id="cb1-303"><a href="#cb1-303" aria-hidden="true" tabindex="-1"></a>              <span class="at">locations =</span> <span class="fu">cells_body</span>(</span>
+<span id="cb1-304"><a href="#cb1-304" aria-hidden="true" tabindex="-1"></a>                <span class="at">columns =</span> P, <span class="at">rows =</span> P <span class="sc">&lt;=</span> <span class="fl">0.05</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb1-305"><a href="#cb1-305" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fmt_number</span>(<span class="at">columns =</span> <span class="sc">-</span>Df, <span class="at">decimals =</span> <span class="dv">3</span>) <span class="sc">|&gt;</span></span>
+<span id="cb1-306"><a href="#cb1-306" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tab_footnote</span>(<span class="fu">paste0</span>(adjust, <span class="st">" P-value adjustment"</span>))</span>
+<span id="cb1-307"><a href="#cb1-307" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 
 
