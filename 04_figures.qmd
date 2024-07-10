@@ -1,5 +1,7 @@
 ---
 title: "Manuscript Figure"
+code-fold: true
+fig-dpi: 600
 ---
 
 This is the final figure for the manuscript.
@@ -17,6 +19,11 @@ knitr::opts_chunk$set(audodep = TRUE)
 #| code-fold: false
 library(tidyverse)
 library(patchwork)
+library(ggspatial)
+library(sf)
+library(rnaturalearth)
+library(ggthemes)
+
 
 source("XX_functions.R")
 
@@ -32,6 +39,8 @@ raw <- read_csv("Data/Datasets/vultures_clean_2023.csv")
 pred <- read_csv("Data/Datasets/vultures_gams_pred.csv")
 ```
 
+
+## Main figure
 
 ```{r}
 v <- v |> 
@@ -54,7 +63,7 @@ g <- g1 / g2 + plot_annotation(tag_levels = "A")
 #ggsave("fig1_quick.png", dpi = 1000, width = 8, height = 7)
 ```
 
-## Big version
+### Big version
 ```{r}
 #| fig-asp: 1
 #| fig-width: 8
@@ -62,12 +71,162 @@ g <- g1 / g2 + plot_annotation(tag_levels = "A")
 g
 ```
 
-## Small version
+### Small version
 ```{r}
 #| fig-asp: 1
+#| fig-height: 8.5
 #| fig-width: 5
-#| fig-height: 6
+#| out-width: 80%
+
 g
+```
+
+## Map
+
+```{r}
+#| cache: true
+library(bcmaps)
+library(ggrepel)
+ne_download(type = "populated_places", scale = "large", load = FALSE)
+
+cities <- bcmaps::bc_cities(ask = FALSE) |> 
+  select(NAME) |>
+  filter(NAME %in% c("Victoria", "Vancouver"))
+cities <- ne_load(file_name = "ne_10m_populated_places") |> 
+  filter(NAME %in% c("Seattle", "Portland"), ADM1NAME %in% c("Oregon", "Washington")) |>
+  select(NAME) |> 
+  st_transform(st_crs(cities)) |>
+  bind_rows(cities) |>
+  rename(name = NAME)
+
+stn <- c(-123.55082035835214, 48.31773308537152) |>
+  st_point() |>
+  st_sfc(crs = 4326) |>
+  st_sf(name = "Rocky Point\nObservatory") |>
+  st_transform(st_crs(cities))
+
+land <- data.frame(lon = c(-124.3, -124.3, -123.5),
+                   lat = c(48.39, 48.75, 49.2),
+                   name = c("Juan de Fuca Strait", "Vancouver Island", "Salish Sea")) |>
+  st_as_sf(coords = c("lon", "lat"), crs = 4326)
+
+area <- ne_states(country = c("Canada", "United States of America")) |>
+  #st_crop(st_bbox(c(xmin = -140, xmax = -112, ymin = 41, ymax = 60))) |>
+  #filter(name %in% c("British Columbia", "Alberta", "Washington", "Oregon", "Idaho", "Montana")) |>
+  mutate(name = if_else(name %in% c("British Columbia", "Washington", "Oregon"), toupper(name), NA),
+         name = str_replace(name, " ", "\n"),
+         postal =  if_else(postal %in% c("BC", "WA", "OR", "AB"), postal, NA))
+
+box <- st_polygon(list(rbind(c(1050000, 330000), 
+                             c(1050000, 490000),
+                             c(1230000, 490000),
+                             c(1230000, 330000),
+                             c(1050000, 330000)))) |>
+  st_sfc(crs = 3005)
+
+g0 <- ggplot(data = area, aes(label = name)) +
+  theme_map() +
+  theme(panel.border = element_rect(fill = NA), 
+        plot.margin = unit(c(0,0,0,0), units = "mm"),
+        panel.spacing = unit(0, units = "mm")) +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = c(0,0)) +
+  geom_sf()
+  
+g <- g0 +
+  geom_sf(data = stn, size = 3) +
+  geom_sf_text(data = stn, lineheight = 0.85, nudge_y = -8000) +
+  geom_sf(data = cities) +
+  geom_sf_text(data = cities, hjust = 1.1, nudge_y = 5000) +
+  geom_sf_text(data = land, angle = c(-24, 0, -45), colour = "grey60", size = c(6, 7, 7)) +
+  annotation_scale(location = "bl") + 
+  annotation_north_arrow(
+    location = "br", height = unit(0.5, "cm"), width = unit(0.5, "cm"),
+    style = north_arrow_orienteering(text_size = -Inf)) +
+  coord_sf(crs = 3005, xlim = c(1050000, 1230000), ylim = c(330000, 490000))
+
+g_inset <- g0 +
+  theme(panel.background = element_rect(fill = "white")) +
+  geom_sf_text(aes(label = postal), colour = "black", size = 3) +
+  geom_sf(data = box, fill = NA, linewidth = 0.5, colour = "black", inherit.aes = FALSE) +
+  coord_sf(crs = 3005, xlim = c(500000, 2000000), ylim = c(-200000, 1370000))
+```
+
+### Big
+```{r}
+#| fig-width: 9
+#| fig-height: 8
+g + inset_element(g_inset, left = 0, top = 1, bottom = 0.6, right = 0.342, align_to = "full")
+```
+
+
+### Small 
+```{r}
+#| fig-width: 5.75
+#| fig-height: 5
+g + inset_element(g_inset, left = 0, top = 1, bottom = 0.6, right = 0.342, align_to = "full")
+```
+
+
+
+
+## Supplemental Figure
+
+```{r}
+pred <- mutate(pred, ci95_upper = count + se * 1.96, ci95_lower = count - se * 1.96)
+res <- filter(v, year == 1998) |>
+  mutate(xmin = 204, 
+         xmax = 240, y = 0.25 * mig_raw_max, 
+         xmid = (240-204)/2 + 204,
+         y = 0.25 * mig_raw_max,
+         height = 0.03 * mig_raw_max, label = "Resident period")
+
+g0 <- ggplot() +
+  theme_void() +
+  annotate(geom = "text", label = c("Migration\nstart", "Peak\nstart", "Peak", "Peak\nend", "Migration\nend"), 
+           y = -0.25, x = c(0, 0.7, 1.3, 1.6, 2), size = 3, lineheight = 0.85) +
+  annotate(geom = "text", label = c("5%", "25%", "50%", "75%", "95%"), y = 0.25, x = c(0, 0.7, 1.3, 1.6, 2), size = 3) +
+  annotate(geom = "segment", y = 0, x = 0, xend = 2, arrow = arrow(angle = 90, ends = "both", length = unit(1, "mm"))) +
+  annotate(geom = "segment", y = 0, x = 0.7, xend = 1.6, linewidth = 4) +
+  annotate(geom = "segment", x = 1.29, xend = 1.30, y = 0, linewidth = 8) +
+  ylim(c(-0.5, 0.5)) +
+  xlim(c(-0.1, 2.1))
+
+g1 <- ggplot(data = pred, mapping = aes(x = doy, y = count)) +
+  theme_bw() +
+  geom_ribbon(aes(ymin = ci95_lower, ymax = ci95_upper), fill = "grey50", alpha = 0.5) +
+  geom_point(data = raw, na.rm = TRUE, size = 0.5) +
+  geom_line() +
+  geom_errorbarh(data = res, aes(xmin = xmin, xmax = xmax, y = y, height = height), 
+                 colour = "grey70", inherit.aes = FALSE) +
+  geom_text(data = res, aes(x = xmid, y = y, label = label), vjust = -0.5, inherit.aes = FALSE,
+            size = 3, colour = "grey30") +
+  geom_segment(data = v, aes(x = p50_doy, xend = p50_doy + 1, y = -(0.07 * mig_raw_max)), 
+               linewidth = 4, inherit.aes = FALSE) +
+  geom_errorbarh(data = v, aes(y = -(0.07 * mig_raw_max), 
+                               xmin = mig_start_doy, 
+                               xmax = mig_end_doy, 
+                               height = 0.07 * mig_raw_max), inherit.aes = FALSE) +
+  geom_segment(data = v, aes(y = -(0.07 * mig_raw_max), x = peak_start_doy, xend = peak_end_doy), linewidth = 2, inherit.aes = FALSE) +
+  scale_x_continuous(name = "Date", limits = c(203, 295), labels = \(x) format(as_date(x), "%b %d")) +
+  labs(y = "Count") + 
+  facet_wrap(~ year, scales = "free_y", ncol = 4)
+```
+
+### Big
+```{r}
+#| fig-width: 12
+#| fig-height: 16
+
+g1 + inset_element(g0, left = 0.55, right = 0.95, bottom = 0, top = 0.1)
+```
+
+### Small
+```{r}
+#| fig-width: 10
+#| fig-height: 12
+
+g1 + inset_element(g0, left = 0.55, right = 0.95, bottom = 0, top = 0.1)
 ```
 
 
