@@ -371,6 +371,118 @@ compare(m4, 2020)
 Therefore I wouldn't be concerned
 :::
 
+
+### Problematic Years
+
+In addition to the sensitivity check using cook's distances, here we will 
+conduct a more targeted exploration of some specific years.
+
+#### Gaps around the peak
+First, we consider removing 1998, 2011, 2013 as they have sampling gaps around
+the peak of migration
+
+```{r}
+#| code-fold: false
+m0a <- update(m0, data = filter(v1, !year %in% c(1998, 2011, 2013)))
+```
+
+Comparing the ANOVA tables shows only superficial differences.
+```{r}
+#| column: body
+#| layout-nrow: 1
+#| code-fold: false
+fmt_anova(m0)
+fmt_anova(m0a)
+```
+
+As does the post-hoc comparison of slopes among the measures. 
+If anything, it looks like removing these 'gappy' years only strengthens the
+existing patterns. 
+
+Those which are significant are slightly more so, and the slopes are slightly greater.
+```{r}
+#| column: body
+#| layout-nrow: 1
+#| code-fold: false
+fmt_emmeans(m0)
+fmt_emmeans(m0a)
+```
+
+#### Missing the end of migration
+Second, we consider removing 2001, 2006, 2023 as they were three years where it looks like sampling ended earlier than the end of migration. 
+
+```{r}
+#| code-fold: false
+m0b <- update(m0, data = filter(v1, !year %in% c(2001, 2006, 2023)))
+```
+
+Comparing the ANOVA tables shows that while year is still significant, the P-value is higher.
+```{r}
+#| column: body
+#| layout-nrow: 1
+#| code-fold: false
+fmt_anova(m0)
+fmt_anova(m0b)
+```
+
+Removing these years from the analyses, reduced the strength of the patterns such that significant effects became trends. 
+However there were few changes to the magnitude of the slopes. 
+```{r}
+#| column: body
+#| layout-nrow: 1
+#| code-fold: false
+fmt_emmeans(m0)
+fmt_emmeans(m0b)
+```
+
+If we compare to a non-adjusted test, only the end of the peak becomes a trend. Adjusting these tests is likely overkill, anyway.
+```{r}
+#| column: body
+#| layout-nrow: 1
+#| code-fold: false
+fmt_emmeans(m0, adjust = "none")
+fmt_emmeans(m0b, adjust = "none")
+```
+
+#### Remove all problematic years
+
+Out of curiosity, let's try removing all 6 years. This reduces our
+data from 25 to 19 samples, so is a substantial change and we may
+see non-significant results merely because we have removed too many samples.
+
+```{r}
+#| code-fold: false
+m0c <- update(m0, data = filter(v1, !year %in% c(1998, 2011, 2013, 
+                                                 2001, 2006, 2023)))
+```
+
+Comparing the ANOVA tables shows that while year is still significant, the P-value is higher.
+```{r}
+#| column: body
+#| layout-nrow: 1
+#| code-fold: false
+fmt_anova(m0)
+fmt_anova(m0c)
+```
+
+Removing these years from the analyses, reduced the strength of the patterns in the end of the peak such that it becomes a trend, but all other measures
+show little changes. Further, there are few changes to the magnitude of the slopes. 
+```{r}
+#| column: body
+#| layout-nrow: 1
+#| code-fold: false
+fmt_emmeans(m0)
+fmt_emmeans(m0c)
+```
+
+#### Conclusions
+**I do not believe that these potentially problematic sampling years are driving
+the patterns we see in this data**. 
+
+At worst, by removing these years we increase 
+the error around a slope. But the magnitudes of the slopes do not change and even
+the significance is only ever reduced to trends. 
+
 ### Full Model Results
 
 ```{r}
@@ -471,6 +583,99 @@ compare(m2, 1999)
 :::{.callout-tip}
 Therefore I wouldn't be concerned
 :::
+
+### Problematic Years
+
+In addition to the sensitivity check using cook's distances, here we will 
+conduct a more targeted exploration of some specific years.
+
+#### Gaps around the peak
+First, we consider removing 1998, 2011, 2013 as they have sampling gaps around
+the peak of migration
+
+```{r}
+#| code-fold: false
+m1a <- update(m1, data = filter(v, !year %in% c(1998, 2011, 2013)))
+m2a <- update(m2, data = filter(v, !year %in% c(1998, 2011, 2013)))
+```
+
+Comparing the summary tables shows only superficial differences.
+```{r}
+#| column: body
+#| layout-nrow: 1
+#| code-fold: false
+fmt_summary(m1)
+fmt_summary(m1a)
+```
+
+```{r}
+#| column: body
+#| layout-nrow: 1
+#| code-fold: false
+fmt_summary(m2)
+fmt_summary(m2a)
+```
+
+#### Missing the end of migration
+Second, we consider removing 2001, 2006, 2023 as they were three years where it looks like sampling ended earlier than the end of migration. 
+
+```{r}
+#| code-fold: false
+m1b <- update(m1, data = filter(v, !year %in% c(2001, 2006, 2023)))
+m2b <- update(m2, data = filter(v, !year %in% c(2001, 2006, 2023)))
+```
+
+Comparing the summary tables shows only superficial differences.
+```{r}
+#| column: body
+#| layout-nrow: 1
+#| code-fold: false
+fmt_summary(m1)
+fmt_summary(m1b)
+```
+
+```{r}
+#| column: body
+#| layout-nrow: 1
+#| code-fold: false
+fmt_summary(m2)
+fmt_summary(m2b)
+```
+
+#### Remove all problematic years
+
+Out of curiosity, let's try removing all 6 years. This reduces our
+data from 25 to 19 samples, so is a substantial change and we may
+see non-significant results merely because we have removed too many samples.
+
+```{r}
+#| code-fold: false
+m1c <- update(m1, data = filter(v, !year %in% c(1998, 2011, 2013, 
+                                                2001, 2006, 2023)))
+m2c <- update(m2, data = filter(v, !year %in% c(1998, 2011, 2013, 
+                                                2001, 2006, 2023)))
+```
+
+Comparing the summary tables shows only superficial differences.
+```{r}
+#| column: body
+#| layout-nrow: 1
+#| code-fold: false
+fmt_summary(m1)
+fmt_summary(m1c)
+```
+
+```{r}
+#| column: body
+#| layout-nrow: 1
+#| code-fold: false
+fmt_summary(m2)
+fmt_summary(m2c)
+```
+
+#### Conclusions
+**I do not believe that these potentially problematic sampling years are driving
+the patterns we see in this data**. 
 
 
 ### Full Model Results
@@ -625,6 +830,100 @@ compare(m2, 2022)
 :::{.callout-tip}
 Therefore I wouldn't be concerned
 :::
+
+
+### Problematic Years
+
+In addition to the sensitivity check using cook's distances, here we will 
+conduct a more targeted exploration of some specific years.
+
+#### Gaps around the peak
+First, we consider removing 1998, 2011, 2013 as they have sampling gaps around
+the peak of migration
+
+```{r}
+#| code-fold: false
+m1a <- update(m1, data = filter(v, !year %in% c(1998, 2011, 2013)))
+m2a <- update(m2, data = filter(v, !year %in% c(1998, 2011, 2013)))
+```
+
+Comparing the summary tables shows only superficial differences.
+```{r}
+#| column: body
+#| layout-nrow: 1
+#| code-fold: false
+fmt_summary(m1)
+fmt_summary(m1a)
+```
+
+```{r}
+#| column: body
+#| layout-nrow: 1
+#| code-fold: false
+fmt_summary(m2)
+fmt_summary(m2a)
+```
+
+#### Missing the end of migration
+Second, we consider removing 2001, 2006, 2023 as they were three years where it looks like sampling ended earlier than the end of migration. 
+
+```{r}
+#| code-fold: false
+m1b <- update(m1, data = filter(v, !year %in% c(2001, 2006, 2023)))
+m2b <- update(m2, data = filter(v, !year %in% c(2001, 2006, 2023)))
+```
+
+Comparing the summary tables shows only superficial differences.
+```{r}
+#| column: body
+#| layout-nrow: 1
+#| code-fold: false
+fmt_summary(m1)
+fmt_summary(m1b)
+```
+
+```{r}
+#| column: body
+#| layout-nrow: 1
+#| code-fold: false
+fmt_summary(m2)
+fmt_summary(m2b)
+```
+
+#### Remove all problematic years
+
+Out of curiosity, let's try removing all 6 years. This reduces our
+data from 25 to 19 samples, so is a substantial change and we may
+see non-significant results merely because we have removed too many samples.
+
+```{r}
+#| code-fold: false
+m1c <- update(m1, data = filter(v, !year %in% c(1998, 2011, 2013, 
+                                                2001, 2006, 2023)))
+m2c <- update(m2, data = filter(v, !year %in% c(1998, 2011, 2013, 
+                                                2001, 2006, 2023)))
+```
+
+Comparing the summary tables shows only superficial differences.
+```{r}
+#| column: body
+#| layout-nrow: 1
+#| code-fold: false
+fmt_summary(m1)
+fmt_summary(m1c)
+```
+
+```{r}
+#| column: body
+#| layout-nrow: 1
+#| code-fold: false
+fmt_summary(m2)
+fmt_summary(m2c)
+```
+
+#### Conclusions
+**I do not believe that these potentially problematic sampling years are driving
+the patterns we see in this data**. 
 
 ### Full Model Results
 ```{r}

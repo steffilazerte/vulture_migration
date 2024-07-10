@@ -169,7 +169,7 @@ fmt_table <- function(t) {
               locations = cells_column_labels()) |>
     text_transform(locations = cells_row_groups(), fn = \(x) map(x, html)) |>
     fmt_number(columns = -1, decimals = 3) |>
-    fmt_number(columns = "n", decimals = 0) |>
+    fmt_number(columns = any_of(c("n", "df")), decimals = 0) |>
     tab_style(style = cell_text(weight = "bold"), 
               locations = cells_body(
                 columns = `p value`, rows = `p value` <= 0.05))
@@ -265,4 +265,43 @@ desc_stats <- function(data) {
     gt() |>
     gt_theme() |>
     fmt_number(columns = c(mean, sd), decimals = 2)
+}
+  
+fmt_anova <- function(m) {
+  car::Anova(m, type = "III") |>
+    as_tibble(rownames = "Parameter") |>
+    rename("P" = "Pr(>F)", "F" = "F value") |>
+    gt() |>
+    tab_style(style = cell_text(weight = "bold"), 
+              locations = cells_body(
+                columns = P, rows = P <= 0.05)) |>
+    fmt_number(columns = -Df, decimals = 3)
+}
+
+fmt_summary <- function(m) {
+  summary(m) |>
+    coef() |> 
+    as_tibble(rownames = "Parameter") |>
+    rename("P" = starts_with("Pr"),
+           "T" = any_of("t value"),
+           "Z" = any_of("z value")) |>
+    gt() |>
+    tab_style(style = cell_text(weight = "bold"), 
+              locations = cells_body(
+                columns = P, rows = P <= 0.05)) |>
+    fmt_number(decimals = 3)
+}
+
+fmt_emmeans <- function(m, adjust = "FDR") {
+  emmeans::emtrends(m, ~ measure, var = "year") |> 
+    emmeans::test(adjust = adjust) |>
+    as_tibble() |>
+    rename(slope = year.trend, P = p.value, `T` = t.ratio) |>
+    rename_with(tools::toTitleCase) |>
+    gt() |>
+    tab_style(style = cell_text(weight = "bold"), 
+              locations = cells_body(
+                columns = P, rows = P <= 0.05)) |>
+    fmt_number(columns = -Df, decimals = 3) |>
+    tab_footnote(paste0(adjust, " P-value adjustment"))
 }
