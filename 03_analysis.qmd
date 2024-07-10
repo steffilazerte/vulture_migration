@@ -226,7 +226,64 @@ v |>
 
 :::{.panel-tabset}
 
-### Models
+### Single Model
+
+Here we look at a **linear regression** of year by kettle timing dates.
+
+We look at the effect of year and type of measurement (migration start/end, 
+peak start/end and time of 50% passage) on date (day of year). 
+
+```{r}
+v1 <- select(v, ends_with("doy"), year) |>
+  pivot_longer(-year, names_to = "measure", values_to = "doy")
+```
+
+First we look at the interaction term to see if the slopes of change among 
+measurements are significantly different from one another.
+
+The type III ANOVA shows no significant interaction.
+```{r}
+m0 <- lm(doy ~ measure * year, data = v1)
+car::Anova(m0, type = "III")
+```
+
+We'll look at a post-hoc comparison of the slopes to interpret them individually.
+
+As with the individual models, we can see that each measure shows a significant
+positive slope with the exception of the End of Migration 
+(`mig_end_day`). 
+
+Note that here we've used a False Discovery Rate to adjust the p-values to multiple tests. Adjusting these tests is likely more conservative than required.
+
+```{r}
+e <- emmeans::emtrends(m0, ~ measure, var = "year") |> 
+  emmeans::test(adjust = "FDR")
+```
+
+All show a significant increase in doy except `mig_end_doy`. 
+Data saved to `r d <- "Data/Datasets/table_timing_combined.csv"; d`
+
+```{r}
+t <- e |> 
+  mutate(
+    model = "doy ~ measure * year",
+    n = nrow(v)) |>
+  rename(
+    estimate = year.trend, 
+    std_error = SE, 
+    
+    statistic = t.ratio, 
+    p_value = p.value)
+
+write_csv(t, d)
+
+fmt_table(t) |>
+  tab_header(title = "Post-hoc results") |>
+  tab_footnote("Number of years in the data.", locations = cells_column_labels(n)) |>
+  tab_footnote("T statistic.", locations = cells_column_labels("statistic"))
+```
+
+### Individual Models
 
 Here we look at **linear regressions** of year by kettle timing dates.
 
@@ -254,30 +311,6 @@ write_csv(t, d)
 fmt_table(t)
 ```
 
-### Quick look at slopes
-
-We were wondering if we could say anything about whether the magnitude of change
-in slope was significant, but probably not, simply because there isn't a 
-significant interaction, so that means we can't really say that the magnitude 
-is changing.
-
-```{r}
-v1 <- select(v, ends_with("doy"), year) |>
-  pivot_longer(-year, names_to = "measure", values_to = "doy")
-
-m0a <- lm(doy ~ measure * year, data = v1)
-m0b <- lm(doy ~ measure + year, data = v1)
-
-car::Anova(m0a, type = "III")
-car::Anova(m0b, type = "III")
-
-emmeans::emtrends(m0a, ~ year | measure, var = "year")
-
-simulateResiduals(m0a, plot = TRUE)
-simulateResiduals(m0b, plot = TRUE)
-```
-
-
 ### Figures
 
 **Note:** Lines without CI ribbons are not significant
@@ -299,13 +332,6 @@ ggplot(doy_figs, aes(x = year, y = doy, group = measure, colour = measure, fill 
   scale_colour_viridis_d() +
   scale_fill_manual(values = c("TRUE" = "grey60", "FALSE" = "#FFFFFF00"), guide = "none") +
   labs(caption = "Lines without CI Error ribbons represent non-significant models")
-```
-
-
-### Model Checks
-
-```{r}
-model_check_figs(models)
 ```
 
 
@@ -348,13 +374,17 @@ Therefore I wouldn't be concerned
 ### Full Model Results
 
 ```{r}
+models <- append(list(m0), models)
 map(models, summary)
 ```
 
+### Model Checks
+
+```{r}
+model_check_figs(models)
+```
+
 :::
-
-
-
 
 ## Duration of migration
 
