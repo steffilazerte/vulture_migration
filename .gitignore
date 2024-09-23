@@ -13,3 +13,5 @@ Data/Datasets/*
 Docs/
 /.quarto/
 *_cache/
+*_files
+!docs/*_files
