@@ -278,17 +278,33 @@ fmt_anova <- function(m) {
     fmt_number(columns = -Df, decimals = 3)
 }
 
-fmt_summary <- function(m) {
+fmt_prep <- function(m) {
   summary(m) |>
     coef() |> 
     as_tibble(rownames = "Parameter") |>
+    mutate(model = as.character(m$call)[2]) |>
     rename("P" = starts_with("Pr"),
            "T" = any_of("t value"),
            "Z" = any_of("z value")) |>
+    relocate(model)
+}
+
+fmt_summary <- function(m, intercept = TRUE) {
+  if(inherits(m, "lm")) {
+    t <- fmt_prep(m) 
+  } else {
+    t <- map(m, fmt_prep) |> 
+      bind_rows()
+  }
+  if(!intercept) t <- filter(t, !str_detect(Parameter, "(I|i)ntercept"))
+  t |>
+    #group_by(pick(any_of("model"))) |>
     gt() |>
     tab_style(style = cell_text(weight = "bold"), 
               locations = cells_body(
                 columns = P, rows = P <= 0.05)) |>
+    tab_style(style = cell_text(weight = "bold"), 
+              locations = cells_body(columns = model)) |>
     fmt_number(decimals = 3)
 }
 

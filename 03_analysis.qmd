@@ -226,63 +226,6 @@ v |>
 
 :::{.panel-tabset}
 
-### Single Model
-
-Here we look at a **linear regression** of year by kettle timing dates.
-
-We look at the effect of year and type of measurement (migration start/end, 
-peak start/end and time of 50% passage) on date (day of year). 
-
-```{r}
-v1 <- select(v, ends_with("doy"), year) |>
-  pivot_longer(-year, names_to = "measure", values_to = "doy")
-```
-
-First we look at the interaction term to see if the slopes of change among 
-measurements are significantly different from one another.
-
-The type III ANOVA shows no significant interaction.
-```{r}
-m0 <- lm(doy ~ measure * year, data = v1)
-car::Anova(m0, type = "III")
-```
-
-We'll look at a post-hoc comparison of the slopes to interpret them individually.
-
-As with the individual models, we can see that each measure shows a significant
-positive slope with the exception of the End of Migration 
-(`mig_end_day`). 
-
-Note that here we've used a False Discovery Rate to adjust the p-values to multiple tests. Adjusting these tests is likely more conservative than required.
-
-```{r}
-e <- emmeans::emtrends(m0, ~ measure, var = "year") |> 
-  emmeans::test(adjust = "FDR")
-```
-
-All show a significant increase in doy except `mig_end_doy`. 
-Data saved to `r d <- "Data/Datasets/table_timing_combined.csv"; d`
-
-```{r}
-t <- e |> 
-  mutate(
-    model = "doy ~ measure * year",
-    n = nrow(v)) |>
-  rename(
-    estimate = year.trend, 
-    std_error = SE, 
-    
-    statistic = t.ratio, 
-    p_value = p.value)
-
-write_csv(t, d)
-
-fmt_table(t) |>
-  tab_header(title = "Post-hoc results") |>
-  tab_footnote("Number of years in the data.", locations = cells_column_labels(n)) |>
-  tab_footnote("T statistic.", locations = cells_column_labels("statistic"))
-```
-
 ### Individual Models
 
 Here we look at **linear regressions** of year by kettle timing dates.
@@ -306,9 +249,69 @@ All show a significant increase in doy except `mig_end_doy`.
 Data saved to `r d <- "Data/Datasets/table_timing.csv"; d`
 
 ```{r}
-t <- get_table(models)
-write_csv(t, d)
-fmt_table(t)
+t1 <- get_table(models)
+write_csv(t1, d)
+fmt_table(t1)
+```
+
+### Single Model
+
+Here we look at a **linear regression** of year by kettle timing dates.
+The idea is to explore whether the interaction is significant, which would
+indicate that the *rate of change* in migration phenology differs among the 
+seasonal points (start, start of peak, peak, end of peak, end).
+
+We look at the effect of year and type of measurement (migration start/end, 
+peak start/end and time of 50% passage) on date (day of year). 
+
+```{r}
+v1 <- select(v, ends_with("doy"), year) |>
+  pivot_longer(-year, names_to = "measure", values_to = "doy")
+```
+
+First we look at the interaction term to see if the slopes of change among 
+measurements are significantly different from one another.
+
+The type III ANOVA shows no significant interaction.
+```{r}
+m0 <- lm(doy ~ measure * year, data = v1)
+car::Anova(m0, type = "III")
+```
+
+We'll look at a post-hoc comparison of the slopes to interpret them individually. 
+
+> **This is nearly identical to running the models separately, above**
+
+As with the individual models, we can see that each measure shows a significant
+positive slope with the exception of the End of Migration 
+(`mig_end_day`). 
+
+```{r}
+e <- emmeans::emtrends(m0, ~ measure, var = "year") |> 
+  emmeans::test()
+```
+
+All show a significant increase in doy except `mig_end_doy`. 
+Data saved to `r d <- "Data/Datasets/table_timing_combined.csv"; d`
+
+```{r}
+t2 <- e |> 
+  mutate(
+    model = "doy ~ measure * year",
+    n = nrow(v)) |>
+  rename(
+    estimate = year.trend, 
+    std_error = SE, 
+    
+    statistic = t.ratio, 
+    p_value = p.value)
+
+write_csv(t2, d)
+
+fmt_table(t2) |>
+  tab_header(title = "Post-hoc results") |>
+  tab_footnote("Number of years in the data.", locations = cells_column_labels(n)) |>
+  tab_footnote("T statistic.", locations = cells_column_labels("statistic"))
 ```
 
 ### Figures
@@ -320,7 +323,7 @@ fmt_table(t)
 doy_figs <- v |>
   select(year, contains("doy")) |>
   pivot_longer(-year, names_to = "measure", values_to = "doy") |>
-  left_join(mutate(t, measure = str_trim(str_extract(model, "^[^~]*")), sig = p_value <= 0.05) |> 
+  left_join(mutate(t1, measure = str_trim(str_extract(model, "^[^~]*")), sig = p_value <= 0.05) |> 
               filter(term == "year") |>
               select(measure, sig), by = "measure")
 
@@ -383,65 +386,81 @@ the peak of migration
 
 ```{r}
 #| code-fold: false
-m0a <- update(m0, data = filter(v1, !year %in% c(1998, 2011, 2013)))
+y <- c(1998, 2011, 2013)
+m1a <- update(m1, data = filter(v, !year %in% y))
+m2a <- update(m2, data = filter(v, !year %in% y))
+m3a <- update(m3, data = filter(v, !year %in% y))
+m4a <- update(m4, data = filter(v, !year %in% y))
+m5a <- update(m5, data = filter(v, !year %in% y))
+m6a <- update(m6, data = filter(v, !year %in% y))
+
+models_a <- list(m1a, m2a, m3a, m4a, m5a, m6a)
 ```
 
-Comparing the ANOVA tables shows only superficial differences.
-```{r}
-#| column: body
-#| layout-nrow: 1
-#| code-fold: false
-fmt_anova(m0)
-fmt_anova(m0a)
-```
-
-As does the post-hoc comparison of slopes among the measures. 
+Comparing the summary tables shows only superficial differences.
 If anything, it looks like removing these 'gappy' years only strengthens the
 existing patterns. 
-
 Those which are significant are slightly more so, and the slopes are slightly greater.
-```{r}
-#| column: body
-#| layout-nrow: 1
-#| code-fold: false
-fmt_emmeans(m0)
-fmt_emmeans(m0a)
+
+Data saved to `r d <- "Data/Datasets/table_supplemental.csv"; d`
+
+```{r, include = FALSE}
+file.remove(d)
 ```
+
+
+**Original**
+```{r}
+fmt_summary(models, intercept = FALSE)
+to <- get_table(models) |>
+  select(model, term, estimate, std_error, statistic, p_value) |>
+  mutate(type = "original")
+write_csv(to, d)
+```
+
+**Years removed**
+```{r}
+fmt_summary(models_a, intercept = FALSE)
+ta <- get_table(models_a) |>
+  select(model, term, estimate, std_error, statistic, p_value) |>
+  mutate(type = "gaps_removed")
+write_csv(ta, d, append = TRUE)
+```
+
 
 #### Missing the end of migration
 Second, we consider removing 2001, 2006, 2023 as they were three years where it looks like sampling ended earlier than the end of migration. 
 
 ```{r}
 #| code-fold: false
-m0b <- update(m0, data = filter(v1, !year %in% c(2001, 2006, 2023)))
+y <- c(2001, 2006, 2023)
+m1b <- update(m1, data = filter(v, !year %in% y))
+m2b <- update(m2, data = filter(v, !year %in% y))
+m3b <- update(m3, data = filter(v, !year %in% y))
+m4b <- update(m4, data = filter(v, !year %in% y))
+m5b <- update(m5, data = filter(v, !year %in% y))
+m6b <- update(m6, data = filter(v, !year %in% y))
+
+models_b <- list(m1b, m2b, m3b, m4b, m5b, m6b)
 ```
 
-Comparing the ANOVA tables shows that while year is still significant, the P-value is higher.
+Removing these years from the analyses, reduced the strength of the patterns, 
+but not by much. Further, there were few changes to the magnitude of the slopes. 
+
+Data saved to `r d <- "Data/Datasets/table_supplemental.csv"; d`
+
+**Original**
 ```{r}
-#| column: body
-#| layout-nrow: 1
-#| code-fold: false
-fmt_anova(m0)
-fmt_anova(m0b)
+fmt_summary(models, intercept = FALSE)
 ```
 
-Removing these years from the analyses, reduced the strength of the patterns such that significant effects became trends. 
-However there were few changes to the magnitude of the slopes. 
+**Years removed**
 ```{r}
-#| column: body
-#| layout-nrow: 1
-#| code-fold: false
-fmt_emmeans(m0)
-fmt_emmeans(m0b)
-```
-
-If we compare to a non-adjusted test, only the end of the peak becomes a trend. Adjusting these tests is likely overkill, anyway.
-```{r}
-#| column: body
-#| layout-nrow: 1
-#| code-fold: false
-fmt_emmeans(m0, adjust = "none")
-fmt_emmeans(m0b, adjust = "none")
+fmt_summary(models_b, intercept = FALSE)
+tb <- get_table(models_b) |>
+  select(model, term, estimate, std_error, statistic, p_value) |>
+  mutate(type = "end_removed")
+write_csv(tb, d, append = TRUE)
 ```
 
 #### Remove all problematic years
@@ -452,28 +471,36 @@ see non-significant results merely because we have removed too many samples.
 
 ```{r}
 #| code-fold: false
-m0c <- update(m0, data = filter(v1, !year %in% c(1998, 2011, 2013, 
-                                                 2001, 2006, 2023)))
+y <- c(1998, 2011, 2013, 2001, 2006, 2023)
+m1c <- update(m1, data = filter(v, !year %in% y))
+m2c <- update(m2, data = filter(v, !year %in% y))
+m3c <- update(m3, data = filter(v, !year %in% y))
+m4c <- update(m4, data = filter(v, !year %in% y))
+m5c <- update(m5, data = filter(v, !year %in% y))
+m6c <- update(m6, data = filter(v, !year %in% y))
+
+models_c <- list(m1c, m2c, m3c, m4c, m5c, m6c)
 ```
 
-Comparing the ANOVA tables shows that while year is still significant, the P-value is higher.
+Removing these years from the analyses, reduced the strength of the patterns, 
+but not by much. Further, there are few changes to the magnitude of the slopes. 
+
+Data saved to `r d <- "Data/Datasets/table_supplemental.csv"; d`
+
+**Original**
 ```{r}
-#| column: body
-#| layout-nrow: 1
-#| code-fold: false
-fmt_anova(m0)
-fmt_anova(m0c)
+fmt_summary(models, intercept = FALSE)
 ```
 
-Removing these years from the analyses, reduced the strength of the patterns in the end of the peak such that it becomes a trend, but all other measures
-show little changes. Further, there are few changes to the magnitude of the slopes. 
+**Years removed**
 ```{r}
-#| column: body
-#| layout-nrow: 1
-#| code-fold: false
-fmt_emmeans(m0)
-fmt_emmeans(m0c)
+fmt_summary(models_c, intercept = FALSE)
+tc <- get_table(models_c) |>
+  select(model, term, estimate, std_error, statistic, p_value) |>
+  mutate(type = "all_removed")
+write_csv(tc, d, append = TRUE)
 ```
+
 
 #### Conclusions
 **I do not believe that these potentially problematic sampling years are driving
@@ -481,7 +508,7 @@ the patterns we see in this data**.
 
 At worst, by removing these years we increase 
 the error around a slope. But the magnitudes of the slopes do not change and even
-the significance is only ever reduced to trends. 
+the significance is only ever reduced only a little. 
 
 ### Full Model Results
 
@@ -497,6 +524,8 @@ model_check_figs(models)
 ```
 
 :::
+
+
 
 ## Duration of migration
 
@@ -595,51 +624,75 @@ the peak of migration
 
 ```{r}
 #| code-fold: false
-m1a <- update(m1, data = filter(v, !year %in% c(1998, 2011, 2013)))
-m2a <- update(m2, data = filter(v, !year %in% c(1998, 2011, 2013)))
+y <- c(1998, 2011, 2013)
+m1a <- update(m1, data = filter(v, !year %in% y))
+m2a <- update(m2, data = filter(v, !year %in% y))
+models_a <- list(m1a, m2a)
 ```
 
 Comparing the summary tables shows only superficial differences.
+
+Data saved to `r d <- "Data/Datasets/table_supplemental.csv"; d`
+
+**Original**
 ```{r}
 #| column: body
 #| layout-nrow: 1
 #| code-fold: false
-fmt_summary(m1)
-fmt_summary(m1a)
+fmt_summary(models, intercept = FALSE)
+to <- get_table(models) |>
+  select(model, term, estimate, std_error, statistic, p_value) |>
+  mutate(type = "original")
+write_csv(to, d, append = TRUE)
 ```
 
+**Years removed**
 ```{r}
 #| column: body
 #| layout-nrow: 1
 #| code-fold: false
-fmt_summary(m2)
-fmt_summary(m2a)
+fmt_summary(models_a, intercept = FALSE)
+ta <- get_table(models_a) |>
+  select(model, term, estimate, std_error, statistic, p_value) |>
+  mutate(type = "gaps_removed")
+write_csv(ta, d, append = TRUE)
 ```
+
+
 
 #### Missing the end of migration
 Second, we consider removing 2001, 2006, 2023 as they were three years where it looks like sampling ended earlier than the end of migration. 
 
 ```{r}
 #| code-fold: false
-m1b <- update(m1, data = filter(v, !year %in% c(2001, 2006, 2023)))
-m2b <- update(m2, data = filter(v, !year %in% c(2001, 2006, 2023)))
+y <- c(2001, 2006, 2023)
+m1b <- update(m1, data = filter(v, !year %in% y))
+m2b <- update(m2, data = filter(v, !year %in% y))
+models_b <- list(m1b, m2b)
 ```
 
 Comparing the summary tables shows only superficial differences.
+
+Data saved to `r d <- "Data/Datasets/table_supplemental.csv"; d`
+
+**Original**
 ```{r}
 #| column: body
 #| layout-nrow: 1
 #| code-fold: false
-fmt_summary(m1)
-fmt_summary(m1b)
+fmt_summary(models, intercept = FALSE)
 ```
 
+**Years removed**
 ```{r}
 #| column: body
 #| layout-nrow: 1
 #| code-fold: false
-fmt_summary(m2)
-fmt_summary(m2b)
+fmt_summary(models_b, intercept = FALSE)
+tb <- get_table(models_b) |>
+  select(model, term, estimate, std_error, statistic, p_value) |>
+  mutate(type = "end_removed")
+write_csv(tb, d, append = TRUE)
 ```
 
 #### Remove all problematic years
@@ -650,27 +703,34 @@ see non-significant results merely because we have removed too many samples.
 
 ```{r}
 #| code-fold: false
-m1c <- update(m1, data = filter(v, !year %in% c(1998, 2011, 2013, 
-                                                2001, 2006, 2023)))
-m2c <- update(m2, data = filter(v, !year %in% c(1998, 2011, 2013, 
-                                                2001, 2006, 2023)))
+y <- c(1998, 2011, 2013, 2001, 2006, 2023)
+m1c <- update(m1, data = filter(v, !year %in% y))
+m2c <- update(m2, data = filter(v, !year %in% y))
+models_c <- list(m1c, m2c)
 ```
 
 Comparing the summary tables shows only superficial differences.
+
+Data saved to `r d <- "Data/Datasets/table_supplemental.csv"; d`
+
+**Original**
 ```{r}
 #| column: body
 #| layout-nrow: 1
 #| code-fold: false
-fmt_summary(m1)
-fmt_summary(m1c)
+fmt_summary(models, intercept = FALSE)
 ```
 
+**Years removed**
 ```{r}
 #| column: body
 #| layout-nrow: 1
 #| code-fold: false
-fmt_summary(m2)
-fmt_summary(m2c)
+fmt_summary(models_c, intercept = FALSE)
+tc <- get_table(models_c) |>
+  select(model, term, estimate, std_error, statistic, p_value) |>
+  mutate(type = "all_removed")
+write_csv(tc, d, append = TRUE)
 ```
 
 #### Conclusions
@@ -843,51 +903,74 @@ the peak of migration
 
 ```{r}
 #| code-fold: false
-m1a <- update(m1, data = filter(v, !year %in% c(1998, 2011, 2013)))
-m2a <- update(m2, data = filter(v, !year %in% c(1998, 2011, 2013)))
+y <- c(1998, 2011, 2013)
+m1a <- update(m1, data = filter(v, !year %in% y))
+m2a <- update(m2, data = filter(v, !year %in% y))
+models_a <- list(m1a, m2a)
 ```
 
 Comparing the summary tables shows only superficial differences.
+
+Data saved to `r d <- "Data/Datasets/table_supplemental.csv"; d`
+
+**Original**
 ```{r}
 #| column: body
 #| layout-nrow: 1
 #| code-fold: false
-fmt_summary(m1)
-fmt_summary(m1a)
+fmt_summary(models[1:2], intercept = FALSE)
+to <- get_table(models[1:2]) |>
+  select(model, term, estimate, std_error, statistic, p_value) |>
+  mutate(type = "original")
+write_csv(to, d, append = TRUE)
 ```
 
+**Years removed**
 ```{r}
 #| column: body
 #| layout-nrow: 1
 #| code-fold: false
-fmt_summary(m2)
-fmt_summary(m2a)
+fmt_summary(models_a, intercept = FALSE)
+ta <- get_table(models_a) |>
+  select(model, term, estimate, std_error, statistic, p_value) |>
+  mutate(type = "gaps_removed")
+write_csv(ta, d, append = TRUE)
 ```
+
 
 #### Missing the end of migration
 Second, we consider removing 2001, 2006, 2023 as they were three years where it looks like sampling ended earlier than the end of migration. 
 
 ```{r}
 #| code-fold: false
-m1b <- update(m1, data = filter(v, !year %in% c(2001, 2006, 2023)))
-m2b <- update(m2, data = filter(v, !year %in% c(2001, 2006, 2023)))
+y <- c(2001, 2006, 2023)
+m1b <- update(m1, data = filter(v, !year %in% y))
+m2b <- update(m2, data = filter(v, !year %in% y))
+models_b <- list(m1b, m2b)
 ```
 
 Comparing the summary tables shows only superficial differences.
+
+Data saved to `r d <- "Data/Datasets/table_supplemental.csv"; d`
+
+**Original**
 ```{r}
 #| column: body
 #| layout-nrow: 1
 #| code-fold: false
-fmt_summary(m1)
-fmt_summary(m1b)
+fmt_summary(models[1:2], intercept = FALSE)
 ```
 
+**Years removed**
 ```{r}
 #| column: body
 #| layout-nrow: 1
 #| code-fold: false
-fmt_summary(m2)
-fmt_summary(m2b)
+fmt_summary(models_b, intercept = FALSE)
+tb <- get_table(models_b) |>
+  select(model, term, estimate, std_error, statistic, p_value) |>
+  mutate(type = "end_removed")
+write_csv(tb, d, append = TRUE)
 ```
 
 #### Remove all problematic years
@@ -898,28 +981,36 @@ see non-significant results merely because we have removed too many samples.
 
 ```{r}
 #| code-fold: false
-m1c <- update(m1, data = filter(v, !year %in% c(1998, 2011, 2013, 
-                                                2001, 2006, 2023)))
-m2c <- update(m2, data = filter(v, !year %in% c(1998, 2011, 2013, 
-                                                2001, 2006, 2023)))
+y <- c(1998, 2011, 2013, 2001, 2006, 2023)
+m1c <- update(m1, data = filter(v, !year %in% y))
+m2c <- update(m2, data = filter(v, !year %in% y))
+models_c <- list(m1c, m2c)
 ```
 
 Comparing the summary tables shows only superficial differences.
+
+Data saved to `r d <- "Data/Datasets/table_supplemental.csv"; d`
+
+**Original**
 ```{r}
 #| column: body
 #| layout-nrow: 1
 #| code-fold: false
-fmt_summary(m1)
-fmt_summary(m1c)
+fmt_summary(models[1:2], intercept = FALSE)
 ```
 
+**Years removed**
 ```{r}
 #| column: body
 #| layout-nrow: 1
 #| code-fold: false
-fmt_summary(m2)
-fmt_summary(m2c)
+fmt_summary(models_c, intercept = FALSE)
+tc <- get_table(models_c) |>
+  select(model, term, estimate, std_error, statistic, p_value) |>
+  mutate(type = "all_removed")
+write_csv(tc, d, append = TRUE)
 ```
+
 
 #### Conclusions
 **I do not believe that these potentially problematic sampling years are driving
