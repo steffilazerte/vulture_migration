@@ -1,10 +1,10 @@
 ---
-title: "Manuscript Figure"
+title: "Manuscript Figure and Supplemental"
 code-fold: true
 fig-dpi: 600
 ---
 
-This is the final figure for the manuscript.
+This is the final figure and Supplemental material for the manuscript.
 
 ## Setup 
 
@@ -23,6 +23,8 @@ library(ggspatial)
 library(sf)
 library(rnaturalearth)
 library(ggthemes)
+library(openxlsx)
+library(gt)
 
 
 source("XX_functions.R")
@@ -37,6 +39,9 @@ raw <- read_csv("Data/Datasets/vultures_clean_2023.csv")
 
 # Predicted GAM models
 pred <- read_csv("Data/Datasets/vultures_gams_pred.csv")
+
+# Checking problematic years
+supp <- read_csv("Data/Datasets/table_supplemental.csv")
 ```
 
 
@@ -91,7 +96,7 @@ ne_download(type = "populated_places", scale = "large", load = FALSE)
 
 cities <- bcmaps::bc_cities(ask = FALSE) |> 
   select(NAME) |>
-  filter(NAME %in% c("Victoria", "Vancouver"))
+  filter(NAME %in% c("Victoria", "Vancouver", "Nanaimo"))
 cities <- ne_load(file_name = "ne_10m_populated_places") |> 
   filter(NAME %in% c("Seattle", "Portland"), ADM1NAME %in% c("Oregon", "Washington")) |>
   select(NAME) |> 
@@ -208,7 +213,9 @@ g1 <- ggplot(data = pred, mapping = aes(x = doy, y = count)) +
                                xmax = mig_end_doy, 
                                height = 0.07 * mig_raw_max), inherit.aes = FALSE) +
   geom_segment(data = v, aes(y = -(0.07 * mig_raw_max), x = peak_start_doy, xend = peak_end_doy), linewidth = 2, inherit.aes = FALSE) +
-  scale_x_continuous(name = "Date", limits = c(203, 295), labels = \(x) format(as_date(x), "%b %d")) +
+  scale_x_continuous(name = "Date", limits = c(203, 295), 
+                     labels = \(x) format(as_date(x), "%b %d"), 
+                     n.breaks = 7) +
   labs(y = "Count") + 
   facet_wrap(~ year, scales = "free_y", ncol = 4)
 ```
@@ -223,10 +230,86 @@ g1 + inset_element(g0, left = 0.55, right = 0.95, bottom = 0, top = 0.1)
 
 ### Small
 ```{r}
-#| fig-width: 10
+#| fig-width: 12
 #| fig-height: 12
 
 g1 + inset_element(g0, left = 0.55, right = 0.95, bottom = 0, top = 0.1)
+```
+
+## Supplemental Table
+
+Presented here for the record, but use exported XLSX version for submission.
+
+```{r}
+t <- supp |> 
+  filter(!str_detect(term, "(I|i)ntercept"),
+         !str_detect(model, "(max_doy)|(pop_max)")) |>
+  mutate(across(where(is.numeric), \(x) round(x, 3))) |>
+  mutate(p_value = if_else(p_value <= 0.05, 
+                           paste0("**", format(p_value, nsmall = 3), "**"),
+                           format(p_value, nsmall = 3)),
+         value = paste0(format(estimate, nsmall = 3), " (P = ", p_value, ")"),
+         value = str_trim(value)) |>
+  select(Model = model, value, type) |>
+  mutate(type = str_replace(type, "_", " "),
+         type = str_to_title(type)) |>
+  pivot_wider(names_from = "type", values_from = "value")
+
+gt(t) |>
+  gt_theme() |>
+  fmt_markdown() |>
+  fmt_number(columns = -1, decimals = 3)
+
+t <- supp |> 
+  filter(!str_detect(term, "(I|i)ntercept")) |>
+  mutate(across(where(is.numeric), \(x) round(x, 3))) |>
+  select(model, type, estimate, p_value) |>
+  pivot_wider(names_from = "type", values_from = c("estimate", "p_value"),
+              names_glue = "{type}_{.value}") |>
+  select(model, contains("original"), contains("gaps"), contains("end"), contains("all")) |>
+  rename("Model" = "model",
+         "Original" = "original_estimate", 
+         "Removed Gaps" = "gaps_removed_estimate",
+         "Removed Ends " = "end_removed_estimate", 
+         "Removed All" = "all_removed_estimate")
+
+wb <- createWorkbook()
+addWorksheet(wb, "Supplemental Table 1")
+writeData(wb, 1, t)
+bold <- createStyle(textDecoration = "bold")
+pval <- createStyle(halign = "left", numFmt = "(P = 0.000)")
+est <- createStyle(halign = "right", numFmt = "0.000")
+for(c in c(3, 5, 7, 9)) {
+  conditionalFormatting(wb, 1, cols = c, rows = 1:15, rule = "<=0.05", style = bold)
+  addStyle(wb, 1, cols = c, rows = 1:15, style = pval, stack = TRUE)
+}
+for(c in c(2, 4, 6, 8)) {
+  addStyle(wb, 1, cols = c, rows = 1:15, style = est, stack = TRUE)
+}
+mergeCells(wb, 1, cols = 2:3, rows = 1)
+mergeCells(wb, 1, cols = 4:5, rows = 1)
+mergeCells(wb, 1, cols = 6:7, rows = 1)
+mergeCells(wb, 1, cols = 8:9, rows = 1)
+addStyle(wb, 1, cols = 1:9, rows = 1, 
+         style = createStyle(halign = "center", textDecoration = "bold"),
+         stack = TRUE)
+setColWidths(wb, 1, cols = 1:9, widths = 10)
+setColWidths(wb, 1, cols = 1, widths = 20)
+
+setRowHeights(wb, 1, rows = nrow(t) + 3, heights = 100)
+writeData(
+  wb, 1, startCol = 1, startRow = nrow(t) + 3, 
+  x = paste0(
+    "Table. Results [Estimate of Year (P-value)] for different models when removing selective years. \n",
+    "'Original' represents the results for the original model;\n",
+    "'Removed Gaps' represents the results for these models when removing years with large gaps around the migration peaks (1998, 2011, 2013);\n",
+    "'Removed Ends' represents the results for these models when removing years where it looks like sampling ended earlier than the end of migration (2001, 2006, 2023);\n",
+    "'Removed All' represents the results for these models when removing all questionable years (1998, 2001, 2006, 2011, 2013, 2023)\n",
+    "Bold P values are significant at P <= 0.05."
+    ))
+
+saveWorkbook(wb, "table_supp.xlsx", overwrite = TRUE)
+
 ```
 
 
