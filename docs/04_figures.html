@@ -7,9 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Steffi LaZerte">
-<meta name="dcterms.date" content="2024-07-10">
+<meta name="dcterms.date" content="2024-09-23">
 
-<title>Vulture Migration on Vancouver Island - Manuscript Figure</title>
+<title>Vulture Migration on Vancouver Island - Manuscript Figure and Supplemental</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -120,7 +120,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./01_initial_exploration.html">Workflow</a></li><li class="breadcrumb-item"><a href="./04_figures.html">Manuscript Figure</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./01_initial_exploration.html">Workflow</a></li><li class="breadcrumb-item"><a href="./04_figures.html">Manuscript Figure and Supplemental</a></li></ol></nav>
         <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -178,7 +178,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./04_figures.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">Manuscript Figure</span></a>
+ <span class="menu-text">Manuscript Figure and Supplemental</span></a>
   </div>
 </li>
       </ul>
@@ -238,15 +238,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#big-1" id="toc-big-1" class="nav-link" data-scroll-target="#big-1">Big</a></li>
   <li><a href="#small-1" id="toc-small-1" class="nav-link" data-scroll-target="#small-1">Small</a></li>
   </ul></li>
+  <li><a href="#supplemental-table" id="toc-supplemental-table" class="nav-link" data-scroll-target="#supplemental-table">Supplemental Table</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/steffilazerte/vulture_migration/edit/main/04_figures.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/steffilazerte/vulture_migration/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./01_initial_exploration.html">Workflow</a></li><li class="breadcrumb-item"><a href="./04_figures.html">Manuscript Figure</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./01_initial_exploration.html">Workflow</a></li><li class="breadcrumb-item"><a href="./04_figures.html">Manuscript Figure and Supplemental</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">Manuscript Figure</h1>
+<h1 class="title">Manuscript Figure and Supplemental</h1>
 </div>
 
 
@@ -263,7 +264,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">July 10, 2024</p>
+      <p class="date">September 23, 2024</p>
     </div>
   </div>
   
@@ -275,7 +276,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>This is the final figure for the manuscript.</p>
+<p>This is the final figure and Supplemental material for the manuscript.</p>
 <section id="setup" class="level2">
 <h2 class="anchored" data-anchor-id="setup">Setup</h2>
 <div class="cell">
@@ -285,20 +286,25 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rnaturalearth)</span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggthemes)</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"XX_functions.R"</span>)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(openxlsx)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gt)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Metrics</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>v <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"Data/Datasets/vultures_final.csv"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Round non-integer values of population counts</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">c</span>(<span class="fu">contains</span>(<span class="st">"pop"</span>), <span class="fu">contains</span>(<span class="st">"raw"</span>)), round)) </span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Raw counts</span></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>raw <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"Data/Datasets/vultures_clean_2023.csv"</span>)</span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Predicted GAM models</span></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"Data/Datasets/vultures_gams_pred.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"XX_functions.R"</span>)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Metrics</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>v <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"Data/Datasets/vultures_final.csv"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Round non-integer values of population counts</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">c</span>(<span class="fu">contains</span>(<span class="st">"pop"</span>), <span class="fu">contains</span>(<span class="st">"raw"</span>)), round)) </span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Raw counts</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>raw <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"Data/Datasets/vultures_clean_2023.csv"</span>)</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Predicted GAM models</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"Data/Datasets/vultures_gams_pred.csv"</span>)</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Checking problematic years</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>supp <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"Data/Datasets/table_supplemental.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="main-figure" class="level2">
@@ -383,7 +389,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>cities <span class="ot">&lt;-</span> bcmaps<span class="sc">::</span><span class="fu">bc_cities</span>(<span class="at">ask =</span> <span class="cn">FALSE</span>) <span class="sc">|&gt;</span> </span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(NAME) <span class="sc">|&gt;</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(NAME <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Victoria"</span>, <span class="st">"Vancouver"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(NAME <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Victoria"</span>, <span class="st">"Vancouver"</span>, <span class="st">"Nanaimo"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stderr">
 <pre><code>bc_cities was updated on 2024-07-10</code></pre>
@@ -399,7 +405,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Reading layer `ne_10m_populated_places' from data source 
-  `/home/steffi/R_tmpdir/RtmpyigEpv/ne_10m_populated_places.shp' 
+  `/home/steffi/R_tmpdir/RtmpHNzeqe/ne_10m_populated_places.shp' 
   using driver `ESRI Shapefile'
 Simple feature collection with 7342 features and 137 fields
 Geometry type: POINT
@@ -543,9 +549,11 @@ Geodetic CRS:  WGS 84</code></pre>
 <span id="cb18-33"><a href="#cb18-33" aria-hidden="true" tabindex="-1"></a>                               <span class="at">xmax =</span> mig_end_doy, </span>
 <span id="cb18-34"><a href="#cb18-34" aria-hidden="true" tabindex="-1"></a>                               <span class="at">height =</span> <span class="fl">0.07</span> <span class="sc">*</span> mig_raw_max), <span class="at">inherit.aes =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
 <span id="cb18-35"><a href="#cb18-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="at">data =</span> v, <span class="fu">aes</span>(<span class="at">y =</span> <span class="sc">-</span>(<span class="fl">0.07</span> <span class="sc">*</span> mig_raw_max), <span class="at">x =</span> peak_start_doy, <span class="at">xend =</span> peak_end_doy), <span class="at">linewidth =</span> <span class="dv">2</span>, <span class="at">inherit.aes =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb18-36"><a href="#cb18-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">name =</span> <span class="st">"Date"</span>, <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">203</span>, <span class="dv">295</span>), <span class="at">labels =</span> \(x) <span class="fu">format</span>(<span class="fu">as_date</span>(x), <span class="st">"%b %d"</span>)) <span class="sc">+</span></span>
-<span id="cb18-37"><a href="#cb18-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"Count"</span>) <span class="sc">+</span> </span>
-<span id="cb18-38"><a href="#cb18-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> year, <span class="at">scales =</span> <span class="st">"free_y"</span>, <span class="at">ncol =</span> <span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb18-36"><a href="#cb18-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">name =</span> <span class="st">"Date"</span>, <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">203</span>, <span class="dv">295</span>), </span>
+<span id="cb18-37"><a href="#cb18-37" aria-hidden="true" tabindex="-1"></a>                     <span class="at">labels =</span> \(x) <span class="fu">format</span>(<span class="fu">as_date</span>(x), <span class="st">"%b %d"</span>), </span>
+<span id="cb18-38"><a href="#cb18-38" aria-hidden="true" tabindex="-1"></a>                     <span class="at">n.breaks =</span> <span class="dv">7</span>) <span class="sc">+</span></span>
+<span id="cb18-39"><a href="#cb18-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"Count"</span>) <span class="sc">+</span> </span>
+<span id="cb18-40"><a href="#cb18-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> year, <span class="at">scales =</span> <span class="st">"free_y"</span>, <span class="at">ncol =</span> <span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <section id="big-1" class="level3">
@@ -574,14 +582,614 @@ Geodetic CRS:  WGS 84</code></pre>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><a href="04_figures_files/figure-html/unnamed-chunk-11-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-6"><img src="04_figures_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="6000"></a></p>
+<p><a href="04_figures_files/figure-html/unnamed-chunk-11-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-6"><img src="04_figures_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="7200"></a></p>
 </figure>
 </div>
 </div>
 </div>
-
-
 </section>
+</section>
+<section id="supplemental-table" class="level2">
+<h2 class="anchored" data-anchor-id="supplemental-table">Supplemental Table</h2>
+<p>Presented here for the record, but use exported XLSX version for submission.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>t <span class="ot">&lt;-</span> supp <span class="sc">|&gt;</span> </span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">str_detect</span>(term, <span class="st">"(I|i)ntercept"</span>),</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>         <span class="sc">!</span><span class="fu">str_detect</span>(model, <span class="st">"(max_doy)|(pop_max)"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.numeric), \(x) <span class="fu">round</span>(x, <span class="dv">3</span>))) <span class="sc">|&gt;</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">p_value =</span> <span class="fu">if_else</span>(p_value <span class="sc">&lt;=</span> <span class="fl">0.05</span>, </span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>                           <span class="fu">paste0</span>(<span class="st">"**"</span>, <span class="fu">format</span>(p_value, <span class="at">nsmall =</span> <span class="dv">3</span>), <span class="st">"**"</span>),</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>                           <span class="fu">format</span>(p_value, <span class="at">nsmall =</span> <span class="dv">3</span>)),</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">value =</span> <span class="fu">paste0</span>(<span class="fu">format</span>(estimate, <span class="at">nsmall =</span> <span class="dv">3</span>), <span class="st">" (P = "</span>, p_value, <span class="st">")"</span>),</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>         <span class="at">value =</span> <span class="fu">str_trim</span>(value)) <span class="sc">|&gt;</span></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="at">Model =</span> model, value, type) <span class="sc">|&gt;</span></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">type =</span> <span class="fu">str_replace</span>(type, <span class="st">"_"</span>, <span class="st">" "</span>),</span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>         <span class="at">type =</span> <span class="fu">str_to_title</span>(type)) <span class="sc">|&gt;</span></span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> <span class="st">"type"</span>, <span class="at">values_from =</span> <span class="st">"value"</span>)</span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a><span class="fu">gt</span>(t) <span class="sc">|&gt;</span></span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt_theme</span>() <span class="sc">|&gt;</span></span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmt_markdown</span>() <span class="sc">|&gt;</span></span>
+<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmt_number</span>(<span class="at">columns =</span> <span class="sc">-</span><span class="dv">1</span>, <span class="at">decimals =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div id="qwzafwyoqd" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#qwzafwyoqd table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#qwzafwyoqd thead, #qwzafwyoqd tbody, #qwzafwyoqd tfoot, #qwzafwyoqd tr, #qwzafwyoqd td, #qwzafwyoqd th {
+  border-style: none;
+}
+
+#qwzafwyoqd p {
+  margin: 0;
+  padding: 0;
+}
+
+#qwzafwyoqd .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: 80%;
+  border-top-style: solid;
+  border-top-width: 3px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#qwzafwyoqd .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#qwzafwyoqd .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#qwzafwyoqd .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#qwzafwyoqd .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#qwzafwyoqd .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#qwzafwyoqd .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 3px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#qwzafwyoqd .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: bold;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#qwzafwyoqd .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: bold;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#qwzafwyoqd .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#qwzafwyoqd .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#qwzafwyoqd .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 3px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#qwzafwyoqd .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#qwzafwyoqd .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#qwzafwyoqd .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#qwzafwyoqd .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#qwzafwyoqd .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#qwzafwyoqd .gt_row {
+  padding-top: 7px;
+  padding-bottom: 7px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#qwzafwyoqd .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#qwzafwyoqd .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#qwzafwyoqd .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#qwzafwyoqd .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#qwzafwyoqd .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#qwzafwyoqd .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#qwzafwyoqd .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#qwzafwyoqd .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#qwzafwyoqd .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#qwzafwyoqd .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#qwzafwyoqd .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#qwzafwyoqd .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#qwzafwyoqd .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#qwzafwyoqd .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#qwzafwyoqd .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#qwzafwyoqd .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#qwzafwyoqd .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#qwzafwyoqd .gt_left {
+  text-align: left;
+}
+
+#qwzafwyoqd .gt_center {
+  text-align: center;
+}
+
+#qwzafwyoqd .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#qwzafwyoqd .gt_font_normal {
+  font-weight: normal;
+}
+
+#qwzafwyoqd .gt_font_bold {
+  font-weight: bold;
+}
+
+#qwzafwyoqd .gt_font_italic {
+  font-style: italic;
+}
+
+#qwzafwyoqd .gt_super {
+  font-size: 65%;
+}
+
+#qwzafwyoqd .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#qwzafwyoqd .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#qwzafwyoqd .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#qwzafwyoqd .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#qwzafwyoqd .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#qwzafwyoqd .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#qwzafwyoqd .gt_indent_5 {
+  text-indent: 25px;
+}
+</style>
+
+<table class="gt_table table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+</colgroup>
+<thead>
+<tr class="header gt_col_headings">
+<th id="Model" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">Model</th>
+<th id="Original" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">Original</th>
+<th id="Gaps Removed" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">Gaps Removed</th>
+<th id="End Removed" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">End Removed</th>
+<th id="All Removed" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">All Removed</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_left" headers="Model"><p>mig_start_doy ~ year</p></td>
+<td class="gt_row gt_left" headers="Original"><p>0.176 (P = <strong>0.017</strong>)</p></td>
+<td class="gt_row gt_left" headers="Gaps Removed"><p>0.191 (P = <strong>0.016</strong>)</p></td>
+<td class="gt_row gt_left" headers="End Removed"><p>0.166 (P = <strong>0.037</strong>)</p></td>
+<td class="gt_row gt_left" headers="All Removed"><p>0.180 (P = <strong>0.041</strong>)</p></td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="Model"><p>peak_start_doy ~ year</p></td>
+<td class="gt_row gt_left" headers="Original"><p>0.155 (P = <strong>0.005</strong>)</p></td>
+<td class="gt_row gt_left" headers="Gaps Removed"><p>0.163 (P = <strong>0.003</strong>)</p></td>
+<td class="gt_row gt_left" headers="End Removed"><p>0.155 (P = <strong>0.014</strong>)</p></td>
+<td class="gt_row gt_left" headers="All Removed"><p>0.165 (P = <strong>0.012</strong>)</p></td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="Model"><p>p50_doy ~ year</p></td>
+<td class="gt_row gt_left" headers="Original"><p>0.147 (P = <strong>0.009</strong>)</p></td>
+<td class="gt_row gt_left" headers="Gaps Removed"><p>0.157 (P = <strong>0.005</strong>)</p></td>
+<td class="gt_row gt_left" headers="End Removed"><p>0.151 (P = <strong>0.024</strong>)</p></td>
+<td class="gt_row gt_left" headers="All Removed"><p>0.165 (P = <strong>0.015</strong>)</p></td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="Model"><p>peak_end_doy ~ year</p></td>
+<td class="gt_row gt_left" headers="Original"><p>0.132 (P = <strong>0.016</strong>)</p></td>
+<td class="gt_row gt_left" headers="Gaps Removed"><p>0.140 (P = <strong>0.008</strong>)</p></td>
+<td class="gt_row gt_left" headers="End Removed"><p>0.128 (P = <strong>0.043</strong>)</p></td>
+<td class="gt_row gt_left" headers="All Removed"><p>0.138 (P = <strong>0.027</strong>)</p></td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="Model"><p>mig_end_doy ~ year</p></td>
+<td class="gt_row gt_left" headers="Original"><p>0.093 (P = 0.263)</p></td>
+<td class="gt_row gt_left" headers="Gaps Removed"><p>0.091 (P = 0.324)</p></td>
+<td class="gt_row gt_left" headers="End Removed"><p>0.077 (P = 0.402)</p></td>
+<td class="gt_row gt_left" headers="All Removed"><p>0.073 (P = 0.480)</p></td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="Model"><p>mig_dur_days ~ year</p></td>
+<td class="gt_row gt_left" headers="Original"><p>-0.083 (P = 0.394)</p></td>
+<td class="gt_row gt_left" headers="Gaps Removed"><p>-0.100 (P = 0.365)</p></td>
+<td class="gt_row gt_left" headers="End Removed"><p>-0.089 (P = 0.394)</p></td>
+<td class="gt_row gt_left" headers="All Removed"><p>-0.107 (P = 0.382)</p></td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="Model"><p>peak_dur_days ~ year</p></td>
+<td class="gt_row gt_left" headers="Original"><p>-0.023 (P = 0.476)</p></td>
+<td class="gt_row gt_left" headers="Gaps Removed"><p>-0.023 (P = 0.508)</p></td>
+<td class="gt_row gt_left" headers="End Removed"><p>-0.028 (P = 0.420)</p></td>
+<td class="gt_row gt_left" headers="All Removed"><p>-0.027 (P = 0.469)</p></td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="Model"><p>mig_raw_max ~ year</p></td>
+<td class="gt_row gt_left" headers="Original"><p>0.041 (P = <strong>0.000</strong>)</p></td>
+<td class="gt_row gt_left" headers="Gaps Removed"><p>0.040 (P = <strong>0.000</strong>)</p></td>
+<td class="gt_row gt_left" headers="End Removed"><p>0.034 (P = <strong>0.002</strong>)</p></td>
+<td class="gt_row gt_left" headers="All Removed"><p>0.032 (P = <strong>0.009</strong>)</p></td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>t <span class="ot">&lt;-</span> supp <span class="sc">|&gt;</span> </span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">str_detect</span>(term, <span class="st">"(I|i)ntercept"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.numeric), \(x) <span class="fu">round</span>(x, <span class="dv">3</span>))) <span class="sc">|&gt;</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(model, type, estimate, p_value) <span class="sc">|&gt;</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> <span class="st">"type"</span>, <span class="at">values_from =</span> <span class="fu">c</span>(<span class="st">"estimate"</span>, <span class="st">"p_value"</span>),</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>              <span class="at">names_glue =</span> <span class="st">"{type}_{.value}"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(model, <span class="fu">contains</span>(<span class="st">"original"</span>), <span class="fu">contains</span>(<span class="st">"gaps"</span>), <span class="fu">contains</span>(<span class="st">"end"</span>), <span class="fu">contains</span>(<span class="st">"all"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="st">"Model"</span> <span class="ot">=</span> <span class="st">"model"</span>,</span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>         <span class="st">"Original"</span> <span class="ot">=</span> <span class="st">"original_estimate"</span>, </span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>         <span class="st">"Removed Gaps"</span> <span class="ot">=</span> <span class="st">"gaps_removed_estimate"</span>,</span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>         <span class="st">"Removed Ends "</span> <span class="ot">=</span> <span class="st">"end_removed_estimate"</span>, </span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>         <span class="st">"Removed All"</span> <span class="ot">=</span> <span class="st">"all_removed_estimate"</span>)</span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>wb <span class="ot">&lt;-</span> <span class="fu">createWorkbook</span>()</span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a><span class="fu">addWorksheet</span>(wb, <span class="st">"Supplemental Table 1"</span>)</span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a><span class="fu">writeData</span>(wb, <span class="dv">1</span>, t)</span>
+<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>bold <span class="ot">&lt;-</span> <span class="fu">createStyle</span>(<span class="at">textDecoration =</span> <span class="st">"bold"</span>)</span>
+<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a>pval <span class="ot">&lt;-</span> <span class="fu">createStyle</span>(<span class="at">halign =</span> <span class="st">"left"</span>, <span class="at">numFmt =</span> <span class="st">"(P = 0.000)"</span>)</span>
+<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a>est <span class="ot">&lt;-</span> <span class="fu">createStyle</span>(<span class="at">halign =</span> <span class="st">"right"</span>, <span class="at">numFmt =</span> <span class="st">"0.000"</span>)</span>
+<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(c <span class="cf">in</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">5</span>, <span class="dv">7</span>, <span class="dv">9</span>)) {</span>
+<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conditionalFormatting</span>(wb, <span class="dv">1</span>, <span class="at">cols =</span> c, <span class="at">rows =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">15</span>, <span class="at">rule =</span> <span class="st">"&lt;=0.05"</span>, <span class="at">style =</span> bold)</span>
+<span id="cb22-22"><a href="#cb22-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">addStyle</span>(wb, <span class="dv">1</span>, <span class="at">cols =</span> c, <span class="at">rows =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">15</span>, <span class="at">style =</span> pval, <span class="at">stack =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb22-23"><a href="#cb22-23" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb22-24"><a href="#cb22-24" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(c <span class="cf">in</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">4</span>, <span class="dv">6</span>, <span class="dv">8</span>)) {</span>
+<span id="cb22-25"><a href="#cb22-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">addStyle</span>(wb, <span class="dv">1</span>, <span class="at">cols =</span> c, <span class="at">rows =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">15</span>, <span class="at">style =</span> est, <span class="at">stack =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb22-26"><a href="#cb22-26" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb22-27"><a href="#cb22-27" aria-hidden="true" tabindex="-1"></a><span class="fu">mergeCells</span>(wb, <span class="dv">1</span>, <span class="at">cols =</span> <span class="dv">2</span><span class="sc">:</span><span class="dv">3</span>, <span class="at">rows =</span> <span class="dv">1</span>)</span>
+<span id="cb22-28"><a href="#cb22-28" aria-hidden="true" tabindex="-1"></a><span class="fu">mergeCells</span>(wb, <span class="dv">1</span>, <span class="at">cols =</span> <span class="dv">4</span><span class="sc">:</span><span class="dv">5</span>, <span class="at">rows =</span> <span class="dv">1</span>)</span>
+<span id="cb22-29"><a href="#cb22-29" aria-hidden="true" tabindex="-1"></a><span class="fu">mergeCells</span>(wb, <span class="dv">1</span>, <span class="at">cols =</span> <span class="dv">6</span><span class="sc">:</span><span class="dv">7</span>, <span class="at">rows =</span> <span class="dv">1</span>)</span>
+<span id="cb22-30"><a href="#cb22-30" aria-hidden="true" tabindex="-1"></a><span class="fu">mergeCells</span>(wb, <span class="dv">1</span>, <span class="at">cols =</span> <span class="dv">8</span><span class="sc">:</span><span class="dv">9</span>, <span class="at">rows =</span> <span class="dv">1</span>)</span>
+<span id="cb22-31"><a href="#cb22-31" aria-hidden="true" tabindex="-1"></a><span class="fu">addStyle</span>(wb, <span class="dv">1</span>, <span class="at">cols =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">9</span>, <span class="at">rows =</span> <span class="dv">1</span>, </span>
+<span id="cb22-32"><a href="#cb22-32" aria-hidden="true" tabindex="-1"></a>         <span class="at">style =</span> <span class="fu">createStyle</span>(<span class="at">halign =</span> <span class="st">"center"</span>, <span class="at">textDecoration =</span> <span class="st">"bold"</span>),</span>
+<span id="cb22-33"><a href="#cb22-33" aria-hidden="true" tabindex="-1"></a>         <span class="at">stack =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb22-34"><a href="#cb22-34" aria-hidden="true" tabindex="-1"></a><span class="fu">setColWidths</span>(wb, <span class="dv">1</span>, <span class="at">cols =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">9</span>, <span class="at">widths =</span> <span class="dv">10</span>)</span>
+<span id="cb22-35"><a href="#cb22-35" aria-hidden="true" tabindex="-1"></a><span class="fu">setColWidths</span>(wb, <span class="dv">1</span>, <span class="at">cols =</span> <span class="dv">1</span>, <span class="at">widths =</span> <span class="dv">20</span>)</span>
+<span id="cb22-36"><a href="#cb22-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-37"><a href="#cb22-37" aria-hidden="true" tabindex="-1"></a><span class="fu">setRowHeights</span>(wb, <span class="dv">1</span>, <span class="at">rows =</span> <span class="fu">nrow</span>(t) <span class="sc">+</span> <span class="dv">3</span>, <span class="at">heights =</span> <span class="dv">100</span>)</span>
+<span id="cb22-38"><a href="#cb22-38" aria-hidden="true" tabindex="-1"></a><span class="fu">writeData</span>(</span>
+<span id="cb22-39"><a href="#cb22-39" aria-hidden="true" tabindex="-1"></a>  wb, <span class="dv">1</span>, <span class="at">startCol =</span> <span class="dv">1</span>, <span class="at">startRow =</span> <span class="fu">nrow</span>(t) <span class="sc">+</span> <span class="dv">3</span>, </span>
+<span id="cb22-40"><a href="#cb22-40" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> <span class="fu">paste0</span>(</span>
+<span id="cb22-41"><a href="#cb22-41" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Table. Results [Estimate of Year (P-value)] for different models when removing selective years. </span><span class="sc">\n</span><span class="st">"</span>,</span>
+<span id="cb22-42"><a href="#cb22-42" aria-hidden="true" tabindex="-1"></a>    <span class="st">"'Original' represents the results for the original model;</span><span class="sc">\n</span><span class="st">"</span>,</span>
+<span id="cb22-43"><a href="#cb22-43" aria-hidden="true" tabindex="-1"></a>    <span class="st">"'Removed Gaps' represents the results for these models when removing years with large gaps around the migration peaks (1998, 2011, 2013);</span><span class="sc">\n</span><span class="st">"</span>,</span>
+<span id="cb22-44"><a href="#cb22-44" aria-hidden="true" tabindex="-1"></a>    <span class="st">"'Removed Ends' represents the results for these models when removing years where it looks like sampling ended earlier than the end of migration (2001, 2006, 2023);</span><span class="sc">\n</span><span class="st">"</span>,</span>
+<span id="cb22-45"><a href="#cb22-45" aria-hidden="true" tabindex="-1"></a>    <span class="st">"'Removed All' represents the results for these models when removing all questionable years (1998, 2001, 2006, 2011, 2013, 2023)</span><span class="sc">\n</span><span class="st">"</span>,</span>
+<span id="cb22-46"><a href="#cb22-46" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Bold P values are significant at P &lt;= 0.05."</span></span>
+<span id="cb22-47"><a href="#cb22-47" aria-hidden="true" tabindex="-1"></a>    ))</span>
+<span id="cb22-48"><a href="#cb22-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-49"><a href="#cb22-49" aria-hidden="true" tabindex="-1"></a><span class="fu">saveWorkbook</span>(wb, <span class="st">"Data/table_supp.xlsx"</span>, <span class="at">overwrite =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+
+
 </section>
 
 <a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main> <!-- /main -->
@@ -985,7 +1593,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   </div>
 </nav>
 </div> <!-- /content -->
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/steffilazerte/vulture_migration/edit/main/04_figures.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/steffilazerte/vulture_migration/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer><script>var lightboxQuarto = GLightbox({"openEffect":"zoom","closeEffect":"zoom","loop":false,"descPosition":"bottom","selector":".lightbox"});
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/steffilazerte/vulture_migration/edit/main/04_figures.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/steffilazerte/vulture_migration/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer><script>var lightboxQuarto = GLightbox({"openEffect":"zoom","selector":".lightbox","descPosition":"bottom","closeEffect":"zoom","loop":false});
 window.onload = () => {
   lightboxQuarto.on('slide_before_load', (data) => {
     const { slideIndex, slideNode, slideConfig, player, trigger } = data;
