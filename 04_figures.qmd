@@ -68,6 +68,25 @@ g <- g1 / g2 + plot_annotation(tag_levels = "A")
 #ggsave("fig1_quick.png", dpi = 1000, width = 8, height = 7)
 ```
 
+Double checking growth and increases
+```{r}
+m <- MASS::glm.nb(mig_raw_max ~ year, data = v)
+
+d <- select(v, year) |>
+  mutate(y = predict(m, v),
+         yexp = exp(y))
+
+# Compound growth (avg growth over the period)
+(1251 / 451)^ (1/25) - 1
+
+# Compound interest (amount at the end)
+451 * (1 + 0.041647)^(25)
+
+# Factor of increase
+1251/451
+```
+
+
 ### Big version
 ```{r}
 #| fig-asp: 1
@@ -107,7 +126,7 @@ cities <- ne_load(file_name = "ne_10m_populated_places") |>
 stn <- c(-123.55082035835214, 48.31773308537152) |>
   st_point() |>
   st_sfc(crs = 4326) |>
-  st_sf(name = "Rocky Point\nObservatory") |>
+  st_sf(name = "Rocky Point") |>
   st_transform(st_crs(cities))
 
 land <- data.frame(lon = c(-124.3, -124.3, -123.5),
@@ -216,7 +235,7 @@ g1 <- ggplot(data = pred, mapping = aes(x = doy, y = count)) +
   scale_x_continuous(name = "Date", limits = c(203, 295), 
                      labels = \(x) format(as_date(x), "%b %d"), 
                      n.breaks = 7) +
-  labs(y = "Count") + 
+  labs(y = "Daily Estimated Total") + 
   facet_wrap(~ year, scales = "free_y", ncol = 4)
 ```
 
