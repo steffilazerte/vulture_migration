@@ -49,7 +49,7 @@ supp <- read_csv("Data/Datasets/table_supplemental.csv")
 
 ```{r}
 v <- v |> 
-  mutate(date = as_date(p50_doy))
+  mutate(date = as_date(p50_doy) - days(1))
 
 g1 <- ggplot(v, aes(x = year, y = date)) +
   theme_bw() +
@@ -62,11 +62,15 @@ g2 <- ggplot(v, aes(x = year, y = mig_raw_max)) +
   theme_bw() +
   geom_point() +
   stat_smooth(method = MASS::glm.nb) +
-  labs(y = "Maximum observed count", x = "Year")
+  labs(y = "Annual maximum\nDaily Estimated Total", x = "Year")
 
 g <- g1 / g2 + plot_annotation(tag_levels = "A")
 #ggsave("fig1_quick.png", dpi = 1000, width = 8, height = 7)
+
+gg <- g1 / (g2 + labs(y = "Annual maximum DET")) + plot_annotation(tag_levels = "A")
 ```
+
+
 
 Double checking growth and increases
 ```{r}
@@ -88,21 +92,25 @@ d <- select(v, year) |>
 
 
 ### Big version
+
+**With two y-axis options for panel B**
 ```{r}
 #| fig-asp: 1
 #| fig-width: 8
 #| fig-height: 9
 g
+gg
 ```
 
 ### Small version
+**With two y-axis options for panel B**
 ```{r}
 #| fig-asp: 1
 #| fig-height: 8.5
 #| fig-width: 5
 #| out-width: 80%
-
 g
+gg
 ```
 
 ## Map
