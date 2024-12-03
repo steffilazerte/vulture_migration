@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Steffi LaZerte">
-<meta name="dcterms.date" content="2024-11-14">
+<meta name="dcterms.date" content="2024-12-03">
 
 <title>Manuscript Figure and Supplemental – Vulture Migration on Vancouver Island</title>
 <style>
@@ -264,7 +264,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">November 14, 2024</p>
+      <p class="date">December 3, 2024</p>
     </div>
   </div>
   
@@ -602,25 +602,32 @@ Geodetic CRS:  WGS 84</code></pre>
 <span id="cb28-19"><a href="#cb28-19" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb28-20"><a href="#cb28-20" aria-hidden="true" tabindex="-1"></a>g1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> pred, <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> doy, <span class="at">y =</span> count)) <span class="sc">+</span></span>
 <span id="cb28-21"><a href="#cb28-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
-<span id="cb28-22"><a href="#cb28-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_ribbon</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> ci95_lower, <span class="at">ymax =</span> ci95_upper), <span class="at">fill =</span> <span class="st">"grey50"</span>, <span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
-<span id="cb28-23"><a href="#cb28-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> raw, <span class="at">na.rm =</span> <span class="cn">TRUE</span>, <span class="at">size =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
-<span id="cb28-24"><a href="#cb28-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
-<span id="cb28-25"><a href="#cb28-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbarh</span>(<span class="at">data =</span> res, <span class="fu">aes</span>(<span class="at">xmin =</span> xmin, <span class="at">xmax =</span> xmax, <span class="at">y =</span> y, <span class="at">height =</span> height), </span>
-<span id="cb28-26"><a href="#cb28-26" aria-hidden="true" tabindex="-1"></a>                 <span class="at">colour =</span> <span class="st">"grey70"</span>, <span class="at">inherit.aes =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb28-27"><a href="#cb28-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="at">data =</span> res, <span class="fu">aes</span>(<span class="at">x =</span> xmid, <span class="at">y =</span> y, <span class="at">label =</span> label), <span class="at">vjust =</span> <span class="sc">-</span><span class="fl">0.5</span>, <span class="at">inherit.aes =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb28-28"><a href="#cb28-28" aria-hidden="true" tabindex="-1"></a>            <span class="at">size =</span> <span class="dv">3</span>, <span class="at">colour =</span> <span class="st">"grey30"</span>) <span class="sc">+</span></span>
-<span id="cb28-29"><a href="#cb28-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="at">data =</span> v, <span class="fu">aes</span>(<span class="at">x =</span> p50_doy, <span class="at">xend =</span> p50_doy <span class="sc">+</span> <span class="dv">1</span>, <span class="at">y =</span> <span class="sc">-</span>(<span class="fl">0.07</span> <span class="sc">*</span> mig_raw_max)), </span>
-<span id="cb28-30"><a href="#cb28-30" aria-hidden="true" tabindex="-1"></a>               <span class="at">linewidth =</span> <span class="dv">4</span>, <span class="at">inherit.aes =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb28-31"><a href="#cb28-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbarh</span>(<span class="at">data =</span> v, <span class="fu">aes</span>(<span class="at">y =</span> <span class="sc">-</span>(<span class="fl">0.07</span> <span class="sc">*</span> mig_raw_max), </span>
-<span id="cb28-32"><a href="#cb28-32" aria-hidden="true" tabindex="-1"></a>                               <span class="at">xmin =</span> mig_start_doy, </span>
-<span id="cb28-33"><a href="#cb28-33" aria-hidden="true" tabindex="-1"></a>                               <span class="at">xmax =</span> mig_end_doy, </span>
-<span id="cb28-34"><a href="#cb28-34" aria-hidden="true" tabindex="-1"></a>                               <span class="at">height =</span> <span class="fl">0.07</span> <span class="sc">*</span> mig_raw_max), <span class="at">inherit.aes =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb28-35"><a href="#cb28-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="at">data =</span> v, <span class="fu">aes</span>(<span class="at">y =</span> <span class="sc">-</span>(<span class="fl">0.07</span> <span class="sc">*</span> mig_raw_max), <span class="at">x =</span> peak_start_doy, <span class="at">xend =</span> peak_end_doy), <span class="at">linewidth =</span> <span class="dv">2</span>, <span class="at">inherit.aes =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb28-36"><a href="#cb28-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">name =</span> <span class="st">"Date"</span>, <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">203</span>, <span class="dv">295</span>), </span>
-<span id="cb28-37"><a href="#cb28-37" aria-hidden="true" tabindex="-1"></a>                     <span class="at">labels =</span> \(x) <span class="fu">format</span>(<span class="fu">as_date</span>(x), <span class="st">"%b %d"</span>), </span>
-<span id="cb28-38"><a href="#cb28-38" aria-hidden="true" tabindex="-1"></a>                     <span class="at">n.breaks =</span> <span class="dv">7</span>) <span class="sc">+</span></span>
-<span id="cb28-39"><a href="#cb28-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"Daily Estimated Total"</span>) <span class="sc">+</span> </span>
-<span id="cb28-40"><a href="#cb28-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> year, <span class="at">scales =</span> <span class="st">"free_y"</span>, <span class="at">ncol =</span> <span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb28-22"><a href="#cb28-22" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb28-23"><a href="#cb28-23" aria-hidden="true" tabindex="-1"></a>  <span class="co"># GAM</span></span>
+<span id="cb28-24"><a href="#cb28-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_ribbon</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> ci95_lower, <span class="at">ymax =</span> ci95_upper), <span class="at">fill =</span> <span class="st">"grey50"</span>, <span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb28-25"><a href="#cb28-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb28-26"><a href="#cb28-26" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb28-27"><a href="#cb28-27" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Raw points</span></span>
+<span id="cb28-28"><a href="#cb28-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> raw, <span class="at">na.rm =</span> <span class="cn">TRUE</span>, <span class="at">size =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb28-29"><a href="#cb28-29" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb28-30"><a href="#cb28-30" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Metrics</span></span>
+<span id="cb28-31"><a href="#cb28-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbarh</span>(<span class="at">data =</span> res, <span class="fu">aes</span>(<span class="at">xmin =</span> xmin, <span class="at">xmax =</span> xmax, <span class="at">y =</span> y, <span class="at">height =</span> height), </span>
+<span id="cb28-32"><a href="#cb28-32" aria-hidden="true" tabindex="-1"></a>                 <span class="at">colour =</span> <span class="st">"grey70"</span>, <span class="at">inherit.aes =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb28-33"><a href="#cb28-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="at">data =</span> res, <span class="fu">aes</span>(<span class="at">x =</span> xmid, <span class="at">y =</span> y, <span class="at">label =</span> label), <span class="at">vjust =</span> <span class="sc">-</span><span class="fl">0.5</span>, <span class="at">inherit.aes =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb28-34"><a href="#cb28-34" aria-hidden="true" tabindex="-1"></a>            <span class="at">size =</span> <span class="dv">3</span>, <span class="at">colour =</span> <span class="st">"grey30"</span>) <span class="sc">+</span></span>
+<span id="cb28-35"><a href="#cb28-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="at">data =</span> v, <span class="fu">aes</span>(<span class="at">x =</span> p50_doy <span class="sc">-</span> <span class="fl">0.5</span>, <span class="at">xend =</span> p50_doy <span class="sc">+</span> <span class="fl">0.5</span>, </span>
+<span id="cb28-36"><a href="#cb28-36" aria-hidden="true" tabindex="-1"></a>                             <span class="at">y =</span> <span class="sc">-</span>(<span class="fl">0.07</span> <span class="sc">*</span> mig_raw_max)), </span>
+<span id="cb28-37"><a href="#cb28-37" aria-hidden="true" tabindex="-1"></a>               <span class="at">linewidth =</span> <span class="dv">4</span>, <span class="at">inherit.aes =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb28-38"><a href="#cb28-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbarh</span>(<span class="at">data =</span> v, <span class="fu">aes</span>(<span class="at">y =</span> <span class="sc">-</span>(<span class="fl">0.07</span> <span class="sc">*</span> mig_raw_max), </span>
+<span id="cb28-39"><a href="#cb28-39" aria-hidden="true" tabindex="-1"></a>                               <span class="at">xmin =</span> mig_start_doy, </span>
+<span id="cb28-40"><a href="#cb28-40" aria-hidden="true" tabindex="-1"></a>                               <span class="at">xmax =</span> mig_end_doy, </span>
+<span id="cb28-41"><a href="#cb28-41" aria-hidden="true" tabindex="-1"></a>                               <span class="at">height =</span> <span class="fl">0.07</span> <span class="sc">*</span> mig_raw_max), <span class="at">inherit.aes =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb28-42"><a href="#cb28-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="at">data =</span> v, <span class="fu">aes</span>(<span class="at">y =</span> <span class="sc">-</span>(<span class="fl">0.07</span> <span class="sc">*</span> mig_raw_max), <span class="at">x =</span> peak_start_doy, <span class="at">xend =</span> peak_end_doy), <span class="at">linewidth =</span> <span class="dv">2</span>, <span class="at">inherit.aes =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb28-43"><a href="#cb28-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">name =</span> <span class="st">"Date"</span>, <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">203</span>, <span class="dv">295</span>), </span>
+<span id="cb28-44"><a href="#cb28-44" aria-hidden="true" tabindex="-1"></a>                     <span class="at">labels =</span> \(x) <span class="fu">format</span>(<span class="fu">as_date</span>(x) <span class="sc">-</span> <span class="fu">days</span>(<span class="dv">1</span>), <span class="st">"%b %d"</span>), </span>
+<span id="cb28-45"><a href="#cb28-45" aria-hidden="true" tabindex="-1"></a>                     <span class="at">n.breaks =</span> <span class="dv">7</span>) <span class="sc">+</span></span>
+<span id="cb28-46"><a href="#cb28-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"Daily Estimated Total"</span>) <span class="sc">+</span> </span>
+<span id="cb28-47"><a href="#cb28-47" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> year, <span class="at">scales =</span> <span class="st">"free_y"</span>, <span class="at">ncol =</span> <span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <section id="big-1" class="level3">

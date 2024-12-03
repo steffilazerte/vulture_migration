@@ -226,14 +226,21 @@ g0 <- ggplot() +
 
 g1 <- ggplot(data = pred, mapping = aes(x = doy, y = count)) +
   theme_bw() +
+  
+  # GAM
   geom_ribbon(aes(ymin = ci95_lower, ymax = ci95_upper), fill = "grey50", alpha = 0.5) +
-  geom_point(data = raw, na.rm = TRUE, size = 0.5) +
   geom_line() +
+  
+  # Raw points
+  geom_point(data = raw, na.rm = TRUE, size = 0.5) +
+  
+  # Metrics
   geom_errorbarh(data = res, aes(xmin = xmin, xmax = xmax, y = y, height = height), 
                  colour = "grey70", inherit.aes = FALSE) +
   geom_text(data = res, aes(x = xmid, y = y, label = label), vjust = -0.5, inherit.aes = FALSE,
             size = 3, colour = "grey30") +
-  geom_segment(data = v, aes(x = p50_doy, xend = p50_doy + 1, y = -(0.07 * mig_raw_max)), 
+  geom_segment(data = v, aes(x = p50_doy - 0.5, xend = p50_doy + 0.5, 
+                             y = -(0.07 * mig_raw_max)), 
                linewidth = 4, inherit.aes = FALSE) +
   geom_errorbarh(data = v, aes(y = -(0.07 * mig_raw_max), 
                                xmin = mig_start_doy, 
@@ -241,7 +248,7 @@ g1 <- ggplot(data = pred, mapping = aes(x = doy, y = count)) +
                                height = 0.07 * mig_raw_max), inherit.aes = FALSE) +
   geom_segment(data = v, aes(y = -(0.07 * mig_raw_max), x = peak_start_doy, xend = peak_end_doy), linewidth = 2, inherit.aes = FALSE) +
   scale_x_continuous(name = "Date", limits = c(203, 295), 
-                     labels = \(x) format(as_date(x), "%b %d"), 
+                     labels = \(x) format(as_date(x) - days(1), "%b %d"), 
                      n.breaks = 7) +
   labs(y = "Daily Estimated Total") + 
   facet_wrap(~ year, scales = "free_y", ncol = 4)
