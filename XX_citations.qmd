@@ -9,7 +9,7 @@ You probably only need to cite
 - **mcgv** for gam models
 - **DHARMa** for model diagnostics
 - **MASS** for negative binomial GLM models
-- possibly the **tidyverse** for general data manipulation
+- possibly the **tidyverse** for general data manipulation (dplyr, tidyr, ggplot2, readr, stringr)
 
 but you should keep track of the packages used and their versions 
 (see General Info, but note that if an workflow step was updated separately, see
@@ -33,7 +33,7 @@ cat("\n#### MASS (for negative binomial GLM)\n")
 citation("MASS") |> print(style = "text")
 
 cat("\n#### tidyverse (for general data management and figures)\n")
-citation("tidyverse") |> print(style = "text")
+"Wickham H, Averick M, Bryan J, Chang W, McGowan LD, François R, Grolemund G, Hayes A, Henry L, Hester J, Kuhn M, Pedersen TL, Miller E, Bache SM, Müller K, Ooms J, Robinson D, Seidel DP, Spinu V, Takahashi K, Vaughan D, Wilke C, Woo K, Yutani H (2019). “Welcome to the tidyverse.” Journal of Open Source Software, 4(43), 1686. doi:10.21105/joss.01686. " |> cat()
 ```
 
 

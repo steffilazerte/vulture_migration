@@ -13,11 +13,7 @@ Data values are daily estimates "of the greatest aggregation of vultures over Ro
 
 ## Load & Clean Data
 ```{r message = FALSE}
-library(tidyverse)
-library(readxl)
-library(mgcv)
-library(patchwork)
-source("XX_functions.R")
+source("XX_functions.R")  # Custom functions and packages
 ```
 
 :::{.panel-tabset}

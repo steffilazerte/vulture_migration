@@ -1,3 +1,35 @@
+# Data manipulation
+library(dplyr)
+library(tidyr)
+library(purrr)
+library(stringr)
+library(lubridate) # Dates/times
+library(assertr)   # Data checks
+library(broom)     # Data tidying
+
+# Data reading/saving
+library(openxlsx) # Custom saving with formating
+library(readxl)   # Quick reading
+library(readr)    # Quick reading
+
+# Figures & Tables
+library(ggplot2)
+library(patchwork)
+library(ggthemes)
+library(gt)
+
+# Spatial
+library(ggspatial)
+library(sf)
+library(rnaturalearth)
+
+# Models & Stats
+library(mgcv)    # GAM
+library(DHARMa)  # Model checks
+library(mgcViz) # For DHARMa to use GAM
+library(moments) # Skew etc.
+
+
 calc_dates <- function(x) {
   x |>
     summarize(p05y1 = 0.05 * max(count_sum),

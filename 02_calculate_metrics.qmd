@@ -20,14 +20,7 @@ explore these metrics for the entire data set.
 
 ## Load Data
 ```{r message = FALSE}
-library(tidyverse)
-library(mgcv)
-library(patchwork)
-library(gt)
-library(moments)
-library(assertr)
-
-source("XX_functions.R")
+source("XX_functions.R")  # Custom functions and packages
 
 set.seed(1234) # To make this reproducible
 

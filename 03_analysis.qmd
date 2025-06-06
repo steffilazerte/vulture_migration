@@ -17,13 +17,7 @@ knitr::opts_chunk$set(audodep = TRUE)
 ```{r}
 #| message: false
 #| code-fold: false
-library(tidyverse)
-library(gt)
-library(DHARMa)
-library(patchwork)
-library(broom)
-
-source("XX_functions.R")
+source("XX_functions.R")  # Custom functions and packages
 
 # Metrics
 v <- read_csv("Data/Datasets/vultures_final.csv") |>
