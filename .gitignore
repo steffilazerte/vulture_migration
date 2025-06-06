@@ -6,10 +6,8 @@
 .httr-oauth
 .DS_Store
 .quarto
-Data/*
-!Data/Datasets/
-Data/Datasets/*
-!Data/Datasets/table_*
+Data/Raw/*
+
 Docs/
 /.quarto/
 *_cache/
