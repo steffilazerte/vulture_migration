@@ -263,7 +263,7 @@ wrap_plots(g)
 
 Based on the **Model Check Plots**, particularly the ones with **Simulated DHARMa residuals**, 
 we have good model fit (QQ plots of residuals) throughout, but a couple examples
-of non-constant variance (e.g., 1999, 2005, 2009, 2018, 2021). However, I am 
+of potential non-constant variance. However, I am 
 not very concerned about this for several reasons.
 
 1. Although DHARMa highlighted these plots as having significant quantile deviations, 
@@ -362,7 +362,7 @@ cum_counts <- pred |>
 ```
 
 #### Preview
-Showing only a snapshot of the middle of the year 1998.
+Showing only a snapshot of the middle of the year 1999.
 
 - `count_init` is the predicted daily kettle count (only included here for illustration)
 - `count` is the predicted daily kettle count after residents are removed (this means that negative counts are possible before migration starts).
@@ -372,7 +372,7 @@ Showing only a snapshot of the middle of the year 1998.
 the resident date cutoff (`r resident_date`), and have been set to zero so we
 start cumulative counts on `r resident_date`.
 
-**The median number of residents for 1998 is `r cum_counts$res_pop_median[1]`**
+**The median number of residents for 1999 is `r cum_counts$res_pop_median[1]`**
 
 ```{r}
 gt(slice(cum_counts, 35:60))

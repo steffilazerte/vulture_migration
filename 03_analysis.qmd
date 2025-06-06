@@ -162,7 +162,7 @@ s <- simulateResiduals(lm(mig_start_doy ~ year, data = v), plot = TRUE)
 
 Similarly, I wouldn't be unduly worried about the scary red line in this plot, 
 as I don't really find the residuals to show much pattern and there are no other 
-problems highlighted, except that one outlier (the red asterisk).
+problems highlighted.
 ```{r}
 #| echo: false
 s <- simulateResiduals(lm(max_doy ~ year, data = v), plot = TRUE)
@@ -171,7 +171,7 @@ s <- simulateResiduals(lm(max_doy ~ year, data = v), plot = TRUE)
 This one starts to look a bit problematic...
 ```{r}
 #| echo: false
-s <- simulateResiduals(lm(mig_pop_max ~ year, data = v), plot = TRUE)
+s <- simulateResiduals(lm(peak_raw_mean ~ year, data = v), plot = TRUE)
 ```
 
 This one is awful!
@@ -352,16 +352,26 @@ Tables with coefficients for both original and new model are shown, with
 colour intensity showing strength in the pattern.
 
 For the start of migration, if we omit 1999, the pattern is stronger, 
-but the same.
+but the same, if we omit 2000, the pattern is weaker but still the same.
 ```{r}
 compare(m1, 1999)
+compare(m1, 2000)
 ```
 
-For the start of peak migration, the date of 50% passage and the end of peak migration, if we omit 2020, the pattern is weaker, but the same.
+For the start of peak migration
 ```{r}
+compare(m2, 2000)
 compare(m2, 2020)
+```
+
+The date of 50% passage
+```{r}
 compare(m3, 2020)
-compare(m4, 2020)
+```
+
+And the date of maximum counts
+```{r}
+compare(m6, 2002)
 ```
 
 :::{.callout-tip}
@@ -375,12 +385,12 @@ In addition to the sensitivity check using cook's distances, here we will
 conduct a more targeted exploration of some specific years.
 
 #### Gaps around the peak
-First, we consider removing 1998, 2011, 2013 as they have sampling gaps around
+First, we consider removing 2011, 2013 as they have sampling gaps around
 the peak of migration
 
 ```{r}
 #| code-fold: false
-y <- c(1998, 2011, 2013)
+y <- c(2011, 2013)
 m1a <- update(m1, data = filter(v, !year %in% y))
 m2a <- update(m2, data = filter(v, !year %in% y))
 m3a <- update(m3, data = filter(v, !year %in% y))
@@ -459,13 +469,13 @@ write_csv(tb, d, append = TRUE)
 
 #### Remove all problematic years
 
-Out of curiosity, let's try removing all 6 years. This reduces our
+Out of curiosity, let's try removing all 5 years. This reduces our
 data from 25 to 19 samples, so is a substantial change and we may
 see non-significant results merely because we have removed too many samples.
 
 ```{r}
 #| code-fold: false
-y <- c(1998, 2011, 2013, 2001, 2006, 2023)
+y <- c(2011, 2013, 2001, 2006, 2023)
 m1c <- update(m1, data = filter(v, !year %in% y))
 m2c <- update(m2, data = filter(v, !year %in% y))
 m3c <- update(m3, data = filter(v, !year %in% y))
@@ -501,7 +511,7 @@ write_csv(tc, d, append = TRUE)
 the patterns we see in this data**. 
 
 At worst, by removing these years we increase 
-the error around a slope. But the magnitudes of the slopes do not change and even
+the error around a slope. But the magnitudes of the slopes do not change very much and even
 the significance is only ever reduced only a little. 
 
 ### Full Model Results
@@ -577,6 +587,8 @@ ggplot(dur_figs, aes(x = year, y = dur, group = measure, colour = measure)) +
 ```
 
 ### Model Checks
+Some pattern to the upper quandrant residuals, but I think the more reflects 
+what we're seeing, that year is a poor predictor of migration duration.
 ```{r}
 model_check_figs(models)
 ```
@@ -598,9 +610,12 @@ Now let's see what happens if we were to omit these years from the respective an
 Tables with coefficients for both original and new model are shown, with
 colour intensity showing strength in the pattern.
 
-For the number of days in peak migration, if we omit 1999, the pattern is stronger, but the same (i.e. not significant).
+For the number of days in peak migration, if we omit 1999, the pattern is stronger, but the same (i.e. not significant), we see the same for the number of days 
+in peak migration for 1999 and 2009.
 ```{r}
+compare(m1, 1999)
 compare(m2, 1999)
+compare(m2, 2009)
 ```
 
 :::{.callout-tip}
@@ -613,12 +628,12 @@ In addition to the sensitivity check using cook's distances, here we will
 conduct a more targeted exploration of some specific years.
 
 #### Gaps around the peak
-First, we consider removing 1998, 2011, 2013 as they have sampling gaps around
+First, we consider removing 2011, 2013 as they have sampling gaps around
 the peak of migration
 
 ```{r}
 #| code-fold: false
-y <- c(1998, 2011, 2013)
+y <- c(2011, 2013)
 m1a <- update(m1, data = filter(v, !year %in% y))
 m2a <- update(m2, data = filter(v, !year %in% y))
 models_a <- list(m1a, m2a)
@@ -691,13 +706,13 @@ write_csv(tb, d, append = TRUE)
 
 #### Remove all problematic years
 
-Out of curiosity, let's try removing all 6 years. This reduces our
+Out of curiosity, let's try removing all 5 years. This reduces our
 data from 25 to 19 samples, so is a substantial change and we may
 see non-significant results merely because we have removed too many samples.
 
 ```{r}
 #| code-fold: false
-y <- c(1998, 2011, 2013, 2001, 2006, 2023)
+y <- c(2011, 2013, 2001, 2006, 2023)
 m1c <- update(m1, data = filter(v, !year %in% y))
 m2c <- update(m2, data = filter(v, !year %in% y))
 models_c <- list(m1c, m2c)
@@ -875,8 +890,9 @@ compare(m1, 1999)
 compare(m2, 1999)
 ```
 
-If we omit 2022, the patterns are weaker, but still the same.
+If we omit 2000 or 2022, the patterns are weaker, but still the same.
 ```{r}
+compare(m1, 2000)
 compare(m1, 2022)
 compare(m2, 2022)
 ```
@@ -892,12 +908,12 @@ In addition to the sensitivity check using cook's distances, here we will
 conduct a more targeted exploration of some specific years.
 
 #### Gaps around the peak
-First, we consider removing 1998, 2011, 2013 as they have sampling gaps around
+First, we consider removing 2011 and 2013 as they have sampling gaps around
 the peak of migration
 
 ```{r}
 #| code-fold: false
-y <- c(1998, 2011, 2013)
+y <- c(2011, 2013)
 m1a <- update(m1, data = filter(v, !year %in% y))
 m2a <- update(m2, data = filter(v, !year %in% y))
 models_a <- list(m1a, m2a)
@@ -969,13 +985,13 @@ write_csv(tb, d, append = TRUE)
 
 #### Remove all problematic years
 
-Out of curiosity, let's try removing all 6 years. This reduces our
+Out of curiosity, let's try removing all 5 years. This reduces our
 data from 25 to 19 samples, so is a substantial change and we may
 see non-significant results merely because we have removed too many samples.
 
 ```{r}
 #| code-fold: false
-y <- c(1998, 2011, 2013, 2001, 2006, 2023)
+y <- c(2011, 2013, 2001, 2006, 2023)
 m1c <- update(m1, data = filter(v, !year %in% y))
 m2c <- update(m2, data = filter(v, !year %in% y))
 models_c <- list(m1c, m2c)
@@ -1311,21 +1327,17 @@ Now let's see what happens if we were to omit these years from the respective an
 Tables with coefficients for both original and new model are shown, with
 colour intensity showing strength in the pattern.
 
-For skew of the counts during the migration period, if we omit 2001, the patterns
-don't really change (i.e., stay non-significant).
+For 2001, the patterns shift but do not change.
 ```{r}
-compare(m1, 2002)
+compare(m1, 2001)
+compare(m3, 2001)
+compare(m4, 2001)
+
 ```
 
-For skew of the counts during the peak migration period, if we omit 2002, the patterns
-don't really change (i.e., stay non-significant).
+For 2002, the patterns are stronger.
 ```{r}
 compare(m2, 2002)
-```
-
-For kurtosis during the peak migration period, if we omit 2002, the patterns don't really 
-change. 
-```{r}
 compare(m5, 2002)
 ```
 
@@ -1341,33 +1353,18 @@ are less strong, but the same.
 compare(m6, 2009)
 ```
 
-
-For skew of the counts during the migration period and during the "all" period if we omit 2015, the patterns are stronger, but the same (i.e., not significant).
+For 2015, the patterns are stronger, but the same (i.e., not significant).
 ```{r}
 compare(m1, 2015)
 compare(m3, 2015)
-```
-
-
-For kurtosis during the migration period, if we omit 2015, the patterns are stronger, 
-but the same.
-```{r}
 compare(m4, 2015)
 ```
-
 
 For kurtosis during the peak migration period, if we omit 2018, the patterns don't really change.
 ```{r}
 compare(m5, 2018)
 ```
 
-For kurtosis during the migration period *and* during the peak migration period, 
-if we omit 2018, the patterns are stronger.
-
-```{r}
-compare(m3, 2018)
-compare(m4, 2018)
-```
 
 :::{.callout-tip}
 Therefore I wouldn't be concerned

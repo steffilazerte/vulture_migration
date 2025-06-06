@@ -135,9 +135,10 @@ land <- data.frame(lon = c(-124.3, -124.3, -123.5),
 area <- ne_states(country = c("Canada", "United States of America")) |>
   #st_crop(st_bbox(c(xmin = -140, xmax = -112, ymin = 41, ymax = 60))) |>
   #filter(name %in% c("British Columbia", "Alberta", "Washington", "Oregon", "Idaho", "Montana")) |>
-  mutate(name = if_else(name %in% c("British Columbia", "Washington", "Oregon"), toupper(name), NA),
-         name = str_replace(name, " ", "\n"),
-         postal =  if_else(postal %in% c("BC", "WA", "OR", "AB"), postal, NA))
+  mutate(
+    name = if_else(name %in% c("British Columbia", "Washington", "Oregon"), toupper(name), NA),
+    name = str_replace(name, " ", "\n"),
+    postal =  if_else(postal %in% c("BC", "WA", "OR", "AB"), postal, NA))
 
 box <- st_polygon(list(rbind(c(1050000, 330000), 
                              c(1050000, 490000),
@@ -163,8 +164,8 @@ g <- g0 +
   geom_sf_text(data = land, angle = c(-24, 0, -45), colour = "grey60", size = c(6, 7, 7)) +
   annotation_scale(location = "bl") + 
   annotation_north_arrow(
-    location = "br", height = unit(0.5, "cm"), width = unit(0.5, "cm"),
-    style = north_arrow_orienteering(text_size = -Inf)) +
+    location = "bl", height = unit(0.5, "cm"), width = unit(0.5, "cm"),
+    style = north_arrow_orienteering(text_size = -Inf), pad_y = unit(0.75, "cm")) +
   coord_sf(crs = 3005, xlim = c(1050000, 1230000), ylim = c(330000, 490000))
 
 g_inset <- g0 +
@@ -196,7 +197,7 @@ g + inset_element(g_inset, left = 0, top = 1, bottom = 0.6, right = 0.342, align
 
 ```{r}
 pred <- mutate(pred, ci95_upper = count + se * 1.96, ci95_lower = count - se * 1.96)
-res <- filter(v, year == 1998) |>
+res <- filter(v, year == 1999) |>
   mutate(xmin = 204, 
          xmax = 240, y = 0.25 * mig_raw_max, 
          xmid = (240-204)/2 + 204,
@@ -326,9 +327,9 @@ writeData(
   x = paste0(
     "Table. Results [Estimate of Year (P-value)] for different models when removing selective years. \n",
     "'Original' represents the results for the original model;\n",
-    "'Removed Gaps' represents the results for these models when removing years with large gaps around the migration peaks (1998, 2011, 2013);\n",
+    "'Removed Gaps' represents the results for these models when removing years with large gaps around the migration peaks (2011, 2013);\n",
     "'Removed Ends' represents the results for these models when removing years where it looks like sampling ended earlier than the end of migration (2001, 2006, 2023);\n",
-    "'Removed All' represents the results for these models when removing all questionable years (1998, 2001, 2006, 2011, 2013, 2023)\n",
+    "'Removed All' represents the results for these models when removing all questionable years (2001, 2006, 2011, 2013, 2023)\n",
     "Bold P values are significant at P <= 0.05."
     ))
 
