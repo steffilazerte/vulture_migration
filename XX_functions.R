@@ -255,9 +255,9 @@ compare <- function(model, y) {
               str_remove(as.character(model$call)[2], " ~ year"))
   c <- rbind(
     as.data.frame(coef(summary(model)))|>
-      rownames_to_column("parameter"),
+      tibble::rownames_to_column("parameter"),
     as.data.frame(coef(summary(update(model, data = filter(v, year != y))))) |>
-      rownames_to_column("parameter")
+      tibble::rownames_to_column("parameter")
   ) |>
     mutate(across(-"parameter", \(x) round(x, digits = 3)))
   cbind(model = sort(rep(m, nrow(c)/2), decreasing = TRUE), c) |>

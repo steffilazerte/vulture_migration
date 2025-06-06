@@ -2,6 +2,8 @@ project:
   type: website
   output-dir: docs
   title: "Vulture Migration on Vancouver Island"
+  render: 
+    - "*.qmd"
   
 website: 
   sidebar: 
