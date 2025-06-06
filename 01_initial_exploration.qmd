@@ -7,7 +7,12 @@ title: "Initial Exploration"
 This is the initial exploration of Turkey Vulture kettling and migration behaviour
 above Rocky Point on southern Vancouver Island. 
 
-> Banding and observations start 1 hour before sunrise and commence for 6 hours. Blanks indicate no data, often because the banding station was not open at all due to rainy weather or closed early for similar reasons. In addition, the station is on Department of National Defence land, and blanks can arise when banders are excluded by DND. Unfortunately, this applies to the entire year of 2007. Zero values represent true zeros, the count was made but no vultures seen.
+> Banding and observations start 1 hour before sunrise and commence for 6 hours. 
+> Blanks and ****** indicate no data (NA), often because the banding station was not open at all due to rainy weather or closed early for similar reasons. 
+> In addition, the station is on Department of National Defence land, 
+> and blanks can arise when banders are excluded by DND. 
+> Unfortunately, this applies to the entire year of 2007. 
+> Zero values represent true zeros, the count was made but no vultures seen.
 
 Data values are daily estimates "of the greatest aggregation of vultures over Rocky Point that day during the station hours".
 
@@ -19,8 +24,13 @@ source("XX_functions.R")  # Custom functions and packages
 :::{.panel-tabset}
 
 ### Load Data
+
 ```{r}
-v <- read_excel("Data/Raw/TUVU DET updated 1998-2023.xlsx")
+peek <- read_excel("Data/Raw/TUVU DET 1998-2023 days excluded FINAL_DLK_2025-05-28.xlsx")
+end <- which(peek$`day/year` == "year") - 1
+
+v <- read_excel("Data/Raw/TUVU DET 1998-2023 days excluded FINAL_DLK_2025-05-28.xlsx", 
+                na = c("", "******"), n_max = end) 
 ```
 
 ### Quick Check
@@ -35,7 +45,9 @@ tail(v)
 ### Quick Clean
 
 ```{r}
-v <- rename(v, date = 1)
+v <- rename(v, date = "day/year") %>%
+  select(matches("date|\\d{4}")) %>%
+  assert(is.numeric, -"date") # make sure we get only numeric data, not summaries
 ```
 
 ### Quick Check
@@ -51,7 +63,10 @@ v
 ### Re-arrange
 
 ```{r}
-v <- pivot_longer(v, -date, names_to = "year", values_to = "count")
+v <- v |>
+  mutate(`2007` = NA) |>  # Add missing year for completeness
+  relocate("2007", .before = "2008") |>
+  pivot_longer(-date, names_to = "year", values_to = "count")
 
 year(v$date) <- as.integer(v$year)  # Fix years for each date
 
@@ -59,9 +74,13 @@ v <- mutate(v, date = as_date(date), doy = yday(date))
 ```
 
 ### Quick Check
-Correct year on all dates now.
+Correct year on all dates now, and verify a couple of random dates.
 ```{r}
-v
+v %>%
+  verify(is.na(count[date == "1999-07-23"])) %>%
+  verify(count[date == "2006-08-06"] == 7) %>%
+  verify(count[date == "2020-09-26"] == 50) %>%
+  verify(count[date == "2023-10-14"] == 54)
 ```
 :::
 
@@ -80,6 +99,11 @@ ggplot(v, aes(x = doy, y = count, group = year, colour = year)) +
               level = 0.95) +
   facet_wrap(~year, scales = "free") +
   scale_colour_viridis_d()
+```
+
+Omit 1998 because missing almost all of the second half of the migration period.
+```{r}
+v <- filter(v, year != 1998)
 ```
 
 Save this formatted data for later use
