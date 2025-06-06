@@ -2,14 +2,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.549">
+<meta name="generator" content="quarto-1.6.39">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Steffi LaZerte">
-<meta name="dcterms.date" content="2024-09-23">
+<meta name="dcterms.date" content="2025-06-06">
 
-<title>Vulture Migration on Vancouver Island - Initial Exploration</title>
+<title>Initial Exploration – Vulture Migration on Vancouver Island</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -35,7 +35,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -72,10 +72,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-e26003cea8cd680ca0c55a263523d882.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-0f2125027929bcb0015b69c7d43d06f0.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script src="site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
 <link href="site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
 <link href="site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
@@ -116,13 +116,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
         <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./01_initial_exploration.html">Workflow</a></li><li class="breadcrumb-item"><a href="./01_initial_exploration.html">Initial Exploration</a></li></ol></nav>
-        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
-      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
       </button>
     </div>
@@ -149,9 +149,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
  <span class="menu-text">Workflow</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -184,9 +184,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
  <span class="menu-text">Appendicies</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -265,7 +265,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">September 23, 2024</p>
+      <p class="date">June 6, 2025</p>
     </div>
   </div>
   
@@ -281,32 +281,52 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="background">Background</h2>
 <p>This is the initial exploration of Turkey Vulture kettling and migration behaviour above Rocky Point on southern Vancouver Island.</p>
 <blockquote class="blockquote">
-<p>Banding and observations start 1 hour before sunrise and commence for 6 hours. Blanks indicate no data, often because the banding station was not open at all due to rainy weather or closed early for similar reasons. In addition, the station is on Department of National Defence land, and blanks can arise when banders are excluded by DND. Unfortunately, this applies to the entire year of 2007. Zero values represent true zeros, the count was made but no vultures seen.</p>
+<p>Banding and observations start 1 hour before sunrise and commence for 6 hours. Blanks and ****** indicate no data (NA), often because the banding station was not open at all due to rainy weather or closed early for similar reasons. In addition, the station is on Department of National Defence land, and blanks can arise when banders are excluded by DND. Unfortunately, this applies to the entire year of 2007. Zero values represent true zeros, the count was made but no vultures seen.</p>
 </blockquote>
 <p>Data values are daily estimates “of the greatest aggregation of vultures over Rocky Point that day during the station hours”.</p>
 </section>
 <section id="load-clean-data" class="level2">
 <h2 class="anchored" data-anchor-id="load-clean-data">Load &amp; Clean Data</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mgcv)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"XX_functions.R"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"XX_functions.R"</span>)  <span class="co"># Custom functions and packages</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" aria-current="page">Load Data</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">Quick Check</a></li></ul>
 <div class="tab-content">
 <div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>v <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">"Data/Raw/TUVU DET updated 1998-2023.xlsx"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>peek <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">"Data/Raw/TUVU DET 1998-2023 days excluded FINAL_DLK_2025-05-28.xlsx"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>New names:
+• `` -&gt; `...1`
+• `` -&gt; `...28`
+• `` -&gt; `...29`
+• `` -&gt; `...30`
+• `` -&gt; `...31`
+• `` -&gt; `...32`
+• `` -&gt; `...33`
+• `` -&gt; `...34`
+• `` -&gt; `...35`</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>end <span class="ot">&lt;-</span> <span class="fu">which</span>(peek<span class="sc">$</span><span class="st">`</span><span class="at">day/year</span><span class="st">`</span> <span class="sc">==</span> <span class="st">"year"</span>) <span class="sc">-</span> <span class="dv">1</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>v <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">"Data/Raw/TUVU DET 1998-2023 days excluded FINAL_DLK_2025-05-28.xlsx"</span>, </span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">na =</span> <span class="fu">c</span>(<span class="st">""</span>, <span class="st">"******"</span>), <span class="at">n_max =</span> end) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>New names:
+• `` -&gt; `...27`
+• `` -&gt; `...28`
+• `` -&gt; `...29`
+• `` -&gt; `...30`
+• `` -&gt; `...31`</code></pre>
+</div>
 </div>
 </div>
 <div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(v)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(v)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 6 × 27
+<pre><code># A tibble: 6 × 31
   `day/year`          `1998` `1999` `2000` `2001` `2002` `2003` `2004` `2005`
   &lt;dttm&gt;               &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
 1 2023-07-23 00:00:00      4     NA      2      4      3      4      3      3
@@ -315,26 +335,28 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 4 2023-07-26 00:00:00      0      4      0      2      6      5      4      6
 5 2023-07-27 00:00:00      0      7     NA      9      5      1      1      1
 6 2023-07-28 00:00:00      1      4     NA     10      7      6      1      8
-# ℹ 18 more variables: `2006` &lt;dbl&gt;, `2007` &lt;lgl&gt;, `2008` &lt;dbl&gt;, `2009` &lt;dbl&gt;,
-#   `2010` &lt;dbl&gt;, `2011` &lt;dbl&gt;, `2012` &lt;dbl&gt;, `2013` &lt;dbl&gt;, `2014` &lt;dbl&gt;,
-#   `2015` &lt;dbl&gt;, `2016` &lt;dbl&gt;, `2017` &lt;dbl&gt;, `2018` &lt;dbl&gt;, `2019` &lt;dbl&gt;,
-#   `2020` &lt;dbl&gt;, `2021` &lt;dbl&gt;, `2022` &lt;dbl&gt;, `2023` &lt;dbl&gt;</code></pre>
+# ℹ 22 more variables: `2006` &lt;dbl&gt;, `2008` &lt;dbl&gt;, `2009` &lt;dbl&gt;, `2010` &lt;dbl&gt;,
+#   `2011` &lt;dbl&gt;, `2012` &lt;dbl&gt;, `2013` &lt;dbl&gt;, `2014` &lt;dbl&gt;, `2015` &lt;dbl&gt;,
+#   `2016` &lt;dbl&gt;, `2017` &lt;dbl&gt;, `2018` &lt;dbl&gt;, `2019` &lt;dbl&gt;, `2020` &lt;dbl&gt;,
+#   `2021` &lt;dbl&gt;, `2022` &lt;dbl&gt;, `2023` &lt;dbl&gt;, ...27 &lt;lgl&gt;, ...28 &lt;lgl&gt;,
+#   ...29 &lt;lgl&gt;, ...30 &lt;lgl&gt;, ...31 &lt;chr&gt;</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tail</span>(v)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tail</span>(v)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 6 × 27
+<pre><code># A tibble: 6 × 31
   `day/year`          `1998` `1999` `2000` `2001` `2002` `2003` `2004` `2005`
   &lt;dttm&gt;               &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
 1 2023-10-16 00:00:00      0     NA      0     NA     25     NA    120      5
 2 2023-10-17 00:00:00     NA     NA      4     NA     26     NA     NA     NA
-3 2023-10-18 00:00:00     12     NA     NA     NA     14      6     26     10
+3 2023-10-18 00:00:00     12     NA      4     NA     14      6     26     10
 4 2023-10-19 00:00:00     NA     18     NA     NA      8     NA     NA     NA
 5 2023-10-20 00:00:00     NA     10     NA     NA     17     NA     NA     NA
 6 2023-10-21 00:00:00     NA     NA     NA     NA      9     NA     NA     NA
-# ℹ 18 more variables: `2006` &lt;dbl&gt;, `2007` &lt;lgl&gt;, `2008` &lt;dbl&gt;, `2009` &lt;dbl&gt;,
-#   `2010` &lt;dbl&gt;, `2011` &lt;dbl&gt;, `2012` &lt;dbl&gt;, `2013` &lt;dbl&gt;, `2014` &lt;dbl&gt;,
-#   `2015` &lt;dbl&gt;, `2016` &lt;dbl&gt;, `2017` &lt;dbl&gt;, `2018` &lt;dbl&gt;, `2019` &lt;dbl&gt;,
-#   `2020` &lt;dbl&gt;, `2021` &lt;dbl&gt;, `2022` &lt;dbl&gt;, `2023` &lt;dbl&gt;</code></pre>
+# ℹ 22 more variables: `2006` &lt;dbl&gt;, `2008` &lt;dbl&gt;, `2009` &lt;dbl&gt;, `2010` &lt;dbl&gt;,
+#   `2011` &lt;dbl&gt;, `2012` &lt;dbl&gt;, `2013` &lt;dbl&gt;, `2014` &lt;dbl&gt;, `2015` &lt;dbl&gt;,
+#   `2016` &lt;dbl&gt;, `2017` &lt;dbl&gt;, `2018` &lt;dbl&gt;, `2019` &lt;dbl&gt;, `2020` &lt;dbl&gt;,
+#   `2021` &lt;dbl&gt;, `2022` &lt;dbl&gt;, `2023` &lt;dbl&gt;, ...27 &lt;lgl&gt;, ...28 &lt;lgl&gt;,
+#   ...29 &lt;lgl&gt;, ...30 &lt;lgl&gt;, ...31 &lt;chr&gt;</code></pre>
 </div>
 </div>
 </div>
@@ -345,15 +367,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="tab-content">
 <div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>v <span class="ot">&lt;-</span> <span class="fu">rename</span>(v, <span class="at">date =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>v <span class="ot">&lt;-</span> <span class="fu">rename</span>(v, <span class="at">date =</span> <span class="st">"day/year"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">matches</span>(<span class="st">"date|</span><span class="sc">\\</span><span class="st">d{4}"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">assert</span>(is.numeric, <span class="sc">-</span><span class="st">"date"</span>) <span class="co"># make sure we get only numeric data, not summaries</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
 <p>Expect 2023 for all years, as original data doesn’t include year and R <em>must</em> have a year (this is corrected below).</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>v</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>v</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 91 × 27
+<pre><code># A tibble: 91 × 26
    date                `1998` `1999` `2000` `2001` `2002` `2003` `2004` `2005`
    &lt;dttm&gt;               &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
  1 2023-07-23 00:00:00      4     NA      2      4      3      4      3      3
@@ -367,10 +391,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  9 2023-07-31 00:00:00      4     11      4      8      2      7      2      3
 10 2023-08-01 00:00:00      6      5      0      2      6      5      3      4
 # ℹ 81 more rows
-# ℹ 18 more variables: `2006` &lt;dbl&gt;, `2007` &lt;lgl&gt;, `2008` &lt;dbl&gt;, `2009` &lt;dbl&gt;,
-#   `2010` &lt;dbl&gt;, `2011` &lt;dbl&gt;, `2012` &lt;dbl&gt;, `2013` &lt;dbl&gt;, `2014` &lt;dbl&gt;,
-#   `2015` &lt;dbl&gt;, `2016` &lt;dbl&gt;, `2017` &lt;dbl&gt;, `2018` &lt;dbl&gt;, `2019` &lt;dbl&gt;,
-#   `2020` &lt;dbl&gt;, `2021` &lt;dbl&gt;, `2022` &lt;dbl&gt;, `2023` &lt;dbl&gt;</code></pre>
+# ℹ 17 more variables: `2006` &lt;dbl&gt;, `2008` &lt;dbl&gt;, `2009` &lt;dbl&gt;, `2010` &lt;dbl&gt;,
+#   `2011` &lt;dbl&gt;, `2012` &lt;dbl&gt;, `2013` &lt;dbl&gt;, `2014` &lt;dbl&gt;, `2015` &lt;dbl&gt;,
+#   `2016` &lt;dbl&gt;, `2017` &lt;dbl&gt;, `2018` &lt;dbl&gt;, `2019` &lt;dbl&gt;, `2020` &lt;dbl&gt;,
+#   `2021` &lt;dbl&gt;, `2022` &lt;dbl&gt;, `2023` &lt;dbl&gt;</code></pre>
 </div>
 </div>
 </div>
@@ -381,17 +405,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="tab-content">
 <div id="tabset-3-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-3-1-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>v <span class="ot">&lt;-</span> <span class="fu">pivot_longer</span>(v, <span class="sc">-</span>date, <span class="at">names_to =</span> <span class="st">"year"</span>, <span class="at">values_to =</span> <span class="st">"count"</span>)</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">year</span>(v<span class="sc">$</span>date) <span class="ot">&lt;-</span> <span class="fu">as.integer</span>(v<span class="sc">$</span>year)  <span class="co"># Fix years for each date</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>v <span class="ot">&lt;-</span> <span class="fu">mutate</span>(v, <span class="at">date =</span> <span class="fu">as_date</span>(date), <span class="at">doy =</span> <span class="fu">yday</span>(date))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>v <span class="ot">&lt;-</span> v <span class="sc">|&gt;</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="st">`</span><span class="at">2007</span><span class="st">`</span> <span class="ot">=</span> <span class="cn">NA</span>) <span class="sc">|&gt;</span>  <span class="co"># Add missing year for completeness</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">relocate</span>(<span class="st">"2007"</span>, <span class="at">.before =</span> <span class="st">"2008"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="sc">-</span>date, <span class="at">names_to =</span> <span class="st">"year"</span>, <span class="at">values_to =</span> <span class="st">"count"</span>)</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="fu">year</span>(v<span class="sc">$</span>date) <span class="ot">&lt;-</span> <span class="fu">as.integer</span>(v<span class="sc">$</span>year)  <span class="co"># Fix years for each date</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>v <span class="ot">&lt;-</span> <span class="fu">mutate</span>(v, <span class="at">date =</span> <span class="fu">as_date</span>(date), <span class="at">doy =</span> <span class="fu">yday</span>(date))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <div id="tabset-3-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-2-tab">
-<p>Correct year on all dates now.</p>
+<p>Correct year on all dates now, and verify a couple of random dates.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>v</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>v <span class="sc">%&gt;%</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">verify</span>(<span class="fu">is.na</span>(count[date <span class="sc">==</span> <span class="st">"1999-07-23"</span>])) <span class="sc">%&gt;%</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">verify</span>(count[date <span class="sc">==</span> <span class="st">"2006-08-06"</span>] <span class="sc">==</span> <span class="dv">7</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">verify</span>(count[date <span class="sc">==</span> <span class="st">"2020-09-26"</span>] <span class="sc">==</span> <span class="dv">50</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">verify</span>(count[date <span class="sc">==</span> <span class="st">"2023-10-14"</span>] <span class="sc">==</span> <span class="dv">54</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 2,366 × 4
    date       year  count   doy
@@ -417,14 +448,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="quick-look-at-the-data">Quick look at the data</h2>
 <p><strong>Too see full screen: Right-click and select “Open Image in New Tab” (or similar)</strong></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(v, <span class="fu">aes</span>(<span class="at">x =</span> doy, <span class="at">y =</span> count, <span class="at">group =</span> year, <span class="at">colour =</span> year)) <span class="sc">+</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">na.rm =</span> <span class="cn">TRUE</span>) <span class="sc">+</span></span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_smooth</span>(<span class="at">method =</span> <span class="st">"gam"</span>, <span class="at">formula =</span> y <span class="sc">~</span> <span class="fu">s</span>(x, <span class="at">k =</span> <span class="dv">20</span>), </span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>              <span class="at">method.args =</span> <span class="fu">list</span>(<span class="at">method =</span> <span class="st">"REML"</span>, <span class="at">family =</span> <span class="st">"nb"</span>), <span class="at">na.rm =</span> <span class="cn">TRUE</span>, </span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>              <span class="at">level =</span> <span class="fl">0.95</span>) <span class="sc">+</span></span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>year, <span class="at">scales =</span> <span class="st">"free"</span>) <span class="sc">+</span></span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_colour_viridis_d</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(v, <span class="fu">aes</span>(<span class="at">x =</span> doy, <span class="at">y =</span> count, <span class="at">group =</span> year, <span class="at">colour =</span> year)) <span class="sc">+</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">na.rm =</span> <span class="cn">TRUE</span>) <span class="sc">+</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_smooth</span>(<span class="at">method =</span> <span class="st">"gam"</span>, <span class="at">formula =</span> y <span class="sc">~</span> <span class="fu">s</span>(x, <span class="at">k =</span> <span class="dv">20</span>), </span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>              <span class="at">method.args =</span> <span class="fu">list</span>(<span class="at">method =</span> <span class="st">"REML"</span>, <span class="at">family =</span> <span class="st">"nb"</span>), <span class="at">na.rm =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>              <span class="at">level =</span> <span class="fl">0.95</span>) <span class="sc">+</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>year, <span class="at">scales =</span> <span class="st">"free"</span>) <span class="sc">+</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_colour_viridis_d</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -433,9 +464,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
+<p>Omit 1998 because missing almost all of the second half of the migration period.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>v <span class="ot">&lt;-</span> <span class="fu">filter</span>(v, year <span class="sc">!=</span> <span class="dv">1998</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 <p>Save this formatted data for later use</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(v, <span class="st">"Data/Datasets/vultures_clean_2023.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(v, <span class="st">"Data/Datasets/vultures_clean_2023.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="questions" class="level2">
@@ -512,14 +547,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>We set <code>k = 10</code> (up to 10 basis functions; we want enough to make sure we capture the patterns, but too many will slow things down).</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>g <span class="ot">&lt;-</span> <span class="fu">gam</span>(count <span class="sc">~</span> <span class="fu">s</span>(doy, <span class="at">k =</span> <span class="dv">10</span>), <span class="at">data =</span> <span class="fu">filter</span>(v, year <span class="sc">==</span> <span class="dv">2000</span>), </span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>         <span class="at">method =</span> <span class="st">"REML"</span>, <span class="at">family =</span> <span class="st">"nb"</span>)</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(g, <span class="at">shade =</span> <span class="cn">TRUE</span>, <span class="at">trans =</span> exp, <span class="at">residuals =</span> <span class="cn">TRUE</span>, <span class="at">pch =</span> <span class="dv">20</span>, </span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">shift =</span> <span class="fu">coef</span>(g)[<span class="dv">1</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>g <span class="ot">&lt;-</span> <span class="fu">gam</span>(count <span class="sc">~</span> <span class="fu">s</span>(doy, <span class="at">k =</span> <span class="dv">10</span>), <span class="at">data =</span> <span class="fu">filter</span>(v, year <span class="sc">==</span> <span class="dv">2000</span>), </span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>         <span class="at">method =</span> <span class="st">"REML"</span>, <span class="at">family =</span> <span class="st">"nb"</span>)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(g, <span class="at">shade =</span> <span class="cn">TRUE</span>, <span class="at">trans =</span> exp, <span class="at">residuals =</span> <span class="cn">TRUE</span>, <span class="at">pch =</span> <span class="dv">20</span>, </span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">shift =</span> <span class="fu">coef</span>(g)[<span class="dv">1</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><a href="01_initial_exploration_files/figure-html/unnamed-chunk-10-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2"><img src="01_initial_exploration_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></a></p>
+<p><a href="01_initial_exploration_files/figure-html/unnamed-chunk-11-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2"><img src="01_initial_exploration_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></a></p>
 </figure>
 </div>
 </div>
@@ -528,10 +563,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="tabset-4-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-4-2-tab">
 <p>Not really necessary for us to evaluate, but the <code>s(doy)</code> value indicates that we have a signifcant pattern, and the fact that the <code>edf</code> value is less than our <code>k = 10</code>, is good.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(g)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(g)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
-Family: Negative Binomial(1.117) 
+Family: Negative Binomial(1.129) 
 Link function: log 
 
 Formula:
@@ -539,18 +574,18 @@ count ~ s(doy, k = 10)
 
 Parametric coefficients:
             Estimate Std. Error z value Pr(&gt;|z|)    
-(Intercept)    2.338      0.122   19.16   &lt;2e-16 ***
+(Intercept)   2.3393     0.1207   19.38   &lt;2e-16 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 Approximate significance of smooth terms:
          edf Ref.df Chi.sq p-value    
-s(doy) 5.482  6.627  170.7  &lt;2e-16 ***
+s(doy) 5.475  6.616  175.5  &lt;2e-16 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-R-sq.(adj) =  0.407   Deviance explained = 71.2%
--REML = 267.73  Scale est. = 1         n = 75</code></pre>
+R-sq.(adj) =  0.391   Deviance explained = 71.3%
+-REML =  271.2  Scale est. = 1         n = 76</code></pre>
 </div>
 </div>
 </div>
@@ -559,13 +594,13 @@ R-sq.(adj) =  0.407   Deviance explained = 71.2%
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>p0 <span class="ot">&lt;-</span> <span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>))</span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">gam.check</span>(g, <span class="at">pch =</span> <span class="dv">19</span>, <span class="at">cex =</span> <span class="fl">0.5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>p0 <span class="ot">&lt;-</span> <span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>))</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">gam.check</span>(g, <span class="at">pch =</span> <span class="dv">19</span>, <span class="at">cex =</span> <span class="fl">0.5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><a href="01_initial_exploration_files/figure-html/unnamed-chunk-12-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3"><img src="01_initial_exploration_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="672"></a></p>
+<p><a href="01_initial_exploration_files/figure-html/unnamed-chunk-13-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3"><img src="01_initial_exploration_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="672"></a></p>
 </figure>
 </div>
 </div>
@@ -573,27 +608,27 @@ R-sq.(adj) =  0.407   Deviance explained = 71.2%
 <pre><code>
 Method: REML   Optimizer: outer newton
 full convergence after 4 iterations.
-Gradient range [9.247488e-07,1.632843e-06]
-(score 267.7298 &amp; scale 1).
-Hessian positive definite, eigenvalue range [2.251584,28.18106].
+Gradient range [8.674563e-10,1.084888e-07]
+(score 271.1993 &amp; scale 1).
+Hessian positive definite, eigenvalue range [2.264941,28.62155].
 Model rank =  10 / 10 
 
 Basis dimension (k) checking results. Low p-value (k-index&lt;1) may
 indicate that k is too low, especially if edf is close to k'.
 
          k'  edf k-index p-value
-s(doy) 9.00 5.48    1.01    0.79</code></pre>
+s(doy) 9.00 5.48    0.96    0.62</code></pre>
 </div>
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(p0)</span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>s <span class="ot">&lt;-</span> DHARMa<span class="sc">::</span><span class="fu">simulateResiduals</span>(g, <span class="at">plot =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(p0)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>s <span class="ot">&lt;-</span> DHARMa<span class="sc">::</span><span class="fu">simulateResiduals</span>(g, <span class="at">plot =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><a href="01_initial_exploration_files/figure-html/unnamed-chunk-12-2.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4"><img src="01_initial_exploration_files/figure-html/unnamed-chunk-12-2.png" class="img-fluid figure-img" width="672"></a></p>
+<p><a href="01_initial_exploration_files/figure-html/unnamed-chunk-13-2.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4"><img src="01_initial_exploration_files/figure-html/unnamed-chunk-13-2.png" class="img-fluid figure-img" width="672"></a></p>
 </figure>
 </div>
 </div>
@@ -605,12 +640,12 @@ s(doy) 9.00 5.48    1.01    0.79</code></pre>
 <h3 class="anchored" data-anchor-id="calculating-dates-of-passage">Calculating dates of passage</h3>
 <p>First create data set of predicted GAM model outputs across the entire date range.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>doy <span class="ot">&lt;-</span> <span class="fu">min</span>(g<span class="sc">$</span>model<span class="sc">$</span>doy)<span class="sc">:</span><span class="fu">max</span>(g<span class="sc">$</span>model<span class="sc">$</span>doy)</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">predict</span>(g, <span class="at">newdata =</span> <span class="fu">list</span>(<span class="at">doy =</span> doy), <span class="at">type =</span> <span class="st">"response"</span>, <span class="at">se.fit =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">doy =</span> doy, <span class="at">count =</span> p<span class="sc">$</span>fit, <span class="at">se =</span> p<span class="sc">$</span>se) <span class="sc">|&gt;</span></span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">ci99_upper =</span> count <span class="sc">+</span> se <span class="sc">*</span> <span class="fl">2.58</span>,</span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">ci99_lower =</span> count <span class="sc">-</span> se <span class="sc">*</span> <span class="fl">2.58</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>doy <span class="ot">&lt;-</span> <span class="fu">min</span>(g<span class="sc">$</span>model<span class="sc">$</span>doy)<span class="sc">:</span><span class="fu">max</span>(g<span class="sc">$</span>model<span class="sc">$</span>doy)</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">predict</span>(g, <span class="at">newdata =</span> <span class="fu">list</span>(<span class="at">doy =</span> doy), <span class="at">type =</span> <span class="st">"response"</span>, <span class="at">se.fit =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">doy =</span> doy, <span class="at">count =</span> p<span class="sc">$</span>fit, <span class="at">se =</span> p<span class="sc">$</span>se) <span class="sc">|&gt;</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">ci99_upper =</span> count <span class="sc">+</span> se <span class="sc">*</span> <span class="fl">2.58</span>,</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">ci99_lower =</span> count <span class="sc">-</span> se <span class="sc">*</span> <span class="fl">2.58</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Next we’ll calculate percentiles based on cumulative counts. But there are several ways we can do this, depending how we want to account for resident vultures.</p>
 <ul>
@@ -630,21 +665,21 @@ s(doy) 9.00 5.48    1.01    0.79</code></pre>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>d_sum <span class="ot">&lt;-</span> <span class="fu">mutate</span>(d, <span class="at">count_sum =</span> <span class="fu">cumsum</span>(count))</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>dts <span class="ot">&lt;-</span> <span class="fu">calc_dates</span>(d_sum)</span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>dts_overall <span class="ot">&lt;-</span> <span class="fu">mutate</span>(dts, <span class="at">type =</span> <span class="st">"Option 1: No Adjustments"</span>)</span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>residents <span class="ot">&lt;-</span> d <span class="sc">|&gt;</span></span>
-<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(doy <span class="sc">&lt;</span> <span class="dv">240</span>) <span class="sc">|&gt;</span></span>
-<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">res_pop_min =</span> <span class="fu">min</span>(count), <span class="at">res_pop_max =</span> <span class="fu">max</span>(count), </span>
-<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>            <span class="at">res_pop_median =</span> <span class="fu">median</span>(count), <span class="at">res_pop_mean =</span> <span class="fu">mean</span>(count)) <span class="sc">|&gt;</span></span>
-<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">everything</span>(), \(x) <span class="fu">round</span>(x, <span class="dv">1</span>)))</span>
-<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>g1 <span class="ot">&lt;-</span> <span class="fu">plot_cum_explore</span>(<span class="at">d_sum =</span> d_sum, <span class="at">dts =</span> dts)</span>
-<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>g2 <span class="ot">&lt;-</span> <span class="fu">plot_model_explore</span>(<span class="at">d_raw =</span> g<span class="sc">$</span>model, <span class="at">d_pred =</span> d, <span class="at">dts =</span> dts, residents, <span class="at">resident_date =</span> <span class="dv">240</span>) <span class="sc">+</span></span>
-<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">caption =</span> <span class="st">"Local count stats calculated up to Day 240"</span>)</span>
-<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>g_opt1 <span class="ot">&lt;-</span> g1 <span class="sc">/</span> g2 <span class="sc">+</span> <span class="fu">plot_annotation</span>(<span class="at">title =</span> <span class="st">"Option 1: No adjustments"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>d_sum <span class="ot">&lt;-</span> <span class="fu">mutate</span>(d, <span class="at">count_sum =</span> <span class="fu">cumsum</span>(count))</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>dts <span class="ot">&lt;-</span> <span class="fu">calc_dates</span>(d_sum)</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>dts_overall <span class="ot">&lt;-</span> <span class="fu">mutate</span>(dts, <span class="at">type =</span> <span class="st">"Option 1: No Adjustments"</span>)</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>residents <span class="ot">&lt;-</span> d <span class="sc">|&gt;</span></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(doy <span class="sc">&lt;</span> <span class="dv">240</span>) <span class="sc">|&gt;</span></span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">res_pop_min =</span> <span class="fu">min</span>(count), <span class="at">res_pop_max =</span> <span class="fu">max</span>(count), </span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>            <span class="at">res_pop_median =</span> <span class="fu">median</span>(count), <span class="at">res_pop_mean =</span> <span class="fu">mean</span>(count)) <span class="sc">|&gt;</span></span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">everything</span>(), \(x) <span class="fu">round</span>(x, <span class="dv">1</span>)))</span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>g1 <span class="ot">&lt;-</span> <span class="fu">plot_cum_explore</span>(<span class="at">d_sum =</span> d_sum, <span class="at">dts =</span> dts)</span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>g2 <span class="ot">&lt;-</span> <span class="fu">plot_model_explore</span>(<span class="at">d_raw =</span> g<span class="sc">$</span>model, <span class="at">d_pred =</span> d, <span class="at">dts =</span> dts, residents, <span class="at">resident_date =</span> <span class="dv">240</span>) <span class="sc">+</span></span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">caption =</span> <span class="st">"Local count stats calculated up to Day 240"</span>)</span>
+<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a>g_opt1 <span class="ot">&lt;-</span> g1 <span class="sc">/</span> g2 <span class="sc">+</span> <span class="fu">plot_annotation</span>(<span class="at">title =</span> <span class="st">"Option 1: No adjustments"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 </section>
@@ -657,12 +692,12 @@ s(doy) 9.00 5.48    1.01    0.79</code></pre>
 <li>Then the percentiles are calculated based on cumulative counts in this subset</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>thresh <span class="ot">&lt;-</span> <span class="fu">filter</span>(d, doy <span class="sc">&lt;</span> <span class="dv">270</span>) <span class="sc">|&gt;</span> <span class="co"># Only consider pre-migration</span></span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(doy)) <span class="sc">|&gt;</span></span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(count <span class="sc">&lt;=</span> <span class="fu">min</span>(ci99_upper)) <span class="sc">|&gt;</span></span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="dv">1</span>) <span class="sc">|&gt;</span></span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(doy)</span>
-<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>thresh</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>thresh <span class="ot">&lt;-</span> <span class="fu">filter</span>(d, doy <span class="sc">&lt;</span> <span class="dv">270</span>) <span class="sc">|&gt;</span> <span class="co"># Only consider pre-migration</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(doy)) <span class="sc">|&gt;</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(count <span class="sc">&lt;=</span> <span class="fu">min</span>(ci99_upper)) <span class="sc">|&gt;</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="dv">1</span>) <span class="sc">|&gt;</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(doy)</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>thresh</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 228</code></pre>
 </div>
@@ -686,32 +721,32 @@ s(doy) 9.00 5.48    1.01    0.79</code></pre>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># g1 &lt;- ggplot(data = d, mapping = aes(x = doy, y = count)) +</span></span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="co">#   theme_bw() +</span></span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="co">#   geom_ribbon(aes(ymin = ci99_lower, ymax = ci99_upper), fill = "grey50", alpha = 0.5) +</span></span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="co">#   geom_point(data = g$model) +</span></span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="co">#   geom_line() +</span></span>
-<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a><span class="co">#   coord_cartesian(xlim = c(204, 270)) +</span></span>
-<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a><span class="co">#   labs(title = "Look only at beginning of migration")</span></span>
-<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>g2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> d, <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> doy, <span class="at">y =</span> count)) <span class="sc">+</span></span>
-<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
-<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="fu">c</span>(<span class="fl">0.3</span>, <span class="fl">0.85</span>), <span class="at">legend.title =</span> <span class="fu">element_blank</span>()) <span class="sc">+</span></span>
-<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_ribbon</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> ci99_lower, <span class="at">ymax =</span> ci99_upper), <span class="at">fill =</span> <span class="st">"grey50"</span>, <span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
-<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> g<span class="sc">$</span>model, <span class="at">colour =</span> <span class="st">"grey40"</span>) <span class="sc">+</span></span>
-<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">colour =</span> <span class="st">"grey60"</span>) <span class="sc">+</span></span>
-<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>(<span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">204</span>, <span class="dv">245</span>), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">5</span>, <span class="dv">40</span>)) <span class="sc">+</span></span>
-<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">x =</span> d<span class="sc">$</span>doy[d<span class="sc">$</span>ci99_upper <span class="sc">==</span> <span class="fu">min</span>(d<span class="sc">$</span>ci99_upper)], </span>
-<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a>             <span class="at">y =</span> <span class="fu">min</span>(d<span class="sc">$</span>ci99_upper), <span class="at">size =</span> <span class="dv">4</span>, <span class="fu">aes</span>(<span class="at">colour =</span> <span class="st">"Day with min 99% CI"</span>),</span>
-<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a>             <span class="at">inherit.aes =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">linetype =</span> <span class="dv">2</span>,</span>
-<span id="cb25-20"><a href="#cb25-20" aria-hidden="true" tabindex="-1"></a>             <span class="fu">aes</span>(<span class="at">yintercept =</span> <span class="fu">min</span>(d<span class="sc">$</span>ci99_upper), <span class="at">colour =</span> <span class="st">"Min of upper 99% CI"</span>)) <span class="sc">+</span></span>
-<span id="cb25-21"><a href="#cb25-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">linetype =</span> <span class="dv">2</span>,</span>
-<span id="cb25-22"><a href="#cb25-22" aria-hidden="true" tabindex="-1"></a>             <span class="fu">aes</span>(<span class="at">xintercept =</span> thresh, <span class="at">colour =</span> <span class="st">"Threshold</span><span class="sc">\n</span><span class="st">(first date consistently</span><span class="sc">\n</span><span class="st">above min of upper 99% CI)"</span>)) <span class="sc">+</span></span>
-<span id="cb25-23"><a href="#cb25-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_colour_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"black"</span>, <span class="st">"black"</span>, <span class="st">"red"</span>)) <span class="sc">+</span></span>
-<span id="cb25-24"><a href="#cb25-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">colour =</span> <span class="fu">guide_legend</span>(<span class="at">override.aes =</span> <span class="fu">list</span>(<span class="at">shape =</span> <span class="fu">c</span>(<span class="dv">19</span>, <span class="dv">0</span>, <span class="dv">0</span>), <span class="at">size =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">0</span>, <span class="dv">0</span>), <span class="at">linewidth =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.3</span>, <span class="fl">0.3</span>), <span class="at">linetype =</span> <span class="fu">c</span>(<span class="st">"solid"</span>, <span class="st">"dashed"</span>, <span class="st">"dashed"</span>)))) <span class="sc">+</span></span>
-<span id="cb25-25"><a href="#cb25-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Find thresholds based on local counts"</span>, </span>
-<span id="cb25-26"><a href="#cb25-26" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">"Figure is model plot 'zoomed' into early season"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># g1 &lt;- ggplot(data = d, mapping = aes(x = doy, y = count)) +</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="co">#   theme_bw() +</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="co">#   geom_ribbon(aes(ymin = ci99_lower, ymax = ci99_upper), fill = "grey50", alpha = 0.5) +</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="co">#   geom_point(data = g$model) +</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a><span class="co">#   geom_line() +</span></span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a><span class="co">#   coord_cartesian(xlim = c(204, 270)) +</span></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a><span class="co">#   labs(title = "Look only at beginning of migration")</span></span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>g2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> d, <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> doy, <span class="at">y =</span> count)) <span class="sc">+</span></span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="fu">c</span>(<span class="fl">0.3</span>, <span class="fl">0.85</span>), <span class="at">legend.title =</span> <span class="fu">element_blank</span>()) <span class="sc">+</span></span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_ribbon</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> ci99_lower, <span class="at">ymax =</span> ci99_upper), <span class="at">fill =</span> <span class="st">"grey50"</span>, <span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> g<span class="sc">$</span>model, <span class="at">colour =</span> <span class="st">"grey40"</span>) <span class="sc">+</span></span>
+<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">colour =</span> <span class="st">"grey60"</span>) <span class="sc">+</span></span>
+<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>(<span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">204</span>, <span class="dv">245</span>), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">5</span>, <span class="dv">40</span>)) <span class="sc">+</span></span>
+<span id="cb29-16"><a href="#cb29-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">x =</span> d<span class="sc">$</span>doy[d<span class="sc">$</span>ci99_upper <span class="sc">==</span> <span class="fu">min</span>(d<span class="sc">$</span>ci99_upper)], </span>
+<span id="cb29-17"><a href="#cb29-17" aria-hidden="true" tabindex="-1"></a>             <span class="at">y =</span> <span class="fu">min</span>(d<span class="sc">$</span>ci99_upper), <span class="at">size =</span> <span class="dv">4</span>, <span class="fu">aes</span>(<span class="at">colour =</span> <span class="st">"Day with min 99% CI"</span>),</span>
+<span id="cb29-18"><a href="#cb29-18" aria-hidden="true" tabindex="-1"></a>             <span class="at">inherit.aes =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb29-19"><a href="#cb29-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">linetype =</span> <span class="dv">2</span>,</span>
+<span id="cb29-20"><a href="#cb29-20" aria-hidden="true" tabindex="-1"></a>             <span class="fu">aes</span>(<span class="at">yintercept =</span> <span class="fu">min</span>(d<span class="sc">$</span>ci99_upper), <span class="at">colour =</span> <span class="st">"Min of upper 99% CI"</span>)) <span class="sc">+</span></span>
+<span id="cb29-21"><a href="#cb29-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">linetype =</span> <span class="dv">2</span>,</span>
+<span id="cb29-22"><a href="#cb29-22" aria-hidden="true" tabindex="-1"></a>             <span class="fu">aes</span>(<span class="at">xintercept =</span> thresh, <span class="at">colour =</span> <span class="st">"Threshold</span><span class="sc">\n</span><span class="st">(first date consistently</span><span class="sc">\n</span><span class="st">above min of upper 99% CI)"</span>)) <span class="sc">+</span></span>
+<span id="cb29-23"><a href="#cb29-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_colour_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"black"</span>, <span class="st">"black"</span>, <span class="st">"red"</span>)) <span class="sc">+</span></span>
+<span id="cb29-24"><a href="#cb29-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">colour =</span> <span class="fu">guide_legend</span>(<span class="at">override.aes =</span> <span class="fu">list</span>(<span class="at">shape =</span> <span class="fu">c</span>(<span class="dv">19</span>, <span class="dv">0</span>, <span class="dv">0</span>), <span class="at">size =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">0</span>, <span class="dv">0</span>), <span class="at">linewidth =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.3</span>, <span class="fl">0.3</span>), <span class="at">linetype =</span> <span class="fu">c</span>(<span class="st">"solid"</span>, <span class="st">"dashed"</span>, <span class="st">"dashed"</span>)))) <span class="sc">+</span></span>
+<span id="cb29-25"><a href="#cb29-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Find thresholds based on local counts"</span>, </span>
+<span id="cb29-26"><a href="#cb29-26" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">"Figure is model plot 'zoomed' into early season"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: A numeric `legend.position` argument in `theme()` was deprecated in ggplot2
@@ -720,10 +755,10 @@ s(doy) 9.00 5.48    1.01    0.79</code></pre>
 </div>
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>g2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>g2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stderr">
-<pre><code>Warning in geom_point(x = d$doy[d$ci99_upper == min(d$ci99_upper)], y = min(d$ci99_upper), : All aesthetics have length 1, but the data has 87 rows.
+<pre><code>Warning in geom_point(x = d$doy[d$ci99_upper == min(d$ci99_upper)], y = min(d$ci99_upper), : All aesthetics have length 1, but the data has 88 rows.
 ℹ Please consider using `annotate()` or provide this layer with data containing
   a single row.</code></pre>
 </div>
@@ -734,7 +769,7 @@ s(doy) 9.00 5.48    1.01    0.79</code></pre>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><a href="01_initial_exploration_files/figure-html/unnamed-chunk-16-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-5"><img src="01_initial_exploration_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" width="672"></a></p>
+<p><a href="01_initial_exploration_files/figure-html/unnamed-chunk-17-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-5"><img src="01_initial_exploration_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid figure-img" width="672"></a></p>
 </figure>
 </div>
 </div>
@@ -742,27 +777,27 @@ s(doy) 9.00 5.48    1.01    0.79</code></pre>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>d_sum <span class="ot">&lt;-</span> <span class="fu">filter</span>(d, doy <span class="sc">&gt;=</span> thresh) <span class="sc">|&gt;</span></span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">count_sum =</span> <span class="fu">cumsum</span>(count))</span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>dts <span class="ot">&lt;-</span> <span class="fu">calc_dates</span>(d_sum)</span>
-<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>dts_overall <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(dts_overall, </span>
-<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>                         <span class="fu">mutate</span>(dts, <span class="at">type =</span> <span class="st">"Option 2: Threshold"</span>))</span>
-<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>residents <span class="ot">&lt;-</span> d <span class="sc">|&gt;</span></span>
-<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(doy <span class="sc">&lt;</span> thresh) <span class="sc">|&gt;</span></span>
-<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">res_pop_min =</span> <span class="fu">min</span>(count), <span class="at">res_pop_max =</span> <span class="fu">max</span>(count), </span>
-<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>            <span class="at">res_pop_median =</span> <span class="fu">median</span>(count), <span class="at">res_pop_mean =</span> <span class="fu">mean</span>(count)) <span class="sc">|&gt;</span></span>
-<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">everything</span>(), \(x) <span class="fu">round</span>(x, <span class="dv">1</span>)))</span>
-<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a>g1 <span class="ot">&lt;-</span> <span class="fu">plot_cum_explore</span>(d_sum, dts) <span class="sc">+</span></span>
-<span id="cb30-16"><a href="#cb30-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> thresh, <span class="at">colour =</span> <span class="st">"red"</span>, <span class="at">linetype =</span> <span class="st">"dotted"</span>) <span class="sc">+</span></span>
-<span id="cb30-17"><a href="#cb30-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">label =</span> <span class="st">"Threshold"</span>, <span class="at">x =</span> thresh, <span class="at">y =</span> <span class="dv">1000</span>)</span>
-<span id="cb30-18"><a href="#cb30-18" aria-hidden="true" tabindex="-1"></a>g2 <span class="ot">&lt;-</span> <span class="fu">plot_model_explore</span>(<span class="at">d_raw =</span> g<span class="sc">$</span>model, <span class="at">d_pred =</span> d, <span class="at">dts =</span> dts, residents, <span class="at">resident_date =</span> thresh) <span class="sc">+</span></span>
-<span id="cb30-19"><a href="#cb30-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">caption =</span> <span class="fu">paste0</span>(<span class="st">"Resident count stats calculated up to threshold date, "</span>, thresh))</span>
-<span id="cb30-20"><a href="#cb30-20" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb30-21"><a href="#cb30-21" aria-hidden="true" tabindex="-1"></a>g_opt2 <span class="ot">&lt;-</span> g1 <span class="sc">/</span> g2 <span class="sc">+</span> <span class="fu">plot_annotation</span>(<span class="at">title =</span> <span class="st">"Option 2: Use only dates after threshold"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>d_sum <span class="ot">&lt;-</span> <span class="fu">filter</span>(d, doy <span class="sc">&gt;=</span> thresh) <span class="sc">|&gt;</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">count_sum =</span> <span class="fu">cumsum</span>(count))</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>dts <span class="ot">&lt;-</span> <span class="fu">calc_dates</span>(d_sum)</span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>dts_overall <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(dts_overall, </span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>                         <span class="fu">mutate</span>(dts, <span class="at">type =</span> <span class="st">"Option 2: Threshold"</span>))</span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>residents <span class="ot">&lt;-</span> d <span class="sc">|&gt;</span></span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(doy <span class="sc">&lt;</span> thresh) <span class="sc">|&gt;</span></span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">res_pop_min =</span> <span class="fu">min</span>(count), <span class="at">res_pop_max =</span> <span class="fu">max</span>(count), </span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a>            <span class="at">res_pop_median =</span> <span class="fu">median</span>(count), <span class="at">res_pop_mean =</span> <span class="fu">mean</span>(count)) <span class="sc">|&gt;</span></span>
+<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">everything</span>(), \(x) <span class="fu">round</span>(x, <span class="dv">1</span>)))</span>
+<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a>g1 <span class="ot">&lt;-</span> <span class="fu">plot_cum_explore</span>(d_sum, dts) <span class="sc">+</span></span>
+<span id="cb34-16"><a href="#cb34-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> thresh, <span class="at">colour =</span> <span class="st">"red"</span>, <span class="at">linetype =</span> <span class="st">"dotted"</span>) <span class="sc">+</span></span>
+<span id="cb34-17"><a href="#cb34-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">label =</span> <span class="st">"Threshold"</span>, <span class="at">x =</span> thresh, <span class="at">y =</span> <span class="dv">1000</span>)</span>
+<span id="cb34-18"><a href="#cb34-18" aria-hidden="true" tabindex="-1"></a>g2 <span class="ot">&lt;-</span> <span class="fu">plot_model_explore</span>(<span class="at">d_raw =</span> g<span class="sc">$</span>model, <span class="at">d_pred =</span> d, <span class="at">dts =</span> dts, residents, <span class="at">resident_date =</span> thresh) <span class="sc">+</span></span>
+<span id="cb34-19"><a href="#cb34-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">caption =</span> <span class="fu">paste0</span>(<span class="st">"Resident count stats calculated up to threshold date, "</span>, thresh))</span>
+<span id="cb34-20"><a href="#cb34-20" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb34-21"><a href="#cb34-21" aria-hidden="true" tabindex="-1"></a>g_opt2 <span class="ot">&lt;-</span> g1 <span class="sc">/</span> g2 <span class="sc">+</span> <span class="fu">plot_annotation</span>(<span class="at">title =</span> <span class="st">"Option 2: Use only dates after threshold"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 </section>
@@ -777,28 +812,28 @@ s(doy) 9.00 5.48    1.01    0.79</code></pre>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>residents <span class="ot">&lt;-</span> d <span class="sc">|&gt;</span></span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(doy <span class="sc">&lt;</span> <span class="dv">240</span>) <span class="sc">|&gt;</span></span>
-<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">res_pop_min =</span> <span class="fu">min</span>(count), <span class="at">res_pop_max =</span> <span class="fu">max</span>(count), </span>
-<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">res_pop_median =</span> <span class="fu">median</span>(count), <span class="at">res_pop_mean =</span> <span class="fu">mean</span>(count)) <span class="sc">|&gt;</span></span>
-<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">everything</span>(), \(x) <span class="fu">round</span>(x, <span class="dv">1</span>)))</span>
-<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>d_sum <span class="ot">&lt;-</span> <span class="fu">mutate</span>(d, </span>
-<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>                <span class="at">count =</span> count <span class="sc">-</span> residents<span class="sc">$</span>res_pop_median,</span>
-<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>                <span class="at">count_sum =</span> <span class="fu">cumsum</span>(count))</span>
-<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>dts <span class="ot">&lt;-</span> <span class="fu">calc_dates</span>(d_sum)</span>
-<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a>dts_overall <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(dts_overall, </span>
-<span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a>                         <span class="fu">mutate</span>(dts, <span class="at">type =</span> <span class="st">"Option 3: Subtraction"</span>))</span>
-<span id="cb31-14"><a href="#cb31-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-15"><a href="#cb31-15" aria-hidden="true" tabindex="-1"></a>g1 <span class="ot">&lt;-</span> <span class="fu">plot_cum_explore</span>(<span class="at">d_sum =</span> d_sum, <span class="at">dts =</span> dts) <span class="sc">+</span></span>
-<span id="cb31-16"><a href="#cb31-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">x =</span> <span class="dv">225</span>, <span class="at">y =</span> <span class="dv">1000</span>,</span>
-<span id="cb31-17"><a href="#cb31-17" aria-hidden="true" tabindex="-1"></a>           <span class="at">label =</span> <span class="fu">paste0</span>(<span class="st">"Remove "</span>, </span>
-<span id="cb31-18"><a href="#cb31-18" aria-hidden="true" tabindex="-1"></a>                          residents<span class="sc">$</span>res_pop_median, </span>
-<span id="cb31-19"><a href="#cb31-19" aria-hidden="true" tabindex="-1"></a>                          <span class="st">" from all counts</span><span class="sc">\n</span><span class="st">before calcuating cumuative sum"</span>))</span>
-<span id="cb31-20"><a href="#cb31-20" aria-hidden="true" tabindex="-1"></a>g2 <span class="ot">&lt;-</span> <span class="fu">plot_model_explore</span>(<span class="at">d_raw =</span> g<span class="sc">$</span>model, <span class="at">d_pred =</span> d, <span class="at">dts =</span> dts, residents, <span class="at">resident_date =</span> <span class="dv">240</span>) <span class="sc">+</span></span>
-<span id="cb31-21"><a href="#cb31-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">caption =</span> <span class="st">"Local count stats calculated up to Day 240"</span>)</span>
-<span id="cb31-22"><a href="#cb31-22" aria-hidden="true" tabindex="-1"></a>g_opt3 <span class="ot">&lt;-</span> g1 <span class="sc">/</span> g2 <span class="sc">+</span> <span class="fu">plot_annotation</span>(<span class="at">title =</span> <span class="st">"Option 3: Subtract median first"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>residents <span class="ot">&lt;-</span> d <span class="sc">|&gt;</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(doy <span class="sc">&lt;</span> <span class="dv">240</span>) <span class="sc">|&gt;</span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">res_pop_min =</span> <span class="fu">min</span>(count), <span class="at">res_pop_max =</span> <span class="fu">max</span>(count), </span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">res_pop_median =</span> <span class="fu">median</span>(count), <span class="at">res_pop_mean =</span> <span class="fu">mean</span>(count)) <span class="sc">|&gt;</span></span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">everything</span>(), \(x) <span class="fu">round</span>(x, <span class="dv">1</span>)))</span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>d_sum <span class="ot">&lt;-</span> <span class="fu">mutate</span>(d, </span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>                <span class="at">count =</span> count <span class="sc">-</span> residents<span class="sc">$</span>res_pop_median,</span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>                <span class="at">count_sum =</span> <span class="fu">cumsum</span>(count))</span>
+<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a>dts <span class="ot">&lt;-</span> <span class="fu">calc_dates</span>(d_sum)</span>
+<span id="cb35-12"><a href="#cb35-12" aria-hidden="true" tabindex="-1"></a>dts_overall <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(dts_overall, </span>
+<span id="cb35-13"><a href="#cb35-13" aria-hidden="true" tabindex="-1"></a>                         <span class="fu">mutate</span>(dts, <span class="at">type =</span> <span class="st">"Option 3: Subtraction"</span>))</span>
+<span id="cb35-14"><a href="#cb35-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-15"><a href="#cb35-15" aria-hidden="true" tabindex="-1"></a>g1 <span class="ot">&lt;-</span> <span class="fu">plot_cum_explore</span>(<span class="at">d_sum =</span> d_sum, <span class="at">dts =</span> dts) <span class="sc">+</span></span>
+<span id="cb35-16"><a href="#cb35-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">x =</span> <span class="dv">225</span>, <span class="at">y =</span> <span class="dv">1000</span>,</span>
+<span id="cb35-17"><a href="#cb35-17" aria-hidden="true" tabindex="-1"></a>           <span class="at">label =</span> <span class="fu">paste0</span>(<span class="st">"Remove "</span>, </span>
+<span id="cb35-18"><a href="#cb35-18" aria-hidden="true" tabindex="-1"></a>                          residents<span class="sc">$</span>res_pop_median, </span>
+<span id="cb35-19"><a href="#cb35-19" aria-hidden="true" tabindex="-1"></a>                          <span class="st">" from all counts</span><span class="sc">\n</span><span class="st">before calcuating cumuative sum"</span>))</span>
+<span id="cb35-20"><a href="#cb35-20" aria-hidden="true" tabindex="-1"></a>g2 <span class="ot">&lt;-</span> <span class="fu">plot_model_explore</span>(<span class="at">d_raw =</span> g<span class="sc">$</span>model, <span class="at">d_pred =</span> d, <span class="at">dts =</span> dts, residents, <span class="at">resident_date =</span> <span class="dv">240</span>) <span class="sc">+</span></span>
+<span id="cb35-21"><a href="#cb35-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">caption =</span> <span class="st">"Local count stats calculated up to Day 240"</span>)</span>
+<span id="cb35-22"><a href="#cb35-22" aria-hidden="true" tabindex="-1"></a>g_opt3 <span class="ot">&lt;-</span> g1 <span class="sc">/</span> g2 <span class="sc">+</span> <span class="fu">plot_annotation</span>(<span class="at">title =</span> <span class="st">"Option 3: Subtract median first"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 </section>
@@ -808,27 +843,27 @@ s(doy) 9.00 5.48    1.01    0.79</code></pre>
 <p>The bottom figure shows the raw counts, with the GAM model overlaid, the pink windows indicate 5%-95% and 25%-75% date ranges. The arrow on the left indicates which predicted values were included in the local count statistics.</p>
 <p>Note that the only two things that really change in this example are the initial 5% date (becomes increasingly later with each option) and the calculation of the “local” population statistics (because in Option 1 and Option 2, they’re based on the same set of data, but in Option 2, we use a threshold to define before and after the expected start of migration.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>g_opt1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>g_opt1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><a href="01_initial_exploration_files/figure-html/unnamed-chunk-19-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-6"><img src="01_initial_exploration_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid figure-img" width="672"></a></p>
+<p><a href="01_initial_exploration_files/figure-html/unnamed-chunk-20-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-6"><img src="01_initial_exploration_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid figure-img" width="672"></a></p>
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>g_opt2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>g_opt2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><a href="01_initial_exploration_files/figure-html/unnamed-chunk-19-2.png" class="lightbox" data-gallery="quarto-lightbox-gallery-7"><img src="01_initial_exploration_files/figure-html/unnamed-chunk-19-2.png" class="img-fluid figure-img" width="672"></a></p>
+<p><a href="01_initial_exploration_files/figure-html/unnamed-chunk-20-2.png" class="lightbox" data-gallery="quarto-lightbox-gallery-7"><img src="01_initial_exploration_files/figure-html/unnamed-chunk-20-2.png" class="img-fluid figure-img" width="672"></a></p>
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>g_opt3</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>g_opt3</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><a href="01_initial_exploration_files/figure-html/unnamed-chunk-19-3.png" class="lightbox" data-gallery="quarto-lightbox-gallery-8"><img src="01_initial_exploration_files/figure-html/unnamed-chunk-19-3.png" class="img-fluid figure-img" width="672"></a></p>
+<p><a href="01_initial_exploration_files/figure-html/unnamed-chunk-20-3.png" class="lightbox" data-gallery="quarto-lightbox-gallery-8"><img src="01_initial_exploration_files/figure-html/unnamed-chunk-20-3.png" class="img-fluid figure-img" width="672"></a></p>
 </figure>
 </div>
 </div>
@@ -836,16 +871,16 @@ s(doy) 9.00 5.48    1.01    0.79</code></pre>
 <p>However in this example (and in many that I’ve looked at), this only really affects the first, 5%, Date value.</p>
 <p>Here are the dates calculated for each percentiles using the different methods in this example.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>dts_overall <span class="sc">|&gt;</span></span>
-<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">contains</span>(<span class="st">"count"</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> <span class="st">"perc"</span>, <span class="at">values_from =</span> <span class="st">"doy_passage"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>dts_overall <span class="sc">|&gt;</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">contains</span>(<span class="st">"count"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> <span class="st">"perc"</span>, <span class="at">values_from =</span> <span class="st">"doy_passage"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 3 × 6
   type                       p05   p25   p50   p75   p95
   &lt;chr&gt;                    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-1 Option 1: No Adjustments   248   262   268   273   281
-2 Option 2: Threshold        251   262   268   273   281
-3 Option 3: Subtraction      254   263   268   273   281</code></pre>
+1 Option 1: No Adjustments   247   262   268   273   281
+2 Option 2: Threshold        250   262   268   273   281
+3 Option 3: Subtraction      253   263   268   273   281</code></pre>
 </div>
 </div>
 </section>
@@ -883,130 +918,148 @@ Session Info
 <div id="callout-1" class="callout-1-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">session_info</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">session_info</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>─ Session info ───────────────────────────────────────────────────────────────
  setting  value
- version  R version 4.4.0 (2024-04-24)
- os       Ubuntu 22.04.4 LTS
+ version  R version 4.5.0 (2025-04-11)
+ os       Ubuntu 24.04.2 LTS
  system   x86_64, linux-gnu
  ui       X11
- language en_CA:en
+ language en_CA:en_US:en
  collate  en_CA.UTF-8
  ctype    en_CA.UTF-8
  tz       America/Winnipeg
- date     2024-07-10
- pandoc   3.1.1 @ /usr/lib/rstudio/resources/app/bin/quarto/bin/tools/ (via rmarkdown)
+ date     2025-06-06
+ pandoc   3.4 @ /usr/lib/rstudio/resources/app/bin/quarto/bin/tools/x86_64/ (via rmarkdown)
+ quarto   1.6.39 @ /usr/local/bin/quarto
 
 ─ Packages ───────────────────────────────────────────────────────────────────
- ! package      * version  date (UTC) lib source
- P bit            4.0.5    2022-11-15 [?] CRAN (R 4.4.0)
- P bit64          4.0.5    2020-08-30 [?] CRAN (R 4.4.0)
- P boot           1.3-30   2024-02-26 [?] CRAN (R 4.3.3)
- P cachem         1.1.0    2024-05-16 [?] CRAN (R 4.4.0)
- P cellranger     1.1.0    2016-07-27 [?] CRAN (R 4.4.0)
- P cli            3.6.2    2023-12-11 [?] CRAN (R 4.4.0)
- P codetools      0.2-19   2023-02-01 [?] CRAN (R 4.2.2)
- P colorspace     2.1-0    2023-01-23 [?] CRAN (R 4.4.0)
- P crayon         1.5.2    2022-09-29 [?] CRAN (R 4.4.0)
- P devtools       2.4.5    2022-10-11 [?] CRAN (R 4.4.0)
- P DHARMa         0.4.6    2022-09-08 [?] CRAN (R 4.4.0)
- P digest         0.6.35   2024-03-11 [?] CRAN (R 4.4.0)
- P doParallel     1.0.17   2022-02-07 [?] CRAN (R 4.4.0)
- P dplyr        * 1.1.4    2023-11-17 [?] CRAN (R 4.4.0)
- P ellipsis       0.3.2    2021-04-29 [?] CRAN (R 4.4.0)
- P evaluate       0.23     2023-11-01 [?] CRAN (R 4.4.0)
- P fansi          1.0.6    2023-12-08 [?] CRAN (R 4.4.0)
- P farver         2.1.2    2024-05-13 [?] CRAN (R 4.4.0)
- P fastmap        1.2.0    2024-05-15 [?] CRAN (R 4.4.0)
- P forcats      * 1.0.0    2023-01-29 [?] CRAN (R 4.4.0)
- P foreach        1.5.2    2022-02-02 [?] CRAN (R 4.4.0)
- P fs             1.6.4    2024-04-25 [?] CRAN (R 4.4.0)
- P gamm4          0.2-6    2020-04-03 [?] CRAN (R 4.4.0)
- P gap            1.5-3    2023-08-26 [?] CRAN (R 4.4.0)
- P gap.datasets   0.0.6    2023-08-25 [?] CRAN (R 4.4.0)
- P generics       0.1.3    2022-07-05 [?] CRAN (R 4.4.0)
- P GGally         2.2.1    2024-02-14 [?] CRAN (R 4.4.0)
- P ggplot2      * 3.5.1    2024-04-23 [?] CRAN (R 4.4.0)
- P ggstats        0.6.0    2024-04-05 [?] CRAN (R 4.4.0)
- P glue           1.7.0    2024-01-09 [?] CRAN (R 4.4.0)
- P gridExtra      2.3      2017-09-09 [?] CRAN (R 4.4.0)
- P gtable         0.3.5    2024-04-22 [?] CRAN (R 4.4.0)
- P hms            1.1.3    2023-03-21 [?] CRAN (R 4.4.0)
- P htmltools      0.5.8.1  2024-04-04 [?] CRAN (R 4.4.0)
- P htmlwidgets    1.6.4    2023-12-06 [?] CRAN (R 4.4.0)
- P httpuv         1.6.15   2024-03-26 [?] CRAN (R 4.4.0)
- P iterators      1.0.14   2022-02-05 [?] CRAN (R 4.4.0)
- P jsonlite       1.8.8    2023-12-04 [?] CRAN (R 4.4.0)
- P KernSmooth     2.23-24  2024-05-17 [?] CRAN (R 4.4.0)
- P knitr          1.47     2024-05-29 [?] CRAN (R 4.4.0)
- P labeling       0.4.3    2023-08-29 [?] CRAN (R 4.4.0)
- P later          1.3.2    2023-12-06 [?] CRAN (R 4.4.0)
- P lattice        0.22-5   2023-10-24 [?] CRAN (R 4.3.1)
- P lifecycle      1.0.4    2023-11-07 [?] CRAN (R 4.4.0)
- P lme4           1.1-35.3 2024-04-16 [?] CRAN (R 4.4.0)
- P lubridate    * 1.9.3    2023-09-27 [?] CRAN (R 4.4.0)
- P magrittr       2.0.3    2022-03-30 [?] CRAN (R 4.4.0)
- P MASS           7.3-60   2023-05-04 [?] CRAN (R 4.3.1)
- P Matrix         1.6-5    2024-01-11 [?] CRAN (R 4.3.3)
- P matrixStats    1.3.0    2024-04-11 [?] CRAN (R 4.4.0)
- P memoise        2.0.1    2021-11-26 [?] CRAN (R 4.4.0)
- P mgcv         * 1.9-1    2023-12-21 [?] CRAN (R 4.3.2)
- P mgcViz         0.1.11   2023-10-06 [?] CRAN (R 4.4.0)
- P mime           0.12     2021-09-28 [?] CRAN (R 4.4.0)
- P miniUI         0.1.1.1  2018-05-18 [?] CRAN (R 4.4.0)
- P minqa          1.2.6    2023-09-11 [?] CRAN (R 4.4.0)
- P munsell        0.5.1    2024-04-01 [?] CRAN (R 4.4.0)
- P nlme         * 3.1-165  2024-06-06 [?] CRAN (R 4.4.0)
- P nloptr         2.0.3    2022-05-26 [?] CRAN (R 4.4.0)
- P patchwork    * 1.2.0    2024-01-08 [?] CRAN (R 4.4.0)
- P pillar         1.9.0    2023-03-22 [?] CRAN (R 4.4.0)
- P pkgbuild       1.4.4    2024-03-17 [?] CRAN (R 4.4.0)
- P pkgconfig      2.0.3    2019-09-22 [?] CRAN (R 4.4.0)
- P pkgload        1.3.4    2024-01-16 [?] CRAN (R 4.4.0)
- P plyr           1.8.9    2023-10-02 [?] CRAN (R 4.4.0)
- P profvis        0.3.8    2023-05-02 [?] CRAN (R 4.4.0)
- P promises       1.3.0    2024-04-05 [?] CRAN (R 4.4.0)
- P purrr        * 1.0.2    2023-08-10 [?] CRAN (R 4.4.0)
- P qgam           1.3.4    2021-11-22 [?] CRAN (R 4.4.0)
- P R6             2.5.1    2021-08-19 [?] CRAN (R 4.4.0)
- P rbibutils      2.2.16   2023-10-25 [?] CRAN (R 4.4.0)
- P RColorBrewer   1.1-3    2022-04-03 [?] CRAN (R 4.4.0)
- P Rcpp           1.0.12   2024-01-09 [?] CRAN (R 4.4.0)
- P Rdpack         2.6      2023-11-08 [?] CRAN (R 4.4.0)
- P readr        * 2.1.5    2024-01-10 [?] CRAN (R 4.4.0)
- P readxl       * 1.4.3    2023-07-06 [?] CRAN (R 4.4.0)
- P remotes        2.5.0    2024-03-17 [?] CRAN (R 4.4.0)
-   renv           1.0.7    2024-04-11 [1] CRAN (R 4.4.0)
- P rlang          1.1.3    2024-01-10 [?] CRAN (R 4.4.0)
- P rmarkdown      2.27     2024-05-17 [?] CRAN (R 4.4.0)
- P rstudioapi     0.16.0   2024-03-24 [?] CRAN (R 4.4.0)
- P scales         1.3.0    2023-11-28 [?] CRAN (R 4.4.0)
- P sessioninfo    1.2.2    2021-12-06 [?] CRAN (R 4.4.0)
- P shiny          1.8.1.1  2024-04-02 [?] CRAN (R 4.4.0)
- P stringi        1.8.4    2024-05-06 [?] CRAN (R 4.4.0)
- P stringr      * 1.5.1    2023-11-14 [?] CRAN (R 4.4.0)
- P tibble       * 3.2.1    2023-03-20 [?] CRAN (R 4.4.0)
- P tidyr        * 1.3.1    2024-01-24 [?] CRAN (R 4.4.0)
- P tidyselect     1.2.1    2024-03-11 [?] CRAN (R 4.4.0)
- P tidyverse    * 2.0.0    2023-02-22 [?] CRAN (R 4.4.0)
- P timechange     0.3.0    2024-01-18 [?] CRAN (R 4.4.0)
- P tzdb           0.4.0    2023-05-12 [?] CRAN (R 4.4.0)
- P urlchecker     1.0.1    2021-11-30 [?] CRAN (R 4.4.0)
- P usethis        2.2.3    2024-02-19 [?] CRAN (R 4.4.0)
- P utf8           1.2.4    2023-10-22 [?] CRAN (R 4.4.0)
- P vctrs          0.6.5    2023-12-01 [?] CRAN (R 4.4.0)
- P viridis        0.6.5    2024-01-29 [?] CRAN (R 4.4.0)
- P viridisLite    0.4.2    2023-05-02 [?] CRAN (R 4.4.0)
- P vroom          1.6.5    2023-12-05 [?] CRAN (R 4.4.0)
- P withr          3.0.0    2024-01-16 [?] CRAN (R 4.4.0)
- P xfun           0.44     2024-05-15 [?] CRAN (R 4.4.0)
- P xtable         1.8-4    2019-04-21 [?] CRAN (R 4.4.0)
- P yaml           2.3.8    2023-12-11 [?] CRAN (R 4.4.0)
+ ! package       * version date (UTC) lib source
+ P assertr       * 3.0.1   2023-11-23 [?] CRAN (R 4.5.0)
+ P backports       1.5.0   2024-05-23 [?] CRAN (R 4.5.0)
+ P bit             4.6.0   2025-03-06 [?] CRAN (R 4.5.0)
+ P bit64           4.6.0-1 2025-01-16 [?] CRAN (R 4.5.0)
+ P boot            1.3-31  2024-08-28 [?] CRAN (R 4.4.2)
+ P broom         * 1.0.8   2025-03-28 [?] CRAN (R 4.5.0)
+ P cachem          1.1.0   2024-05-16 [?] CRAN (R 4.5.0)
+ P cellranger      1.1.0   2016-07-27 [?] CRAN (R 4.5.0)
+ P class           7.3-23  2025-01-01 [?] CRAN (R 4.4.2)
+ P classInt        0.4-11  2025-01-08 [?] CRAN (R 4.5.0)
+ P cli             3.6.5   2025-04-23 [?] CRAN (R 4.5.0)
+ P codetools       0.2-20  2024-03-31 [?] CRAN (R 4.4.0)
+ P crayon          1.5.3   2024-06-20 [?] CRAN (R 4.5.0)
+ P DBI             1.2.3   2024-06-02 [?] CRAN (R 4.5.0)
+ P devtools        2.4.5   2022-10-11 [?] CRAN (R 4.5.0)
+ P DHARMa        * 0.4.7   2024-10-18 [?] CRAN (R 4.5.0)
+ P digest          0.6.37  2024-08-19 [?] CRAN (R 4.5.0)
+ P doParallel      1.0.17  2022-02-07 [?] CRAN (R 4.5.0)
+ P dplyr         * 1.1.4   2023-11-17 [?] CRAN (R 4.5.0)
+ P e1071           1.7-16  2024-09-16 [?] CRAN (R 4.5.0)
+ P ellipsis        0.3.2   2021-04-29 [?] CRAN (R 4.5.0)
+ P evaluate        1.0.3   2025-01-10 [?] CRAN (R 4.5.0)
+ P farver          2.1.2   2024-05-13 [?] CRAN (R 4.5.0)
+ P fastmap         1.2.0   2024-05-15 [?] CRAN (R 4.5.0)
+ P foreach         1.5.2   2022-02-02 [?] CRAN (R 4.5.0)
+ P fs              1.6.6   2025-04-12 [?] CRAN (R 4.5.0)
+ P gamm4           0.2-7   2025-04-22 [?] CRAN (R 4.5.0)
+ P gap             1.6     2024-08-27 [?] CRAN (R 4.5.0)
+ P gap.datasets    0.0.6   2023-08-25 [?] CRAN (R 4.5.0)
+ P generics        0.1.4   2025-05-09 [?] CRAN (R 4.5.0)
+ P GGally          2.2.1   2024-02-14 [?] CRAN (R 4.5.0)
+ P ggplot2       * 3.5.2   2025-04-09 [?] CRAN (R 4.5.0)
+ P ggspatial     * 1.1.9   2023-08-17 [?] CRAN (R 4.5.0)
+ P ggstats         0.9.0   2025-03-10 [?] CRAN (R 4.5.0)
+ P ggthemes      * 5.1.0   2024-02-10 [?] CRAN (R 4.5.0)
+ P glue            1.8.0   2024-09-30 [?] CRAN (R 4.5.0)
+ P gridExtra       2.3     2017-09-09 [?] CRAN (R 4.5.0)
+ P gt            * 1.0.0   2025-04-05 [?] CRAN (R 4.5.0)
+ P gtable          0.3.6   2024-10-25 [?] CRAN (R 4.5.0)
+ P hms             1.1.3   2023-03-21 [?] CRAN (R 4.5.0)
+ P htmltools       0.5.8.1 2024-04-04 [?] CRAN (R 4.5.0)
+ P htmlwidgets     1.6.4   2023-12-06 [?] CRAN (R 4.5.0)
+ P httpuv          1.6.16  2025-04-16 [?] CRAN (R 4.5.0)
+ P httr            1.4.7   2023-08-15 [?] CRAN (R 4.5.0)
+ P iterators       1.0.14  2022-02-05 [?] CRAN (R 4.5.0)
+ P jsonlite        2.0.0   2025-03-27 [?] CRAN (R 4.5.0)
+ P KernSmooth      2.23-26 2025-01-01 [?] CRAN (R 4.4.2)
+ P knitr           1.50    2025-03-16 [?] CRAN (R 4.5.0)
+ P labeling        0.4.3   2023-08-29 [?] CRAN (R 4.5.0)
+ P later           1.4.2   2025-04-08 [?] CRAN (R 4.5.0)
+ P lattice         0.22-5  2023-10-24 [?] CRAN (R 4.3.3)
+ P lifecycle       1.0.4   2023-11-07 [?] CRAN (R 4.5.0)
+ P lme4            1.1-37  2025-03-26 [?] CRAN (R 4.5.0)
+ P lubridate     * 1.9.4   2024-12-08 [?] CRAN (R 4.5.0)
+ P magrittr        2.0.3   2022-03-30 [?] CRAN (R 4.5.0)
+ P MASS            7.3-65  2025-02-28 [?] CRAN (R 4.4.3)
+ P Matrix          1.7-3   2025-03-11 [?] CRAN (R 4.4.3)
+ P matrixStats     1.5.0   2025-01-07 [?] CRAN (R 4.5.0)
+ P memoise         2.0.1   2021-11-26 [?] CRAN (R 4.5.0)
+ P mgcv          * 1.9-3   2025-04-04 [?] CRAN (R 4.5.0)
+ P mgcViz        * 0.2.0   2025-04-11 [?] CRAN (R 4.5.0)
+ P mime            0.13    2025-03-17 [?] CRAN (R 4.5.0)
+ P miniUI          0.1.2   2025-04-17 [?] CRAN (R 4.5.0)
+ P minqa           1.2.8   2024-08-17 [?] CRAN (R 4.5.0)
+ P moments       * 0.14.1  2022-05-02 [?] CRAN (R 4.5.0)
+ P nlme          * 3.1-168 2025-03-31 [?] CRAN (R 4.4.3)
+ P nloptr          2.2.1   2025-03-17 [?] CRAN (R 4.5.0)
+ P openxlsx      * 4.2.8   2025-01-25 [?] CRAN (R 4.5.0)
+ P patchwork     * 1.3.0   2024-09-16 [?] CRAN (R 4.5.0)
+ P pillar          1.10.2  2025-04-05 [?] CRAN (R 4.5.0)
+ P pkgbuild        1.4.7   2025-03-24 [?] CRAN (R 4.5.0)
+ P pkgconfig       2.0.3   2019-09-22 [?] CRAN (R 4.5.0)
+ P pkgload         1.4.0   2024-06-28 [?] CRAN (R 4.5.0)
+ P plyr            1.8.9   2023-10-02 [?] CRAN (R 4.5.0)
+ P profvis         0.4.0   2024-09-20 [?] CRAN (R 4.5.0)
+ P promises        1.3.2   2024-11-28 [?] CRAN (R 4.5.0)
+ P proxy           0.4-27  2022-06-09 [?] CRAN (R 4.5.0)
+ P purrr         * 1.0.4   2025-02-05 [?] CRAN (R 4.5.0)
+ P qgam          * 2.0.0   2025-04-10 [?] CRAN (R 4.5.0)
+ P R6              2.6.1   2025-02-15 [?] CRAN (R 4.5.0)
+ P rbibutils       2.3     2024-10-04 [?] CRAN (R 4.5.0)
+ P RColorBrewer    1.1-3   2022-04-03 [?] CRAN (R 4.5.0)
+ P Rcpp            1.0.14  2025-01-12 [?] CRAN (R 4.5.0)
+ P Rdpack          2.6.4   2025-04-09 [?] CRAN (R 4.5.0)
+ P readr         * 2.1.5   2024-01-10 [?] CRAN (R 4.5.0)
+ P readxl        * 1.4.5   2025-03-07 [?] CRAN (R 4.5.0)
+ P reformulas      0.4.1   2025-04-30 [?] CRAN (R 4.5.0)
+ P remotes         2.5.0   2024-03-17 [?] CRAN (R 4.5.0)
+ P renv            1.1.4   2025-03-20 [?] CRAN (R 4.5.0)
+ P rlang           1.1.6   2025-04-11 [?] CRAN (R 4.5.0)
+ P rmarkdown       2.29    2024-11-04 [?] CRAN (R 4.5.0)
+ P rnaturalearth * 1.0.1   2023-12-15 [?] CRAN (R 4.5.0)
+ P rstudioapi      0.17.1  2024-10-22 [?] CRAN (R 4.5.0)
+ P scales          1.4.0   2025-04-24 [?] CRAN (R 4.5.0)
+ P sessioninfo     1.2.3   2025-02-05 [?] CRAN (R 4.5.0)
+ P sf            * 1.0-20  2025-03-24 [?] CRAN (R 4.5.0)
+ P shiny           1.10.0  2024-12-14 [?] CRAN (R 4.5.0)
+ P stringi         1.8.7   2025-03-27 [?] CRAN (R 4.5.0)
+ P stringr       * 1.5.1   2023-11-14 [?] CRAN (R 4.5.0)
+ P terra           1.8-42  2025-04-02 [?] CRAN (R 4.5.0)
+ P tibble          3.2.1   2023-03-20 [?] CRAN (R 4.5.0)
+ P tidyr         * 1.3.1   2024-01-24 [?] CRAN (R 4.5.0)
+ P tidyselect      1.2.1   2024-03-11 [?] CRAN (R 4.5.0)
+ P timechange      0.3.0   2024-01-18 [?] CRAN (R 4.5.0)
+ P tzdb            0.5.0   2025-03-15 [?] CRAN (R 4.5.0)
+ P units           0.8-7   2025-03-11 [?] CRAN (R 4.5.0)
+ P urlchecker      1.0.1   2021-11-30 [?] CRAN (R 4.5.0)
+ P usethis         3.1.0   2024-11-26 [?] CRAN (R 4.5.0)
+ P utf8            1.2.5   2025-05-01 [?] CRAN (R 4.5.0)
+ P vctrs           0.6.5   2023-12-01 [?] CRAN (R 4.5.0)
+ P viridis         0.6.5   2024-01-29 [?] CRAN (R 4.5.0)
+ P viridisLite     0.4.2   2023-05-02 [?] CRAN (R 4.5.0)
+ P vroom           1.6.5   2023-12-05 [?] CRAN (R 4.5.0)
+ P withr           3.0.2   2024-10-28 [?] CRAN (R 4.5.0)
+ P xfun            0.52    2025-04-02 [?] CRAN (R 4.5.0)
+ P xml2            1.3.8   2025-03-14 [?] CRAN (R 4.5.0)
+ P xtable          1.8-4   2019-04-21 [?] CRAN (R 4.5.0)
+ P yaml            2.3.10  2024-07-26 [?] CRAN (R 4.5.0)
+ P zip             2.3.2   2025-02-01 [?] CRAN (R 4.5.0)
 
- [1] /home/steffi/Projects/vulture_migration/renv/library/linux-ubuntu-jammy/R-4.4/x86_64-pc-linux-gnu
- [2] /home/steffi/.cache/R/renv/sandbox/linux-ubuntu-jammy/R-4.4/x86_64-pc-linux-gnu/9a444a72
+ [1] /home/steffi/Projects/vulture_migration/renv/library/linux-ubuntu-noble/R-4.5/x86_64-pc-linux-gnu
+ [2] /home/steffi/.cache/R/renv/sandbox/linux-ubuntu-noble/R-4.5/x86_64-pc-linux-gnu/9a444a72
 
+ * ── Packages attached to the search path.
  P ── Loaded and on-disk path mismatch.
 
 ──────────────────────────────────────────────────────────────────────────────</code></pre>
@@ -1062,18 +1115,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-    }
-  });
-  clipboard.on('success', function(e) {
+  const onCopySuccess = function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -1105,7 +1147,45 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
   });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
   function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
@@ -1140,7 +1220,11 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      return note.innerHTML;
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
     });
   }
   const xrefs = window.document.querySelectorAll('a.quarto-xref');
@@ -1188,7 +1272,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       if (window.Quarto?.typesetMath) {
         window.Quarto.typesetMath(note);
       }
-      // TODO in 1.5, we should make sure this works without a callout special case
       if (note.classList.contains("callout")) {
         return note.outerHTML;
       } else {
@@ -1424,30 +1507,37 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   </div>
 </nav>
 </div> <!-- /content -->
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/steffilazerte/vulture_migration/edit/main/01_initial_exploration.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/steffilazerte/vulture_migration/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer><script>var lightboxQuarto = GLightbox({"selector":".lightbox","closeEffect":"zoom","loop":false,"descPosition":"bottom","openEffect":"zoom"});
-window.onload = () => {
-  lightboxQuarto.on('slide_before_load', (data) => {
-    const { slideIndex, slideNode, slideConfig, player, trigger } = data;
-    const href = trigger.getAttribute('href');
-    if (href !== null) {
-      const imgEl = window.document.querySelector(`a[href="${href}"] img`);
-      if (imgEl !== null) {
-        const srcAttr = imgEl.getAttribute("src");
-        if (srcAttr && srcAttr.startsWith("data:")) {
-          slideConfig.href = srcAttr;
-        }
-      }
-    } 
-  });
-
-  lightboxQuarto.on('slide_after_load', (data) => {
-    const { slideIndex, slideNode, slideConfig, player, trigger } = data;
-    if (window.Quarto?.typesetMath) {
-      window.Quarto.typesetMath(slideNode);
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/steffilazerte/vulture_migration/edit/main/01_initial_exploration.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/steffilazerte/vulture_migration/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer><script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","descPosition":"bottom","loop":false,"openEffect":"zoom","selector":".lightbox"});
+(function() {
+  let previousOnload = window.onload;
+  window.onload = () => {
+    if (previousOnload) {
+      previousOnload();
     }
-  });
-
-};
+    lightboxQuarto.on('slide_before_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      const href = trigger.getAttribute('href');
+      if (href !== null) {
+        const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+        if (imgEl !== null) {
+          const srcAttr = imgEl.getAttribute("src");
+          if (srcAttr && srcAttr.startsWith("data:")) {
+            slideConfig.href = srcAttr;
+          }
+        }
+      } 
+    });
+  
+    lightboxQuarto.on('slide_after_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(slideNode);
+      }
+    });
+  
+  };
+  
+})();
           </script>
 
 

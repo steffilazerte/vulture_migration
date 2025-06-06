@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.6.32">
+<meta name="generator" content="quarto-1.6.39">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Steffi LaZerte">
-<meta name="dcterms.date" content="2024-12-03">
+<meta name="dcterms.date" content="2025-06-06">
 
 <title>Manuscript Figure and Supplemental – Vulture Migration on Vancouver Island</title>
 <style>
@@ -73,10 +73,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-2486e1f0a3ee9ee1fc393803a1361cdb.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-e26003cea8cd680ca0c55a263523d882.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-c32bab077f231c61755276b585c609b0.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-0f2125027929bcb0015b69c7d43d06f0.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script src="site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
 <link href="site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
 <link href="site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
@@ -264,7 +264,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">December 3, 2024</p>
+      <p class="date">June 6, 2025</p>
     </div>
   </div>
   
@@ -280,31 +280,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="setup" class="level2">
 <h2 class="anchored" data-anchor-id="setup">Setup</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggspatial)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rnaturalearth)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggthemes)</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(openxlsx)</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gt)</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"XX_functions.R"</span>)  <span class="co"># Custom functions and packages</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Metrics</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>v <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"Data/Datasets/vultures_final.csv"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Round non-integer values of population counts</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">c</span>(<span class="fu">contains</span>(<span class="st">"pop"</span>), <span class="fu">contains</span>(<span class="st">"raw"</span>)), round)) </span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Raw counts</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>raw <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"Data/Datasets/vultures_clean_2023.csv"</span>)</span>
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"XX_functions.R"</span>)</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Metrics</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>v <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"Data/Datasets/vultures_final.csv"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Round non-integer values of population counts</span></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">c</span>(<span class="fu">contains</span>(<span class="st">"pop"</span>), <span class="fu">contains</span>(<span class="st">"raw"</span>)), round)) </span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Raw counts</span></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>raw <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"Data/Datasets/vultures_clean_2023.csv"</span>)</span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Predicted GAM models</span></span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"Data/Datasets/vultures_gams_pred.csv"</span>)</span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Checking problematic years</span></span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>supp <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"Data/Datasets/table_supplemental.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Predicted GAM models</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"Data/Datasets/vultures_gams_pred.csv"</span>)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Checking problematic years</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>supp <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"Data/Datasets/table_supplemental.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="main-figure" class="level2">
@@ -445,34 +435,40 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(bcmaps)</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggrepel)</span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ne_download</span>(<span class="at">type =</span> <span class="st">"populated_places"</span>, <span class="at">scale =</span> <span class="st">"large"</span>, <span class="at">load =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(bcmaps)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Support for Spatial objects (`sp`) was removed in {bcmaps} v2.0.0. Please use `sf` objects with {bcmaps}.</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggrepel)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ne_download</span>(<span class="at">type =</span> <span class="st">"populated_places"</span>, <span class="at">scale =</span> <span class="st">"large"</span>, <span class="at">load =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "ne_10m_populated_places"</code></pre>
 </div>
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>cities <span class="ot">&lt;-</span> bcmaps<span class="sc">::</span><span class="fu">bc_cities</span>(<span class="at">ask =</span> <span class="cn">FALSE</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(NAME) <span class="sc">|&gt;</span></span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(NAME <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Victoria"</span>, <span class="st">"Vancouver"</span>, <span class="st">"Nanaimo"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>cities <span class="ot">&lt;-</span> bcmaps<span class="sc">::</span><span class="fu">bc_cities</span>(<span class="at">ask =</span> <span class="cn">FALSE</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(NAME) <span class="sc">|&gt;</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(NAME <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Victoria"</span>, <span class="st">"Vancouver"</span>, <span class="st">"Nanaimo"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stderr">
 <pre><code>bc_cities was updated on 2024-07-10</code></pre>
 </div>
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>cities <span class="ot">&lt;-</span> <span class="fu">ne_load</span>(<span class="at">file_name =</span> <span class="st">"ne_10m_populated_places"</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(NAME <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Seattle"</span>, <span class="st">"Portland"</span>), ADM1NAME <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Oregon"</span>, <span class="st">"Washington"</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(NAME) <span class="sc">|&gt;</span> </span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_transform</span>(<span class="fu">st_crs</span>(cities)) <span class="sc">|&gt;</span></span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(cities) <span class="sc">|&gt;</span></span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">name =</span> NAME)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>cities <span class="ot">&lt;-</span> <span class="fu">ne_load</span>(<span class="at">file_name =</span> <span class="st">"ne_10m_populated_places"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(NAME <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Seattle"</span>, <span class="st">"Portland"</span>), ADM1NAME <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Oregon"</span>, <span class="st">"Washington"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(NAME) <span class="sc">|&gt;</span> </span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_transform</span>(<span class="fu">st_crs</span>(cities)) <span class="sc">|&gt;</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(cities) <span class="sc">|&gt;</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">name =</span> NAME)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Reading layer `ne_10m_populated_places' from data source 
-  `/home/steffi/R_tmpdir/RtmpTPJOlj/ne_10m_populated_places.shp' 
+  `/home/steffi/R_tmpdir/Rtmp1ic9bU/ne_10m_populated_places.shp' 
   using driver `ESRI Shapefile'
 Simple feature collection with 7342 features and 137 fields
 Geometry type: POINT
@@ -482,57 +478,58 @@ Geodetic CRS:  WGS 84</code></pre>
 </div>
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>stn <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">123.55082035835214</span>, <span class="fl">48.31773308537152</span>) <span class="sc">|&gt;</span></span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_point</span>() <span class="sc">|&gt;</span></span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_sfc</span>(<span class="at">crs =</span> <span class="dv">4326</span>) <span class="sc">|&gt;</span></span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_sf</span>(<span class="at">name =</span> <span class="st">"Rocky Point"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_transform</span>(<span class="fu">st_crs</span>(cities))</span>
-<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>land <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">lon =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">124.3</span>, <span class="sc">-</span><span class="fl">124.3</span>, <span class="sc">-</span><span class="fl">123.5</span>),</span>
-<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>                   <span class="at">lat =</span> <span class="fu">c</span>(<span class="fl">48.39</span>, <span class="fl">48.75</span>, <span class="fl">49.2</span>),</span>
-<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>                   <span class="at">name =</span> <span class="fu">c</span>(<span class="st">"Juan de Fuca Strait"</span>, <span class="st">"Vancouver Island"</span>, <span class="st">"Salish Sea"</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_as_sf</span>(<span class="at">coords =</span> <span class="fu">c</span>(<span class="st">"lon"</span>, <span class="st">"lat"</span>), <span class="at">crs =</span> <span class="dv">4326</span>)</span>
-<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>area <span class="ot">&lt;-</span> <span class="fu">ne_states</span>(<span class="at">country =</span> <span class="fu">c</span>(<span class="st">"Canada"</span>, <span class="st">"United States of America"</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>  <span class="co">#st_crop(st_bbox(c(xmin = -140, xmax = -112, ymin = 41, ymax = 60))) |&gt;</span></span>
-<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>  <span class="co">#filter(name %in% c("British Columbia", "Alberta", "Washington", "Oregon", "Idaho", "Montana")) |&gt;</span></span>
-<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">name =</span> <span class="fu">if_else</span>(name <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"British Columbia"</span>, <span class="st">"Washington"</span>, <span class="st">"Oregon"</span>), <span class="fu">toupper</span>(name), <span class="cn">NA</span>),</span>
-<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a>         <span class="at">name =</span> <span class="fu">str_replace</span>(name, <span class="st">" "</span>, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>),</span>
-<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a>         <span class="at">postal =</span>  <span class="fu">if_else</span>(postal <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"BC"</span>, <span class="st">"WA"</span>, <span class="st">"OR"</span>, <span class="st">"AB"</span>), postal, <span class="cn">NA</span>))</span>
-<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a>box <span class="ot">&lt;-</span> <span class="fu">st_polygon</span>(<span class="fu">list</span>(<span class="fu">rbind</span>(<span class="fu">c</span>(<span class="dv">1050000</span>, <span class="dv">330000</span>), </span>
-<span id="cb23-20"><a href="#cb23-20" aria-hidden="true" tabindex="-1"></a>                             <span class="fu">c</span>(<span class="dv">1050000</span>, <span class="dv">490000</span>),</span>
-<span id="cb23-21"><a href="#cb23-21" aria-hidden="true" tabindex="-1"></a>                             <span class="fu">c</span>(<span class="dv">1230000</span>, <span class="dv">490000</span>),</span>
-<span id="cb23-22"><a href="#cb23-22" aria-hidden="true" tabindex="-1"></a>                             <span class="fu">c</span>(<span class="dv">1230000</span>, <span class="dv">330000</span>),</span>
-<span id="cb23-23"><a href="#cb23-23" aria-hidden="true" tabindex="-1"></a>                             <span class="fu">c</span>(<span class="dv">1050000</span>, <span class="dv">330000</span>)))) <span class="sc">|&gt;</span></span>
-<span id="cb23-24"><a href="#cb23-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_sfc</span>(<span class="at">crs =</span> <span class="dv">3005</span>)</span>
-<span id="cb23-25"><a href="#cb23-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-26"><a href="#cb23-26" aria-hidden="true" tabindex="-1"></a>g0 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> area, <span class="fu">aes</span>(<span class="at">label =</span> name)) <span class="sc">+</span></span>
-<span id="cb23-27"><a href="#cb23-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_map</span>() <span class="sc">+</span></span>
-<span id="cb23-28"><a href="#cb23-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.border =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="cn">NA</span>), </span>
-<span id="cb23-29"><a href="#cb23-29" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.margin =</span> <span class="fu">unit</span>(<span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>), <span class="at">units =</span> <span class="st">"mm"</span>),</span>
-<span id="cb23-30"><a href="#cb23-30" aria-hidden="true" tabindex="-1"></a>        <span class="at">panel.spacing =</span> <span class="fu">unit</span>(<span class="dv">0</span>, <span class="at">units =</span> <span class="st">"mm"</span>)) <span class="sc">+</span></span>
-<span id="cb23-31"><a href="#cb23-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>)) <span class="sc">+</span></span>
-<span id="cb23-32"><a href="#cb23-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>)) <span class="sc">+</span></span>
-<span id="cb23-33"><a href="#cb23-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>()</span>
-<span id="cb23-34"><a href="#cb23-34" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb23-35"><a href="#cb23-35" aria-hidden="true" tabindex="-1"></a>g <span class="ot">&lt;-</span> g0 <span class="sc">+</span></span>
-<span id="cb23-36"><a href="#cb23-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data =</span> stn, <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
-<span id="cb23-37"><a href="#cb23-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf_text</span>(<span class="at">data =</span> stn, <span class="at">lineheight =</span> <span class="fl">0.85</span>, <span class="at">nudge_y =</span> <span class="sc">-</span><span class="dv">8000</span>) <span class="sc">+</span></span>
-<span id="cb23-38"><a href="#cb23-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data =</span> cities) <span class="sc">+</span></span>
-<span id="cb23-39"><a href="#cb23-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf_text</span>(<span class="at">data =</span> cities, <span class="at">hjust =</span> <span class="fl">1.1</span>, <span class="at">nudge_y =</span> <span class="dv">5000</span>) <span class="sc">+</span></span>
-<span id="cb23-40"><a href="#cb23-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf_text</span>(<span class="at">data =</span> land, <span class="at">angle =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">24</span>, <span class="dv">0</span>, <span class="sc">-</span><span class="dv">45</span>), <span class="at">colour =</span> <span class="st">"grey60"</span>, <span class="at">size =</span> <span class="fu">c</span>(<span class="dv">6</span>, <span class="dv">7</span>, <span class="dv">7</span>)) <span class="sc">+</span></span>
-<span id="cb23-41"><a href="#cb23-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotation_scale</span>(<span class="at">location =</span> <span class="st">"bl"</span>) <span class="sc">+</span> </span>
-<span id="cb23-42"><a href="#cb23-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotation_north_arrow</span>(</span>
-<span id="cb23-43"><a href="#cb23-43" aria-hidden="true" tabindex="-1"></a>    <span class="at">location =</span> <span class="st">"br"</span>, <span class="at">height =</span> <span class="fu">unit</span>(<span class="fl">0.5</span>, <span class="st">"cm"</span>), <span class="at">width =</span> <span class="fu">unit</span>(<span class="fl">0.5</span>, <span class="st">"cm"</span>),</span>
-<span id="cb23-44"><a href="#cb23-44" aria-hidden="true" tabindex="-1"></a>    <span class="at">style =</span> <span class="fu">north_arrow_orienteering</span>(<span class="at">text_size =</span> <span class="sc">-</span><span class="cn">Inf</span>)) <span class="sc">+</span></span>
-<span id="cb23-45"><a href="#cb23-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_sf</span>(<span class="at">crs =</span> <span class="dv">3005</span>, <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">1050000</span>, <span class="dv">1230000</span>), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">330000</span>, <span class="dv">490000</span>))</span>
-<span id="cb23-46"><a href="#cb23-46" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-47"><a href="#cb23-47" aria-hidden="true" tabindex="-1"></a>g_inset <span class="ot">&lt;-</span> g0 <span class="sc">+</span></span>
-<span id="cb23-48"><a href="#cb23-48" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="st">"white"</span>)) <span class="sc">+</span></span>
-<span id="cb23-49"><a href="#cb23-49" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> postal), <span class="at">colour =</span> <span class="st">"black"</span>, <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
-<span id="cb23-50"><a href="#cb23-50" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data =</span> box, <span class="at">fill =</span> <span class="cn">NA</span>, <span class="at">linewidth =</span> <span class="fl">0.5</span>, <span class="at">colour =</span> <span class="st">"black"</span>, <span class="at">inherit.aes =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb23-51"><a href="#cb23-51" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_sf</span>(<span class="at">crs =</span> <span class="dv">3005</span>, <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">500000</span>, <span class="dv">2000000</span>), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">200000</span>, <span class="dv">1370000</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>stn <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">123.55082035835214</span>, <span class="fl">48.31773308537152</span>) <span class="sc">|&gt;</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_point</span>() <span class="sc">|&gt;</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_sfc</span>(<span class="at">crs =</span> <span class="dv">4326</span>) <span class="sc">|&gt;</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_sf</span>(<span class="at">name =</span> <span class="st">"Rocky Point"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_transform</span>(<span class="fu">st_crs</span>(cities))</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>land <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">lon =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">124.3</span>, <span class="sc">-</span><span class="fl">124.3</span>, <span class="sc">-</span><span class="fl">123.5</span>),</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>                   <span class="at">lat =</span> <span class="fu">c</span>(<span class="fl">48.39</span>, <span class="fl">48.75</span>, <span class="fl">49.2</span>),</span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>                   <span class="at">name =</span> <span class="fu">c</span>(<span class="st">"Juan de Fuca Strait"</span>, <span class="st">"Vancouver Island"</span>, <span class="st">"Salish Sea"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_as_sf</span>(<span class="at">coords =</span> <span class="fu">c</span>(<span class="st">"lon"</span>, <span class="st">"lat"</span>), <span class="at">crs =</span> <span class="dv">4326</span>)</span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>area <span class="ot">&lt;-</span> <span class="fu">ne_states</span>(<span class="at">country =</span> <span class="fu">c</span>(<span class="st">"Canada"</span>, <span class="st">"United States of America"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>  <span class="co">#st_crop(st_bbox(c(xmin = -140, xmax = -112, ymin = 41, ymax = 60))) |&gt;</span></span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>  <span class="co">#filter(name %in% c("British Columbia", "Alberta", "Washington", "Oregon", "Idaho", "Montana")) |&gt;</span></span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> <span class="fu">if_else</span>(name <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"British Columbia"</span>, <span class="st">"Washington"</span>, <span class="st">"Oregon"</span>), <span class="fu">toupper</span>(name), <span class="cn">NA</span>),</span>
+<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> <span class="fu">str_replace</span>(name, <span class="st">" "</span>, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>),</span>
+<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">postal =</span>  <span class="fu">if_else</span>(postal <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"BC"</span>, <span class="st">"WA"</span>, <span class="st">"OR"</span>, <span class="st">"AB"</span>), postal, <span class="cn">NA</span>))</span>
+<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-20"><a href="#cb25-20" aria-hidden="true" tabindex="-1"></a>box <span class="ot">&lt;-</span> <span class="fu">st_polygon</span>(<span class="fu">list</span>(<span class="fu">rbind</span>(<span class="fu">c</span>(<span class="dv">1050000</span>, <span class="dv">330000</span>), </span>
+<span id="cb25-21"><a href="#cb25-21" aria-hidden="true" tabindex="-1"></a>                             <span class="fu">c</span>(<span class="dv">1050000</span>, <span class="dv">490000</span>),</span>
+<span id="cb25-22"><a href="#cb25-22" aria-hidden="true" tabindex="-1"></a>                             <span class="fu">c</span>(<span class="dv">1230000</span>, <span class="dv">490000</span>),</span>
+<span id="cb25-23"><a href="#cb25-23" aria-hidden="true" tabindex="-1"></a>                             <span class="fu">c</span>(<span class="dv">1230000</span>, <span class="dv">330000</span>),</span>
+<span id="cb25-24"><a href="#cb25-24" aria-hidden="true" tabindex="-1"></a>                             <span class="fu">c</span>(<span class="dv">1050000</span>, <span class="dv">330000</span>)))) <span class="sc">|&gt;</span></span>
+<span id="cb25-25"><a href="#cb25-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_sfc</span>(<span class="at">crs =</span> <span class="dv">3005</span>)</span>
+<span id="cb25-26"><a href="#cb25-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-27"><a href="#cb25-27" aria-hidden="true" tabindex="-1"></a>g0 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> area, <span class="fu">aes</span>(<span class="at">label =</span> name)) <span class="sc">+</span></span>
+<span id="cb25-28"><a href="#cb25-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_map</span>() <span class="sc">+</span></span>
+<span id="cb25-29"><a href="#cb25-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.border =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="cn">NA</span>), </span>
+<span id="cb25-30"><a href="#cb25-30" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.margin =</span> <span class="fu">unit</span>(<span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>), <span class="at">units =</span> <span class="st">"mm"</span>),</span>
+<span id="cb25-31"><a href="#cb25-31" aria-hidden="true" tabindex="-1"></a>        <span class="at">panel.spacing =</span> <span class="fu">unit</span>(<span class="dv">0</span>, <span class="at">units =</span> <span class="st">"mm"</span>)) <span class="sc">+</span></span>
+<span id="cb25-32"><a href="#cb25-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>)) <span class="sc">+</span></span>
+<span id="cb25-33"><a href="#cb25-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>)) <span class="sc">+</span></span>
+<span id="cb25-34"><a href="#cb25-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>()</span>
+<span id="cb25-35"><a href="#cb25-35" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb25-36"><a href="#cb25-36" aria-hidden="true" tabindex="-1"></a>g <span class="ot">&lt;-</span> g0 <span class="sc">+</span></span>
+<span id="cb25-37"><a href="#cb25-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data =</span> stn, <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb25-38"><a href="#cb25-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf_text</span>(<span class="at">data =</span> stn, <span class="at">lineheight =</span> <span class="fl">0.85</span>, <span class="at">nudge_y =</span> <span class="sc">-</span><span class="dv">8000</span>) <span class="sc">+</span></span>
+<span id="cb25-39"><a href="#cb25-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data =</span> cities) <span class="sc">+</span></span>
+<span id="cb25-40"><a href="#cb25-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf_text</span>(<span class="at">data =</span> cities, <span class="at">hjust =</span> <span class="fl">1.1</span>, <span class="at">nudge_y =</span> <span class="dv">5000</span>) <span class="sc">+</span></span>
+<span id="cb25-41"><a href="#cb25-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf_text</span>(<span class="at">data =</span> land, <span class="at">angle =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">24</span>, <span class="dv">0</span>, <span class="sc">-</span><span class="dv">45</span>), <span class="at">colour =</span> <span class="st">"grey60"</span>, <span class="at">size =</span> <span class="fu">c</span>(<span class="dv">6</span>, <span class="dv">7</span>, <span class="dv">7</span>)) <span class="sc">+</span></span>
+<span id="cb25-42"><a href="#cb25-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotation_scale</span>(<span class="at">location =</span> <span class="st">"bl"</span>) <span class="sc">+</span> </span>
+<span id="cb25-43"><a href="#cb25-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotation_north_arrow</span>(</span>
+<span id="cb25-44"><a href="#cb25-44" aria-hidden="true" tabindex="-1"></a>    <span class="at">location =</span> <span class="st">"bl"</span>, <span class="at">height =</span> <span class="fu">unit</span>(<span class="fl">0.5</span>, <span class="st">"cm"</span>), <span class="at">width =</span> <span class="fu">unit</span>(<span class="fl">0.5</span>, <span class="st">"cm"</span>),</span>
+<span id="cb25-45"><a href="#cb25-45" aria-hidden="true" tabindex="-1"></a>    <span class="at">style =</span> <span class="fu">north_arrow_orienteering</span>(<span class="at">text_size =</span> <span class="sc">-</span><span class="cn">Inf</span>), <span class="at">pad_y =</span> <span class="fu">unit</span>(<span class="fl">0.75</span>, <span class="st">"cm"</span>)) <span class="sc">+</span></span>
+<span id="cb25-46"><a href="#cb25-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_sf</span>(<span class="at">crs =</span> <span class="dv">3005</span>, <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">1050000</span>, <span class="dv">1230000</span>), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">330000</span>, <span class="dv">490000</span>))</span>
+<span id="cb25-47"><a href="#cb25-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-48"><a href="#cb25-48" aria-hidden="true" tabindex="-1"></a>g_inset <span class="ot">&lt;-</span> g0 <span class="sc">+</span></span>
+<span id="cb25-49"><a href="#cb25-49" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="st">"white"</span>)) <span class="sc">+</span></span>
+<span id="cb25-50"><a href="#cb25-50" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> postal), <span class="at">colour =</span> <span class="st">"black"</span>, <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb25-51"><a href="#cb25-51" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data =</span> box, <span class="at">fill =</span> <span class="cn">NA</span>, <span class="at">linewidth =</span> <span class="fl">0.5</span>, <span class="at">colour =</span> <span class="st">"black"</span>, <span class="at">inherit.aes =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb25-52"><a href="#cb25-52" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_sf</span>(<span class="at">crs =</span> <span class="dv">3005</span>, <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">500000</span>, <span class="dv">2000000</span>), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">200000</span>, <span class="dv">1370000</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <section id="big" class="level3">
@@ -540,7 +537,7 @@ Geodetic CRS:  WGS 84</code></pre>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>g <span class="sc">+</span> <span class="fu">inset_element</span>(g_inset, <span class="at">left =</span> <span class="dv">0</span>, <span class="at">top =</span> <span class="dv">1</span>, <span class="at">bottom =</span> <span class="fl">0.6</span>, <span class="at">right =</span> <span class="fl">0.342</span>, <span class="at">align_to =</span> <span class="st">"full"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>g <span class="sc">+</span> <span class="fu">inset_element</span>(g_inset, <span class="at">left =</span> <span class="dv">0</span>, <span class="at">top =</span> <span class="dv">1</span>, <span class="at">bottom =</span> <span class="fl">0.6</span>, <span class="at">right =</span> <span class="fl">0.342</span>, <span class="at">align_to =</span> <span class="st">"full"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: Removed 60 rows containing missing values or values outside the scale range
@@ -560,7 +557,7 @@ Geodetic CRS:  WGS 84</code></pre>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>g <span class="sc">+</span> <span class="fu">inset_element</span>(g_inset, <span class="at">left =</span> <span class="dv">0</span>, <span class="at">top =</span> <span class="dv">1</span>, <span class="at">bottom =</span> <span class="fl">0.6</span>, <span class="at">right =</span> <span class="fl">0.342</span>, <span class="at">align_to =</span> <span class="st">"full"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>g <span class="sc">+</span> <span class="fu">inset_element</span>(g_inset, <span class="at">left =</span> <span class="dv">0</span>, <span class="at">top =</span> <span class="dv">1</span>, <span class="at">bottom =</span> <span class="fl">0.6</span>, <span class="at">right =</span> <span class="fl">0.342</span>, <span class="at">align_to =</span> <span class="st">"full"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: Removed 60 rows containing missing values or values outside the scale range
@@ -581,53 +578,53 @@ Geodetic CRS:  WGS 84</code></pre>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> <span class="fu">mutate</span>(pred, <span class="at">ci95_upper =</span> count <span class="sc">+</span> se <span class="sc">*</span> <span class="fl">1.96</span>, <span class="at">ci95_lower =</span> count <span class="sc">-</span> se <span class="sc">*</span> <span class="fl">1.96</span>)</span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">filter</span>(v, year <span class="sc">==</span> <span class="dv">1998</span>) <span class="sc">|&gt;</span></span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">xmin =</span> <span class="dv">204</span>, </span>
-<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">xmax =</span> <span class="dv">240</span>, <span class="at">y =</span> <span class="fl">0.25</span> <span class="sc">*</span> mig_raw_max, </span>
-<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">xmid =</span> (<span class="dv">240-204</span>)<span class="sc">/</span><span class="dv">2</span> <span class="sc">+</span> <span class="dv">204</span>,</span>
-<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> <span class="fl">0.25</span> <span class="sc">*</span> mig_raw_max,</span>
-<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">height =</span> <span class="fl">0.03</span> <span class="sc">*</span> mig_raw_max, <span class="at">label =</span> <span class="st">"Resident period"</span>)</span>
-<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>g0 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>() <span class="sc">+</span></span>
-<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_void</span>() <span class="sc">+</span></span>
-<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="at">geom =</span> <span class="st">"text"</span>, <span class="at">label =</span> <span class="fu">c</span>(<span class="st">"Migration</span><span class="sc">\n</span><span class="st">start"</span>, <span class="st">"Peak</span><span class="sc">\n</span><span class="st">start"</span>, <span class="st">"Peak"</span>, <span class="st">"Peak</span><span class="sc">\n</span><span class="st">end"</span>, <span class="st">"Migration</span><span class="sc">\n</span><span class="st">end"</span>), </span>
-<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>           <span class="at">y =</span> <span class="sc">-</span><span class="fl">0.25</span>, <span class="at">x =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.7</span>, <span class="fl">1.3</span>, <span class="fl">1.6</span>, <span class="dv">2</span>), <span class="at">size =</span> <span class="dv">3</span>, <span class="at">lineheight =</span> <span class="fl">0.85</span>) <span class="sc">+</span></span>
-<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="at">geom =</span> <span class="st">"text"</span>, <span class="at">label =</span> <span class="fu">c</span>(<span class="st">"5%"</span>, <span class="st">"25%"</span>, <span class="st">"50%"</span>, <span class="st">"75%"</span>, <span class="st">"95%"</span>), <span class="at">y =</span> <span class="fl">0.25</span>, <span class="at">x =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.7</span>, <span class="fl">1.3</span>, <span class="fl">1.6</span>, <span class="dv">2</span>), <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
-<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="at">geom =</span> <span class="st">"segment"</span>, <span class="at">y =</span> <span class="dv">0</span>, <span class="at">x =</span> <span class="dv">0</span>, <span class="at">xend =</span> <span class="dv">2</span>, <span class="at">arrow =</span> <span class="fu">arrow</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">ends =</span> <span class="st">"both"</span>, <span class="at">length =</span> <span class="fu">unit</span>(<span class="dv">1</span>, <span class="st">"mm"</span>))) <span class="sc">+</span></span>
-<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="at">geom =</span> <span class="st">"segment"</span>, <span class="at">y =</span> <span class="dv">0</span>, <span class="at">x =</span> <span class="fl">0.7</span>, <span class="at">xend =</span> <span class="fl">1.6</span>, <span class="at">linewidth =</span> <span class="dv">4</span>) <span class="sc">+</span></span>
-<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="at">geom =</span> <span class="st">"segment"</span>, <span class="at">x =</span> <span class="fl">1.29</span>, <span class="at">xend =</span> <span class="fl">1.30</span>, <span class="at">y =</span> <span class="dv">0</span>, <span class="at">linewidth =</span> <span class="dv">8</span>) <span class="sc">+</span></span>
-<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylim</span>(<span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.5</span>, <span class="fl">0.5</span>)) <span class="sc">+</span></span>
-<span id="cb28-18"><a href="#cb28-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlim</span>(<span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.1</span>, <span class="fl">2.1</span>))</span>
-<span id="cb28-19"><a href="#cb28-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-20"><a href="#cb28-20" aria-hidden="true" tabindex="-1"></a>g1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> pred, <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> doy, <span class="at">y =</span> count)) <span class="sc">+</span></span>
-<span id="cb28-21"><a href="#cb28-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
-<span id="cb28-22"><a href="#cb28-22" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb28-23"><a href="#cb28-23" aria-hidden="true" tabindex="-1"></a>  <span class="co"># GAM</span></span>
-<span id="cb28-24"><a href="#cb28-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_ribbon</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> ci95_lower, <span class="at">ymax =</span> ci95_upper), <span class="at">fill =</span> <span class="st">"grey50"</span>, <span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
-<span id="cb28-25"><a href="#cb28-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
-<span id="cb28-26"><a href="#cb28-26" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb28-27"><a href="#cb28-27" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Raw points</span></span>
-<span id="cb28-28"><a href="#cb28-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> raw, <span class="at">na.rm =</span> <span class="cn">TRUE</span>, <span class="at">size =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
-<span id="cb28-29"><a href="#cb28-29" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb28-30"><a href="#cb28-30" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Metrics</span></span>
-<span id="cb28-31"><a href="#cb28-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbarh</span>(<span class="at">data =</span> res, <span class="fu">aes</span>(<span class="at">xmin =</span> xmin, <span class="at">xmax =</span> xmax, <span class="at">y =</span> y, <span class="at">height =</span> height), </span>
-<span id="cb28-32"><a href="#cb28-32" aria-hidden="true" tabindex="-1"></a>                 <span class="at">colour =</span> <span class="st">"grey70"</span>, <span class="at">inherit.aes =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb28-33"><a href="#cb28-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="at">data =</span> res, <span class="fu">aes</span>(<span class="at">x =</span> xmid, <span class="at">y =</span> y, <span class="at">label =</span> label), <span class="at">vjust =</span> <span class="sc">-</span><span class="fl">0.5</span>, <span class="at">inherit.aes =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb28-34"><a href="#cb28-34" aria-hidden="true" tabindex="-1"></a>            <span class="at">size =</span> <span class="dv">3</span>, <span class="at">colour =</span> <span class="st">"grey30"</span>) <span class="sc">+</span></span>
-<span id="cb28-35"><a href="#cb28-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="at">data =</span> v, <span class="fu">aes</span>(<span class="at">x =</span> p50_doy <span class="sc">-</span> <span class="fl">0.5</span>, <span class="at">xend =</span> p50_doy <span class="sc">+</span> <span class="fl">0.5</span>, </span>
-<span id="cb28-36"><a href="#cb28-36" aria-hidden="true" tabindex="-1"></a>                             <span class="at">y =</span> <span class="sc">-</span>(<span class="fl">0.07</span> <span class="sc">*</span> mig_raw_max)), </span>
-<span id="cb28-37"><a href="#cb28-37" aria-hidden="true" tabindex="-1"></a>               <span class="at">linewidth =</span> <span class="dv">4</span>, <span class="at">inherit.aes =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb28-38"><a href="#cb28-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbarh</span>(<span class="at">data =</span> v, <span class="fu">aes</span>(<span class="at">y =</span> <span class="sc">-</span>(<span class="fl">0.07</span> <span class="sc">*</span> mig_raw_max), </span>
-<span id="cb28-39"><a href="#cb28-39" aria-hidden="true" tabindex="-1"></a>                               <span class="at">xmin =</span> mig_start_doy, </span>
-<span id="cb28-40"><a href="#cb28-40" aria-hidden="true" tabindex="-1"></a>                               <span class="at">xmax =</span> mig_end_doy, </span>
-<span id="cb28-41"><a href="#cb28-41" aria-hidden="true" tabindex="-1"></a>                               <span class="at">height =</span> <span class="fl">0.07</span> <span class="sc">*</span> mig_raw_max), <span class="at">inherit.aes =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb28-42"><a href="#cb28-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="at">data =</span> v, <span class="fu">aes</span>(<span class="at">y =</span> <span class="sc">-</span>(<span class="fl">0.07</span> <span class="sc">*</span> mig_raw_max), <span class="at">x =</span> peak_start_doy, <span class="at">xend =</span> peak_end_doy), <span class="at">linewidth =</span> <span class="dv">2</span>, <span class="at">inherit.aes =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb28-43"><a href="#cb28-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">name =</span> <span class="st">"Date"</span>, <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">203</span>, <span class="dv">295</span>), </span>
-<span id="cb28-44"><a href="#cb28-44" aria-hidden="true" tabindex="-1"></a>                     <span class="at">labels =</span> \(x) <span class="fu">format</span>(<span class="fu">as_date</span>(x) <span class="sc">-</span> <span class="fu">days</span>(<span class="dv">1</span>), <span class="st">"%b %d"</span>), </span>
-<span id="cb28-45"><a href="#cb28-45" aria-hidden="true" tabindex="-1"></a>                     <span class="at">n.breaks =</span> <span class="dv">7</span>) <span class="sc">+</span></span>
-<span id="cb28-46"><a href="#cb28-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"Daily Estimated Total"</span>) <span class="sc">+</span> </span>
-<span id="cb28-47"><a href="#cb28-47" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> year, <span class="at">scales =</span> <span class="st">"free_y"</span>, <span class="at">ncol =</span> <span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> <span class="fu">mutate</span>(pred, <span class="at">ci95_upper =</span> count <span class="sc">+</span> se <span class="sc">*</span> <span class="fl">1.96</span>, <span class="at">ci95_lower =</span> count <span class="sc">-</span> se <span class="sc">*</span> <span class="fl">1.96</span>)</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">filter</span>(v, year <span class="sc">==</span> <span class="dv">1999</span>) <span class="sc">|&gt;</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">xmin =</span> <span class="dv">204</span>, </span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">xmax =</span> <span class="dv">240</span>, <span class="at">y =</span> <span class="fl">0.25</span> <span class="sc">*</span> mig_raw_max, </span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">xmid =</span> (<span class="dv">240-204</span>)<span class="sc">/</span><span class="dv">2</span> <span class="sc">+</span> <span class="dv">204</span>,</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> <span class="fl">0.25</span> <span class="sc">*</span> mig_raw_max,</span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">height =</span> <span class="fl">0.03</span> <span class="sc">*</span> mig_raw_max, <span class="at">label =</span> <span class="st">"Resident period"</span>)</span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>g0 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_void</span>() <span class="sc">+</span></span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="at">geom =</span> <span class="st">"text"</span>, <span class="at">label =</span> <span class="fu">c</span>(<span class="st">"Migration</span><span class="sc">\n</span><span class="st">start"</span>, <span class="st">"Peak</span><span class="sc">\n</span><span class="st">start"</span>, <span class="st">"Peak"</span>, <span class="st">"Peak</span><span class="sc">\n</span><span class="st">end"</span>, <span class="st">"Migration</span><span class="sc">\n</span><span class="st">end"</span>), </span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a>           <span class="at">y =</span> <span class="sc">-</span><span class="fl">0.25</span>, <span class="at">x =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.7</span>, <span class="fl">1.3</span>, <span class="fl">1.6</span>, <span class="dv">2</span>), <span class="at">size =</span> <span class="dv">3</span>, <span class="at">lineheight =</span> <span class="fl">0.85</span>) <span class="sc">+</span></span>
+<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="at">geom =</span> <span class="st">"text"</span>, <span class="at">label =</span> <span class="fu">c</span>(<span class="st">"5%"</span>, <span class="st">"25%"</span>, <span class="st">"50%"</span>, <span class="st">"75%"</span>, <span class="st">"95%"</span>), <span class="at">y =</span> <span class="fl">0.25</span>, <span class="at">x =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.7</span>, <span class="fl">1.3</span>, <span class="fl">1.6</span>, <span class="dv">2</span>), <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="at">geom =</span> <span class="st">"segment"</span>, <span class="at">y =</span> <span class="dv">0</span>, <span class="at">x =</span> <span class="dv">0</span>, <span class="at">xend =</span> <span class="dv">2</span>, <span class="at">arrow =</span> <span class="fu">arrow</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">ends =</span> <span class="st">"both"</span>, <span class="at">length =</span> <span class="fu">unit</span>(<span class="dv">1</span>, <span class="st">"mm"</span>))) <span class="sc">+</span></span>
+<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="at">geom =</span> <span class="st">"segment"</span>, <span class="at">y =</span> <span class="dv">0</span>, <span class="at">x =</span> <span class="fl">0.7</span>, <span class="at">xend =</span> <span class="fl">1.6</span>, <span class="at">linewidth =</span> <span class="dv">4</span>) <span class="sc">+</span></span>
+<span id="cb30-16"><a href="#cb30-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="at">geom =</span> <span class="st">"segment"</span>, <span class="at">x =</span> <span class="fl">1.29</span>, <span class="at">xend =</span> <span class="fl">1.30</span>, <span class="at">y =</span> <span class="dv">0</span>, <span class="at">linewidth =</span> <span class="dv">8</span>) <span class="sc">+</span></span>
+<span id="cb30-17"><a href="#cb30-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylim</span>(<span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.5</span>, <span class="fl">0.5</span>)) <span class="sc">+</span></span>
+<span id="cb30-18"><a href="#cb30-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlim</span>(<span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.1</span>, <span class="fl">2.1</span>))</span>
+<span id="cb30-19"><a href="#cb30-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-20"><a href="#cb30-20" aria-hidden="true" tabindex="-1"></a>g1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> pred, <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> doy, <span class="at">y =</span> count)) <span class="sc">+</span></span>
+<span id="cb30-21"><a href="#cb30-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb30-22"><a href="#cb30-22" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb30-23"><a href="#cb30-23" aria-hidden="true" tabindex="-1"></a>  <span class="co"># GAM</span></span>
+<span id="cb30-24"><a href="#cb30-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_ribbon</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> ci95_lower, <span class="at">ymax =</span> ci95_upper), <span class="at">fill =</span> <span class="st">"grey50"</span>, <span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb30-25"><a href="#cb30-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb30-26"><a href="#cb30-26" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb30-27"><a href="#cb30-27" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Raw points</span></span>
+<span id="cb30-28"><a href="#cb30-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> raw, <span class="at">na.rm =</span> <span class="cn">TRUE</span>, <span class="at">size =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb30-29"><a href="#cb30-29" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb30-30"><a href="#cb30-30" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Metrics</span></span>
+<span id="cb30-31"><a href="#cb30-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbarh</span>(<span class="at">data =</span> res, <span class="fu">aes</span>(<span class="at">xmin =</span> xmin, <span class="at">xmax =</span> xmax, <span class="at">y =</span> y, <span class="at">height =</span> height), </span>
+<span id="cb30-32"><a href="#cb30-32" aria-hidden="true" tabindex="-1"></a>                 <span class="at">colour =</span> <span class="st">"grey70"</span>, <span class="at">inherit.aes =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb30-33"><a href="#cb30-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="at">data =</span> res, <span class="fu">aes</span>(<span class="at">x =</span> xmid, <span class="at">y =</span> y, <span class="at">label =</span> label), <span class="at">vjust =</span> <span class="sc">-</span><span class="fl">0.5</span>, <span class="at">inherit.aes =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb30-34"><a href="#cb30-34" aria-hidden="true" tabindex="-1"></a>            <span class="at">size =</span> <span class="dv">3</span>, <span class="at">colour =</span> <span class="st">"grey30"</span>) <span class="sc">+</span></span>
+<span id="cb30-35"><a href="#cb30-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="at">data =</span> v, <span class="fu">aes</span>(<span class="at">x =</span> p50_doy <span class="sc">-</span> <span class="fl">0.5</span>, <span class="at">xend =</span> p50_doy <span class="sc">+</span> <span class="fl">0.5</span>, </span>
+<span id="cb30-36"><a href="#cb30-36" aria-hidden="true" tabindex="-1"></a>                             <span class="at">y =</span> <span class="sc">-</span>(<span class="fl">0.07</span> <span class="sc">*</span> mig_raw_max)), </span>
+<span id="cb30-37"><a href="#cb30-37" aria-hidden="true" tabindex="-1"></a>               <span class="at">linewidth =</span> <span class="dv">4</span>, <span class="at">inherit.aes =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb30-38"><a href="#cb30-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbarh</span>(<span class="at">data =</span> v, <span class="fu">aes</span>(<span class="at">y =</span> <span class="sc">-</span>(<span class="fl">0.07</span> <span class="sc">*</span> mig_raw_max), </span>
+<span id="cb30-39"><a href="#cb30-39" aria-hidden="true" tabindex="-1"></a>                               <span class="at">xmin =</span> mig_start_doy, </span>
+<span id="cb30-40"><a href="#cb30-40" aria-hidden="true" tabindex="-1"></a>                               <span class="at">xmax =</span> mig_end_doy, </span>
+<span id="cb30-41"><a href="#cb30-41" aria-hidden="true" tabindex="-1"></a>                               <span class="at">height =</span> <span class="fl">0.07</span> <span class="sc">*</span> mig_raw_max), <span class="at">inherit.aes =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb30-42"><a href="#cb30-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="at">data =</span> v, <span class="fu">aes</span>(<span class="at">y =</span> <span class="sc">-</span>(<span class="fl">0.07</span> <span class="sc">*</span> mig_raw_max), <span class="at">x =</span> peak_start_doy, <span class="at">xend =</span> peak_end_doy), <span class="at">linewidth =</span> <span class="dv">2</span>, <span class="at">inherit.aes =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb30-43"><a href="#cb30-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">name =</span> <span class="st">"Date"</span>, <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">203</span>, <span class="dv">295</span>), </span>
+<span id="cb30-44"><a href="#cb30-44" aria-hidden="true" tabindex="-1"></a>                     <span class="at">labels =</span> \(x) <span class="fu">format</span>(<span class="fu">as_date</span>(x) <span class="sc">-</span> <span class="fu">days</span>(<span class="dv">1</span>), <span class="st">"%b %d"</span>), </span>
+<span id="cb30-45"><a href="#cb30-45" aria-hidden="true" tabindex="-1"></a>                     <span class="at">n.breaks =</span> <span class="dv">7</span>) <span class="sc">+</span></span>
+<span id="cb30-46"><a href="#cb30-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"Daily Estimated Total"</span>) <span class="sc">+</span> </span>
+<span id="cb30-47"><a href="#cb30-47" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> year, <span class="at">scales =</span> <span class="st">"free_y"</span>, <span class="at">ncol =</span> <span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <section id="big-1" class="level3">
@@ -635,7 +632,7 @@ Geodetic CRS:  WGS 84</code></pre>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>g1 <span class="sc">+</span> <span class="fu">inset_element</span>(g0, <span class="at">left =</span> <span class="fl">0.55</span>, <span class="at">right =</span> <span class="fl">0.95</span>, <span class="at">bottom =</span> <span class="dv">0</span>, <span class="at">top =</span> <span class="fl">0.1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>g1 <span class="sc">+</span> <span class="fu">inset_element</span>(g0, <span class="at">left =</span> <span class="fl">0.55</span>, <span class="at">right =</span> <span class="fl">0.95</span>, <span class="at">bottom =</span> <span class="dv">0</span>, <span class="at">top =</span> <span class="fl">0.1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -651,7 +648,7 @@ Geodetic CRS:  WGS 84</code></pre>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>g1 <span class="sc">+</span> <span class="fu">inset_element</span>(g0, <span class="at">left =</span> <span class="fl">0.55</span>, <span class="at">right =</span> <span class="fl">0.95</span>, <span class="at">bottom =</span> <span class="dv">0</span>, <span class="at">top =</span> <span class="fl">0.1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>g1 <span class="sc">+</span> <span class="fu">inset_element</span>(g0, <span class="at">left =</span> <span class="fl">0.55</span>, <span class="at">right =</span> <span class="fl">0.95</span>, <span class="at">bottom =</span> <span class="dv">0</span>, <span class="at">top =</span> <span class="fl">0.1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -669,43 +666,43 @@ Geodetic CRS:  WGS 84</code></pre>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>t <span class="ot">&lt;-</span> supp <span class="sc">|&gt;</span> </span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">str_detect</span>(term, <span class="st">"(I|i)ntercept"</span>),</span>
-<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>         <span class="sc">!</span><span class="fu">str_detect</span>(model, <span class="st">"(max_doy)|(pop_max)"</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.numeric), \(x) <span class="fu">round</span>(x, <span class="dv">3</span>))) <span class="sc">|&gt;</span></span>
-<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">p_value =</span> <span class="fu">if_else</span>(p_value <span class="sc">&lt;=</span> <span class="fl">0.05</span>, </span>
-<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>                           <span class="fu">paste0</span>(<span class="st">"**"</span>, <span class="fu">format</span>(p_value, <span class="at">nsmall =</span> <span class="dv">3</span>), <span class="st">"**"</span>),</span>
-<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>                           <span class="fu">format</span>(p_value, <span class="at">nsmall =</span> <span class="dv">3</span>)),</span>
-<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">value =</span> <span class="fu">paste0</span>(<span class="fu">format</span>(estimate, <span class="at">nsmall =</span> <span class="dv">3</span>), <span class="st">" (P = "</span>, p_value, <span class="st">")"</span>),</span>
-<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>         <span class="at">value =</span> <span class="fu">str_trim</span>(value)) <span class="sc">|&gt;</span></span>
-<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="at">Model =</span> model, value, type) <span class="sc">|&gt;</span></span>
-<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">type =</span> <span class="fu">str_replace</span>(type, <span class="st">"_"</span>, <span class="st">" "</span>),</span>
-<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a>         <span class="at">type =</span> <span class="fu">str_to_title</span>(type)) <span class="sc">|&gt;</span></span>
-<span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> <span class="st">"type"</span>, <span class="at">values_from =</span> <span class="st">"value"</span>)</span>
-<span id="cb31-14"><a href="#cb31-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-15"><a href="#cb31-15" aria-hidden="true" tabindex="-1"></a><span class="fu">gt</span>(t) <span class="sc">|&gt;</span></span>
-<span id="cb31-16"><a href="#cb31-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt_theme</span>() <span class="sc">|&gt;</span></span>
-<span id="cb31-17"><a href="#cb31-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmt_markdown</span>() <span class="sc">|&gt;</span></span>
-<span id="cb31-18"><a href="#cb31-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmt_number</span>(<span class="at">columns =</span> <span class="sc">-</span><span class="dv">1</span>, <span class="at">decimals =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>t <span class="ot">&lt;-</span> supp <span class="sc">|&gt;</span> </span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">str_detect</span>(term, <span class="st">"(I|i)ntercept"</span>),</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>         <span class="sc">!</span><span class="fu">str_detect</span>(model, <span class="st">"(max_doy)|(pop_max)"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.numeric), \(x) <span class="fu">round</span>(x, <span class="dv">3</span>))) <span class="sc">|&gt;</span></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">p_value =</span> <span class="fu">if_else</span>(p_value <span class="sc">&lt;=</span> <span class="fl">0.05</span>, </span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>                           <span class="fu">paste0</span>(<span class="st">"**"</span>, <span class="fu">format</span>(p_value, <span class="at">nsmall =</span> <span class="dv">3</span>), <span class="st">"**"</span>),</span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>                           <span class="fu">format</span>(p_value, <span class="at">nsmall =</span> <span class="dv">3</span>)),</span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">value =</span> <span class="fu">paste0</span>(<span class="fu">format</span>(estimate, <span class="at">nsmall =</span> <span class="dv">3</span>), <span class="st">" (P = "</span>, p_value, <span class="st">")"</span>),</span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>         <span class="at">value =</span> <span class="fu">str_trim</span>(value)) <span class="sc">|&gt;</span></span>
+<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="at">Model =</span> model, value, type) <span class="sc">|&gt;</span></span>
+<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">type =</span> <span class="fu">str_replace</span>(type, <span class="st">"_"</span>, <span class="st">" "</span>),</span>
+<span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a>         <span class="at">type =</span> <span class="fu">str_to_title</span>(type)) <span class="sc">|&gt;</span></span>
+<span id="cb33-13"><a href="#cb33-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> <span class="st">"type"</span>, <span class="at">values_from =</span> <span class="st">"value"</span>)</span>
+<span id="cb33-14"><a href="#cb33-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-15"><a href="#cb33-15" aria-hidden="true" tabindex="-1"></a><span class="fu">gt</span>(t) <span class="sc">|&gt;</span></span>
+<span id="cb33-16"><a href="#cb33-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt_theme</span>() <span class="sc">|&gt;</span></span>
+<span id="cb33-17"><a href="#cb33-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmt_markdown</span>() <span class="sc">|&gt;</span></span>
+<span id="cb33-18"><a href="#cb33-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmt_number</span>(<span class="at">columns =</span> <span class="sc">-</span><span class="dv">1</span>, <span class="at">decimals =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div id="fwbegcjacr" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#fwbegcjacr table {
+<div id="pdeckkbbkg" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#pdeckkbbkg table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#fwbegcjacr thead, #fwbegcjacr tbody, #fwbegcjacr tfoot, #fwbegcjacr tr, #fwbegcjacr td, #fwbegcjacr th {
+#pdeckkbbkg thead, #pdeckkbbkg tbody, #pdeckkbbkg tfoot, #pdeckkbbkg tr, #pdeckkbbkg td, #pdeckkbbkg th {
   border-style: none;
 }
 
-#fwbegcjacr p {
+#pdeckkbbkg p {
   margin: 0;
   padding: 0;
 }
 
-#fwbegcjacr .gt_table {
+#pdeckkbbkg .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -731,12 +728,12 @@ Geodetic CRS:  WGS 84</code></pre>
   border-left-color: #D3D3D3;
 }
 
-#fwbegcjacr .gt_caption {
+#pdeckkbbkg .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#fwbegcjacr .gt_title {
+#pdeckkbbkg .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -748,7 +745,7 @@ Geodetic CRS:  WGS 84</code></pre>
   border-bottom-width: 0;
 }
 
-#fwbegcjacr .gt_subtitle {
+#pdeckkbbkg .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -760,7 +757,7 @@ Geodetic CRS:  WGS 84</code></pre>
   border-top-width: 0;
 }
 
-#fwbegcjacr .gt_heading {
+#pdeckkbbkg .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -772,13 +769,13 @@ Geodetic CRS:  WGS 84</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#fwbegcjacr .gt_bottom_border {
+#pdeckkbbkg .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#fwbegcjacr .gt_col_headings {
+#pdeckkbbkg .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -793,7 +790,7 @@ Geodetic CRS:  WGS 84</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#fwbegcjacr .gt_col_heading {
+#pdeckkbbkg .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -813,7 +810,7 @@ Geodetic CRS:  WGS 84</code></pre>
   overflow-x: hidden;
 }
 
-#fwbegcjacr .gt_column_spanner_outer {
+#pdeckkbbkg .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -825,15 +822,15 @@ Geodetic CRS:  WGS 84</code></pre>
   padding-right: 4px;
 }
 
-#fwbegcjacr .gt_column_spanner_outer:first-child {
+#pdeckkbbkg .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#fwbegcjacr .gt_column_spanner_outer:last-child {
+#pdeckkbbkg .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#fwbegcjacr .gt_column_spanner {
+#pdeckkbbkg .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 3px;
   border-bottom-color: #D3D3D3;
@@ -845,11 +842,11 @@ Geodetic CRS:  WGS 84</code></pre>
   width: 100%;
 }
 
-#fwbegcjacr .gt_spanner_row {
+#pdeckkbbkg .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#fwbegcjacr .gt_group_heading {
+#pdeckkbbkg .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -875,7 +872,7 @@ Geodetic CRS:  WGS 84</code></pre>
   text-align: left;
 }
 
-#fwbegcjacr .gt_empty_group_heading {
+#pdeckkbbkg .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -890,15 +887,15 @@ Geodetic CRS:  WGS 84</code></pre>
   vertical-align: middle;
 }
 
-#fwbegcjacr .gt_from_md > :first-child {
+#pdeckkbbkg .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#fwbegcjacr .gt_from_md > :last-child {
+#pdeckkbbkg .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#fwbegcjacr .gt_row {
+#pdeckkbbkg .gt_row {
   padding-top: 7px;
   padding-bottom: 7px;
   padding-left: 5px;
@@ -917,7 +914,7 @@ Geodetic CRS:  WGS 84</code></pre>
   overflow-x: hidden;
 }
 
-#fwbegcjacr .gt_stub {
+#pdeckkbbkg .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -930,7 +927,7 @@ Geodetic CRS:  WGS 84</code></pre>
   padding-right: 5px;
 }
 
-#fwbegcjacr .gt_stub_row_group {
+#pdeckkbbkg .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -944,15 +941,15 @@ Geodetic CRS:  WGS 84</code></pre>
   vertical-align: top;
 }
 
-#fwbegcjacr .gt_row_group_first td {
+#pdeckkbbkg .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#fwbegcjacr .gt_row_group_first th {
+#pdeckkbbkg .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#fwbegcjacr .gt_summary_row {
+#pdeckkbbkg .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -962,16 +959,16 @@ Geodetic CRS:  WGS 84</code></pre>
   padding-right: 5px;
 }
 
-#fwbegcjacr .gt_first_summary_row {
+#pdeckkbbkg .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#fwbegcjacr .gt_first_summary_row.thick {
+#pdeckkbbkg .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#fwbegcjacr .gt_last_summary_row {
+#pdeckkbbkg .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -981,7 +978,7 @@ Geodetic CRS:  WGS 84</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#fwbegcjacr .gt_grand_summary_row {
+#pdeckkbbkg .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -991,7 +988,7 @@ Geodetic CRS:  WGS 84</code></pre>
   padding-right: 5px;
 }
 
-#fwbegcjacr .gt_first_grand_summary_row {
+#pdeckkbbkg .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1001,7 +998,7 @@ Geodetic CRS:  WGS 84</code></pre>
   border-top-color: #D3D3D3;
 }
 
-#fwbegcjacr .gt_last_grand_summary_row_top {
+#pdeckkbbkg .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1011,11 +1008,11 @@ Geodetic CRS:  WGS 84</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#fwbegcjacr .gt_striped {
+#pdeckkbbkg .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#fwbegcjacr .gt_table_body {
+#pdeckkbbkg .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1024,7 +1021,7 @@ Geodetic CRS:  WGS 84</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#fwbegcjacr .gt_footnotes {
+#pdeckkbbkg .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1038,7 +1035,7 @@ Geodetic CRS:  WGS 84</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#fwbegcjacr .gt_footnote {
+#pdeckkbbkg .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1047,7 +1044,7 @@ Geodetic CRS:  WGS 84</code></pre>
   padding-right: 5px;
 }
 
-#fwbegcjacr .gt_sourcenotes {
+#pdeckkbbkg .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1061,7 +1058,7 @@ Geodetic CRS:  WGS 84</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#fwbegcjacr .gt_sourcenote {
+#pdeckkbbkg .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1069,140 +1066,142 @@ Geodetic CRS:  WGS 84</code></pre>
   padding-right: 5px;
 }
 
-#fwbegcjacr .gt_left {
+#pdeckkbbkg .gt_left {
   text-align: left;
 }
 
-#fwbegcjacr .gt_center {
+#pdeckkbbkg .gt_center {
   text-align: center;
 }
 
-#fwbegcjacr .gt_right {
+#pdeckkbbkg .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#fwbegcjacr .gt_font_normal {
+#pdeckkbbkg .gt_font_normal {
   font-weight: normal;
 }
 
-#fwbegcjacr .gt_font_bold {
+#pdeckkbbkg .gt_font_bold {
   font-weight: bold;
 }
 
-#fwbegcjacr .gt_font_italic {
+#pdeckkbbkg .gt_font_italic {
   font-style: italic;
 }
 
-#fwbegcjacr .gt_super {
+#pdeckkbbkg .gt_super {
   font-size: 65%;
 }
 
-#fwbegcjacr .gt_footnote_marks {
+#pdeckkbbkg .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#fwbegcjacr .gt_asterisk {
+#pdeckkbbkg .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#fwbegcjacr .gt_indent_1 {
+#pdeckkbbkg .gt_indent_1 {
   text-indent: 5px;
 }
 
-#fwbegcjacr .gt_indent_2 {
+#pdeckkbbkg .gt_indent_2 {
   text-indent: 10px;
 }
 
-#fwbegcjacr .gt_indent_3 {
+#pdeckkbbkg .gt_indent_3 {
   text-indent: 15px;
 }
 
-#fwbegcjacr .gt_indent_4 {
+#pdeckkbbkg .gt_indent_4 {
   text-indent: 20px;
 }
 
-#fwbegcjacr .gt_indent_5 {
+#pdeckkbbkg .gt_indent_5 {
   text-indent: 25px;
+}
+
+#pdeckkbbkg .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#pdeckkbbkg div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
 }
 </style>
 
 <table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
-<colgroup>
-<col style="width: 20%">
-<col style="width: 20%">
-<col style="width: 20%">
-<col style="width: 20%">
-<col style="width: 20%">
-</colgroup>
 <thead>
 <tr class="gt_col_headings header">
 <th id="Model" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">Model</th>
 <th id="Original" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">Original</th>
-<th id="Gaps Removed" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">Gaps Removed</th>
-<th id="End Removed" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">End Removed</th>
-<th id="All Removed" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">All Removed</th>
+<th id="Gaps-Removed" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">Gaps Removed</th>
+<th id="End-Removed" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">End Removed</th>
+<th id="All-Removed" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">All Removed</th>
 </tr>
 </thead>
 <tbody class="gt_table_body">
 <tr class="odd">
-<td class="gt_row gt_left" headers="Model"><p>mig_start_doy ~ year</p></td>
-<td class="gt_row gt_left" headers="Original"><p>0.176 (P = <strong>0.017</strong>)</p></td>
-<td class="gt_row gt_left" headers="Gaps Removed"><p>0.191 (P = <strong>0.016</strong>)</p></td>
-<td class="gt_row gt_left" headers="End Removed"><p>0.166 (P = <strong>0.037</strong>)</p></td>
-<td class="gt_row gt_left" headers="All Removed"><p>0.180 (P = <strong>0.041</strong>)</p></td>
+<td class="gt_row gt_left" headers="Model">mig_start_doy ~ year</td>
+<td class="gt_row gt_left" headers="Original">0.206 (P = <strong>0.011</strong>)</td>
+<td class="gt_row gt_left" headers="Gaps Removed">0.204 (P = <strong>0.011</strong>)</td>
+<td class="gt_row gt_left" headers="End Removed">0.198 (P = <strong>0.026</strong>)</td>
+<td class="gt_row gt_left" headers="All Removed">0.196 (P = <strong>0.029</strong>)</td>
 </tr>
 <tr class="even">
-<td class="gt_row gt_left" headers="Model"><p>peak_start_doy ~ year</p></td>
-<td class="gt_row gt_left" headers="Original"><p>0.155 (P = <strong>0.005</strong>)</p></td>
-<td class="gt_row gt_left" headers="Gaps Removed"><p>0.163 (P = <strong>0.003</strong>)</p></td>
-<td class="gt_row gt_left" headers="End Removed"><p>0.155 (P = <strong>0.014</strong>)</p></td>
-<td class="gt_row gt_left" headers="All Removed"><p>0.165 (P = <strong>0.012</strong>)</p></td>
+<td class="gt_row gt_left" headers="Model">peak_start_doy ~ year</td>
+<td class="gt_row gt_left" headers="Original">0.178 (P = <strong>0.003</strong>)</td>
+<td class="gt_row gt_left" headers="Gaps Removed">0.176 (P = <strong>0.003</strong>)</td>
+<td class="gt_row gt_left" headers="End Removed">0.178 (P = <strong>0.011</strong>)</td>
+<td class="gt_row gt_left" headers="All Removed">0.176 (P = <strong>0.010</strong>)</td>
 </tr>
 <tr class="odd">
-<td class="gt_row gt_left" headers="Model"><p>p50_doy ~ year</p></td>
-<td class="gt_row gt_left" headers="Original"><p>0.147 (P = <strong>0.009</strong>)</p></td>
-<td class="gt_row gt_left" headers="Gaps Removed"><p>0.157 (P = <strong>0.005</strong>)</p></td>
-<td class="gt_row gt_left" headers="End Removed"><p>0.151 (P = <strong>0.024</strong>)</p></td>
-<td class="gt_row gt_left" headers="All Removed"><p>0.165 (P = <strong>0.015</strong>)</p></td>
+<td class="gt_row gt_left" headers="Model">p50_doy ~ year</td>
+<td class="gt_row gt_left" headers="Original">0.164 (P = <strong>0.008</strong>)</td>
+<td class="gt_row gt_left" headers="Gaps Removed">0.161 (P = <strong>0.004</strong>)</td>
+<td class="gt_row gt_left" headers="End Removed">0.167 (P = <strong>0.023</strong>)</td>
+<td class="gt_row gt_left" headers="All Removed">0.165 (P = <strong>0.015</strong>)</td>
 </tr>
 <tr class="even">
-<td class="gt_row gt_left" headers="Model"><p>peak_end_doy ~ year</p></td>
-<td class="gt_row gt_left" headers="Original"><p>0.132 (P = <strong>0.016</strong>)</p></td>
-<td class="gt_row gt_left" headers="Gaps Removed"><p>0.140 (P = <strong>0.008</strong>)</p></td>
-<td class="gt_row gt_left" headers="End Removed"><p>0.128 (P = <strong>0.043</strong>)</p></td>
-<td class="gt_row gt_left" headers="All Removed"><p>0.138 (P = <strong>0.027</strong>)</p></td>
+<td class="gt_row gt_left" headers="Model">peak_end_doy ~ year</td>
+<td class="gt_row gt_left" headers="Original">0.156 (P = <strong>0.013</strong>)</td>
+<td class="gt_row gt_left" headers="Gaps Removed">0.151 (P = <strong>0.008</strong>)</td>
+<td class="gt_row gt_left" headers="End Removed">0.147 (P = <strong>0.048</strong>)</td>
+<td class="gt_row gt_left" headers="All Removed">0.143 (P = <strong>0.036</strong>)</td>
 </tr>
 <tr class="odd">
-<td class="gt_row gt_left" headers="Model"><p>mig_end_doy ~ year</p></td>
-<td class="gt_row gt_left" headers="Original"><p>0.093 (P = 0.263)</p></td>
-<td class="gt_row gt_left" headers="Gaps Removed"><p>0.091 (P = 0.324)</p></td>
-<td class="gt_row gt_left" headers="End Removed"><p>0.077 (P = 0.402)</p></td>
-<td class="gt_row gt_left" headers="All Removed"><p>0.073 (P = 0.480)</p></td>
+<td class="gt_row gt_left" headers="Model">mig_end_doy ~ year</td>
+<td class="gt_row gt_left" headers="Original">0.119 (P = 0.171)</td>
+<td class="gt_row gt_left" headers="Gaps Removed">0.115 (P = 0.192)</td>
+<td class="gt_row gt_left" headers="End Removed">0.077 (P = 0.445)</td>
+<td class="gt_row gt_left" headers="All Removed">0.073 (P = 0.480)</td>
 </tr>
 <tr class="even">
-<td class="gt_row gt_left" headers="Model"><p>mig_dur_days ~ year</p></td>
-<td class="gt_row gt_left" headers="Original"><p>-0.083 (P = 0.394)</p></td>
-<td class="gt_row gt_left" headers="Gaps Removed"><p>-0.100 (P = 0.365)</p></td>
-<td class="gt_row gt_left" headers="End Removed"><p>-0.089 (P = 0.394)</p></td>
-<td class="gt_row gt_left" headers="All Removed"><p>-0.107 (P = 0.382)</p></td>
+<td class="gt_row gt_left" headers="Model">mig_dur_days ~ year</td>
+<td class="gt_row gt_left" headers="Original">-0.087 (P = 0.373)</td>
+<td class="gt_row gt_left" headers="Gaps Removed">-0.089 (P = 0.388)</td>
+<td class="gt_row gt_left" headers="End Removed">-0.121 (P = 0.297)</td>
+<td class="gt_row gt_left" headers="All Removed">-0.123 (P = 0.314)</td>
 </tr>
 <tr class="odd">
-<td class="gt_row gt_left" headers="Model"><p>peak_dur_days ~ year</p></td>
-<td class="gt_row gt_left" headers="Original"><p>-0.023 (P = 0.476)</p></td>
-<td class="gt_row gt_left" headers="Gaps Removed"><p>-0.023 (P = 0.508)</p></td>
-<td class="gt_row gt_left" headers="End Removed"><p>-0.028 (P = 0.420)</p></td>
-<td class="gt_row gt_left" headers="All Removed"><p>-0.027 (P = 0.469)</p></td>
+<td class="gt_row gt_left" headers="Model">peak_dur_days ~ year</td>
+<td class="gt_row gt_left" headers="Original">-0.022 (P = 0.563)</td>
+<td class="gt_row gt_left" headers="Gaps Removed">-0.024 (P = 0.531)</td>
+<td class="gt_row gt_left" headers="End Removed">-0.031 (P = 0.485)</td>
+<td class="gt_row gt_left" headers="All Removed">-0.034 (P = 0.457)</td>
 </tr>
 <tr class="even">
-<td class="gt_row gt_left" headers="Model"><p>mig_raw_max ~ year</p></td>
-<td class="gt_row gt_left" headers="Original"><p>0.041 (P = <strong>0.000</strong>)</p></td>
-<td class="gt_row gt_left" headers="Gaps Removed"><p>0.040 (P = <strong>0.000</strong>)</p></td>
-<td class="gt_row gt_left" headers="End Removed"><p>0.034 (P = <strong>0.002</strong>)</p></td>
-<td class="gt_row gt_left" headers="All Removed"><p>0.032 (P = <strong>0.009</strong>)</p></td>
+<td class="gt_row gt_left" headers="Model">mig_raw_max ~ year</td>
+<td class="gt_row gt_left" headers="Original">0.041 (P = <strong>0.000</strong>)</td>
+<td class="gt_row gt_left" headers="Gaps Removed">0.042 (P = <strong>0.000</strong>)</td>
+<td class="gt_row gt_left" headers="End Removed">0.033 (P = <strong>0.005</strong>)</td>
+<td class="gt_row gt_left" headers="All Removed">0.034 (P = <strong>0.005</strong>)</td>
 </tr>
 </tbody>
 </table>
@@ -1211,55 +1210,55 @@ Geodetic CRS:  WGS 84</code></pre>
 </div>
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>t <span class="ot">&lt;-</span> supp <span class="sc">|&gt;</span> </span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">str_detect</span>(term, <span class="st">"(I|i)ntercept"</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.numeric), \(x) <span class="fu">round</span>(x, <span class="dv">3</span>))) <span class="sc">|&gt;</span></span>
-<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(model, type, estimate, p_value) <span class="sc">|&gt;</span></span>
-<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> <span class="st">"type"</span>, <span class="at">values_from =</span> <span class="fu">c</span>(<span class="st">"estimate"</span>, <span class="st">"p_value"</span>),</span>
-<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>              <span class="at">names_glue =</span> <span class="st">"{type}_{.value}"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(model, <span class="fu">contains</span>(<span class="st">"original"</span>), <span class="fu">contains</span>(<span class="st">"gaps"</span>), <span class="fu">contains</span>(<span class="st">"end"</span>), <span class="fu">contains</span>(<span class="st">"all"</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="st">"Model"</span> <span class="ot">=</span> <span class="st">"model"</span>,</span>
-<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>         <span class="st">"Original"</span> <span class="ot">=</span> <span class="st">"original_estimate"</span>, </span>
-<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>         <span class="st">"Removed Gaps"</span> <span class="ot">=</span> <span class="st">"gaps_removed_estimate"</span>,</span>
-<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>         <span class="st">"Removed Ends "</span> <span class="ot">=</span> <span class="st">"end_removed_estimate"</span>, </span>
-<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a>         <span class="st">"Removed All"</span> <span class="ot">=</span> <span class="st">"all_removed_estimate"</span>)</span>
-<span id="cb32-13"><a href="#cb32-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb32-14"><a href="#cb32-14" aria-hidden="true" tabindex="-1"></a>wb <span class="ot">&lt;-</span> <span class="fu">createWorkbook</span>()</span>
-<span id="cb32-15"><a href="#cb32-15" aria-hidden="true" tabindex="-1"></a><span class="fu">addWorksheet</span>(wb, <span class="st">"Supplemental Table 1"</span>)</span>
-<span id="cb32-16"><a href="#cb32-16" aria-hidden="true" tabindex="-1"></a><span class="fu">writeData</span>(wb, <span class="dv">1</span>, t)</span>
-<span id="cb32-17"><a href="#cb32-17" aria-hidden="true" tabindex="-1"></a>bold <span class="ot">&lt;-</span> <span class="fu">createStyle</span>(<span class="at">textDecoration =</span> <span class="st">"bold"</span>)</span>
-<span id="cb32-18"><a href="#cb32-18" aria-hidden="true" tabindex="-1"></a>pval <span class="ot">&lt;-</span> <span class="fu">createStyle</span>(<span class="at">halign =</span> <span class="st">"left"</span>, <span class="at">numFmt =</span> <span class="st">"(P = 0.000)"</span>)</span>
-<span id="cb32-19"><a href="#cb32-19" aria-hidden="true" tabindex="-1"></a>est <span class="ot">&lt;-</span> <span class="fu">createStyle</span>(<span class="at">halign =</span> <span class="st">"right"</span>, <span class="at">numFmt =</span> <span class="st">"0.000"</span>)</span>
-<span id="cb32-20"><a href="#cb32-20" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(c <span class="cf">in</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">5</span>, <span class="dv">7</span>, <span class="dv">9</span>)) {</span>
-<span id="cb32-21"><a href="#cb32-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conditionalFormatting</span>(wb, <span class="dv">1</span>, <span class="at">cols =</span> c, <span class="at">rows =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">15</span>, <span class="at">rule =</span> <span class="st">"&lt;=0.05"</span>, <span class="at">style =</span> bold)</span>
-<span id="cb32-22"><a href="#cb32-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">addStyle</span>(wb, <span class="dv">1</span>, <span class="at">cols =</span> c, <span class="at">rows =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">15</span>, <span class="at">style =</span> pval, <span class="at">stack =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb32-23"><a href="#cb32-23" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb32-24"><a href="#cb32-24" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(c <span class="cf">in</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">4</span>, <span class="dv">6</span>, <span class="dv">8</span>)) {</span>
-<span id="cb32-25"><a href="#cb32-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">addStyle</span>(wb, <span class="dv">1</span>, <span class="at">cols =</span> c, <span class="at">rows =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">15</span>, <span class="at">style =</span> est, <span class="at">stack =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb32-26"><a href="#cb32-26" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb32-27"><a href="#cb32-27" aria-hidden="true" tabindex="-1"></a><span class="fu">mergeCells</span>(wb, <span class="dv">1</span>, <span class="at">cols =</span> <span class="dv">2</span><span class="sc">:</span><span class="dv">3</span>, <span class="at">rows =</span> <span class="dv">1</span>)</span>
-<span id="cb32-28"><a href="#cb32-28" aria-hidden="true" tabindex="-1"></a><span class="fu">mergeCells</span>(wb, <span class="dv">1</span>, <span class="at">cols =</span> <span class="dv">4</span><span class="sc">:</span><span class="dv">5</span>, <span class="at">rows =</span> <span class="dv">1</span>)</span>
-<span id="cb32-29"><a href="#cb32-29" aria-hidden="true" tabindex="-1"></a><span class="fu">mergeCells</span>(wb, <span class="dv">1</span>, <span class="at">cols =</span> <span class="dv">6</span><span class="sc">:</span><span class="dv">7</span>, <span class="at">rows =</span> <span class="dv">1</span>)</span>
-<span id="cb32-30"><a href="#cb32-30" aria-hidden="true" tabindex="-1"></a><span class="fu">mergeCells</span>(wb, <span class="dv">1</span>, <span class="at">cols =</span> <span class="dv">8</span><span class="sc">:</span><span class="dv">9</span>, <span class="at">rows =</span> <span class="dv">1</span>)</span>
-<span id="cb32-31"><a href="#cb32-31" aria-hidden="true" tabindex="-1"></a><span class="fu">addStyle</span>(wb, <span class="dv">1</span>, <span class="at">cols =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">9</span>, <span class="at">rows =</span> <span class="dv">1</span>, </span>
-<span id="cb32-32"><a href="#cb32-32" aria-hidden="true" tabindex="-1"></a>         <span class="at">style =</span> <span class="fu">createStyle</span>(<span class="at">halign =</span> <span class="st">"center"</span>, <span class="at">textDecoration =</span> <span class="st">"bold"</span>),</span>
-<span id="cb32-33"><a href="#cb32-33" aria-hidden="true" tabindex="-1"></a>         <span class="at">stack =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb32-34"><a href="#cb32-34" aria-hidden="true" tabindex="-1"></a><span class="fu">setColWidths</span>(wb, <span class="dv">1</span>, <span class="at">cols =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">9</span>, <span class="at">widths =</span> <span class="dv">10</span>)</span>
-<span id="cb32-35"><a href="#cb32-35" aria-hidden="true" tabindex="-1"></a><span class="fu">setColWidths</span>(wb, <span class="dv">1</span>, <span class="at">cols =</span> <span class="dv">1</span>, <span class="at">widths =</span> <span class="dv">20</span>)</span>
-<span id="cb32-36"><a href="#cb32-36" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb32-37"><a href="#cb32-37" aria-hidden="true" tabindex="-1"></a><span class="fu">setRowHeights</span>(wb, <span class="dv">1</span>, <span class="at">rows =</span> <span class="fu">nrow</span>(t) <span class="sc">+</span> <span class="dv">3</span>, <span class="at">heights =</span> <span class="dv">100</span>)</span>
-<span id="cb32-38"><a href="#cb32-38" aria-hidden="true" tabindex="-1"></a><span class="fu">writeData</span>(</span>
-<span id="cb32-39"><a href="#cb32-39" aria-hidden="true" tabindex="-1"></a>  wb, <span class="dv">1</span>, <span class="at">startCol =</span> <span class="dv">1</span>, <span class="at">startRow =</span> <span class="fu">nrow</span>(t) <span class="sc">+</span> <span class="dv">3</span>, </span>
-<span id="cb32-40"><a href="#cb32-40" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> <span class="fu">paste0</span>(</span>
-<span id="cb32-41"><a href="#cb32-41" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Table. Results [Estimate of Year (P-value)] for different models when removing selective years. </span><span class="sc">\n</span><span class="st">"</span>,</span>
-<span id="cb32-42"><a href="#cb32-42" aria-hidden="true" tabindex="-1"></a>    <span class="st">"'Original' represents the results for the original model;</span><span class="sc">\n</span><span class="st">"</span>,</span>
-<span id="cb32-43"><a href="#cb32-43" aria-hidden="true" tabindex="-1"></a>    <span class="st">"'Removed Gaps' represents the results for these models when removing years with large gaps around the migration peaks (1998, 2011, 2013);</span><span class="sc">\n</span><span class="st">"</span>,</span>
-<span id="cb32-44"><a href="#cb32-44" aria-hidden="true" tabindex="-1"></a>    <span class="st">"'Removed Ends' represents the results for these models when removing years where it looks like sampling ended earlier than the end of migration (2001, 2006, 2023);</span><span class="sc">\n</span><span class="st">"</span>,</span>
-<span id="cb32-45"><a href="#cb32-45" aria-hidden="true" tabindex="-1"></a>    <span class="st">"'Removed All' represents the results for these models when removing all questionable years (1998, 2001, 2006, 2011, 2013, 2023)</span><span class="sc">\n</span><span class="st">"</span>,</span>
-<span id="cb32-46"><a href="#cb32-46" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Bold P values are significant at P &lt;= 0.05."</span></span>
-<span id="cb32-47"><a href="#cb32-47" aria-hidden="true" tabindex="-1"></a>    ))</span>
-<span id="cb32-48"><a href="#cb32-48" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb32-49"><a href="#cb32-49" aria-hidden="true" tabindex="-1"></a><span class="fu">saveWorkbook</span>(wb, <span class="st">"Data/table_supp.xlsx"</span>, <span class="at">overwrite =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>t <span class="ot">&lt;-</span> supp <span class="sc">|&gt;</span> </span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">str_detect</span>(term, <span class="st">"(I|i)ntercept"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.numeric), \(x) <span class="fu">round</span>(x, <span class="dv">3</span>))) <span class="sc">|&gt;</span></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(model, type, estimate, p_value) <span class="sc">|&gt;</span></span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> <span class="st">"type"</span>, <span class="at">values_from =</span> <span class="fu">c</span>(<span class="st">"estimate"</span>, <span class="st">"p_value"</span>),</span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>              <span class="at">names_glue =</span> <span class="st">"{type}_{.value}"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(model, <span class="fu">contains</span>(<span class="st">"original"</span>), <span class="fu">contains</span>(<span class="st">"gaps"</span>), <span class="fu">contains</span>(<span class="st">"end"</span>), <span class="fu">contains</span>(<span class="st">"all"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="st">"Model"</span> <span class="ot">=</span> <span class="st">"model"</span>,</span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>         <span class="st">"Original"</span> <span class="ot">=</span> <span class="st">"original_estimate"</span>, </span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a>         <span class="st">"Removed Gaps"</span> <span class="ot">=</span> <span class="st">"gaps_removed_estimate"</span>,</span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a>         <span class="st">"Removed Ends "</span> <span class="ot">=</span> <span class="st">"end_removed_estimate"</span>, </span>
+<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a>         <span class="st">"Removed All"</span> <span class="ot">=</span> <span class="st">"all_removed_estimate"</span>)</span>
+<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a>wb <span class="ot">&lt;-</span> <span class="fu">createWorkbook</span>()</span>
+<span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a><span class="fu">addWorksheet</span>(wb, <span class="st">"Supplemental Table 1"</span>)</span>
+<span id="cb34-16"><a href="#cb34-16" aria-hidden="true" tabindex="-1"></a><span class="fu">writeData</span>(wb, <span class="dv">1</span>, t)</span>
+<span id="cb34-17"><a href="#cb34-17" aria-hidden="true" tabindex="-1"></a>bold <span class="ot">&lt;-</span> <span class="fu">createStyle</span>(<span class="at">textDecoration =</span> <span class="st">"bold"</span>)</span>
+<span id="cb34-18"><a href="#cb34-18" aria-hidden="true" tabindex="-1"></a>pval <span class="ot">&lt;-</span> <span class="fu">createStyle</span>(<span class="at">halign =</span> <span class="st">"left"</span>, <span class="at">numFmt =</span> <span class="st">"(P = 0.000)"</span>)</span>
+<span id="cb34-19"><a href="#cb34-19" aria-hidden="true" tabindex="-1"></a>est <span class="ot">&lt;-</span> <span class="fu">createStyle</span>(<span class="at">halign =</span> <span class="st">"right"</span>, <span class="at">numFmt =</span> <span class="st">"0.000"</span>)</span>
+<span id="cb34-20"><a href="#cb34-20" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(c <span class="cf">in</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">5</span>, <span class="dv">7</span>, <span class="dv">9</span>)) {</span>
+<span id="cb34-21"><a href="#cb34-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conditionalFormatting</span>(wb, <span class="dv">1</span>, <span class="at">cols =</span> c, <span class="at">rows =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">15</span>, <span class="at">rule =</span> <span class="st">"&lt;=0.05"</span>, <span class="at">style =</span> bold)</span>
+<span id="cb34-22"><a href="#cb34-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">addStyle</span>(wb, <span class="dv">1</span>, <span class="at">cols =</span> c, <span class="at">rows =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">15</span>, <span class="at">style =</span> pval, <span class="at">stack =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb34-23"><a href="#cb34-23" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb34-24"><a href="#cb34-24" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(c <span class="cf">in</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">4</span>, <span class="dv">6</span>, <span class="dv">8</span>)) {</span>
+<span id="cb34-25"><a href="#cb34-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">addStyle</span>(wb, <span class="dv">1</span>, <span class="at">cols =</span> c, <span class="at">rows =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">15</span>, <span class="at">style =</span> est, <span class="at">stack =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb34-26"><a href="#cb34-26" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb34-27"><a href="#cb34-27" aria-hidden="true" tabindex="-1"></a><span class="fu">mergeCells</span>(wb, <span class="dv">1</span>, <span class="at">cols =</span> <span class="dv">2</span><span class="sc">:</span><span class="dv">3</span>, <span class="at">rows =</span> <span class="dv">1</span>)</span>
+<span id="cb34-28"><a href="#cb34-28" aria-hidden="true" tabindex="-1"></a><span class="fu">mergeCells</span>(wb, <span class="dv">1</span>, <span class="at">cols =</span> <span class="dv">4</span><span class="sc">:</span><span class="dv">5</span>, <span class="at">rows =</span> <span class="dv">1</span>)</span>
+<span id="cb34-29"><a href="#cb34-29" aria-hidden="true" tabindex="-1"></a><span class="fu">mergeCells</span>(wb, <span class="dv">1</span>, <span class="at">cols =</span> <span class="dv">6</span><span class="sc">:</span><span class="dv">7</span>, <span class="at">rows =</span> <span class="dv">1</span>)</span>
+<span id="cb34-30"><a href="#cb34-30" aria-hidden="true" tabindex="-1"></a><span class="fu">mergeCells</span>(wb, <span class="dv">1</span>, <span class="at">cols =</span> <span class="dv">8</span><span class="sc">:</span><span class="dv">9</span>, <span class="at">rows =</span> <span class="dv">1</span>)</span>
+<span id="cb34-31"><a href="#cb34-31" aria-hidden="true" tabindex="-1"></a><span class="fu">addStyle</span>(wb, <span class="dv">1</span>, <span class="at">cols =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">9</span>, <span class="at">rows =</span> <span class="dv">1</span>, </span>
+<span id="cb34-32"><a href="#cb34-32" aria-hidden="true" tabindex="-1"></a>         <span class="at">style =</span> <span class="fu">createStyle</span>(<span class="at">halign =</span> <span class="st">"center"</span>, <span class="at">textDecoration =</span> <span class="st">"bold"</span>),</span>
+<span id="cb34-33"><a href="#cb34-33" aria-hidden="true" tabindex="-1"></a>         <span class="at">stack =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb34-34"><a href="#cb34-34" aria-hidden="true" tabindex="-1"></a><span class="fu">setColWidths</span>(wb, <span class="dv">1</span>, <span class="at">cols =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">9</span>, <span class="at">widths =</span> <span class="dv">10</span>)</span>
+<span id="cb34-35"><a href="#cb34-35" aria-hidden="true" tabindex="-1"></a><span class="fu">setColWidths</span>(wb, <span class="dv">1</span>, <span class="at">cols =</span> <span class="dv">1</span>, <span class="at">widths =</span> <span class="dv">20</span>)</span>
+<span id="cb34-36"><a href="#cb34-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-37"><a href="#cb34-37" aria-hidden="true" tabindex="-1"></a><span class="fu">setRowHeights</span>(wb, <span class="dv">1</span>, <span class="at">rows =</span> <span class="fu">nrow</span>(t) <span class="sc">+</span> <span class="dv">3</span>, <span class="at">heights =</span> <span class="dv">100</span>)</span>
+<span id="cb34-38"><a href="#cb34-38" aria-hidden="true" tabindex="-1"></a><span class="fu">writeData</span>(</span>
+<span id="cb34-39"><a href="#cb34-39" aria-hidden="true" tabindex="-1"></a>  wb, <span class="dv">1</span>, <span class="at">startCol =</span> <span class="dv">1</span>, <span class="at">startRow =</span> <span class="fu">nrow</span>(t) <span class="sc">+</span> <span class="dv">3</span>, </span>
+<span id="cb34-40"><a href="#cb34-40" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> <span class="fu">paste0</span>(</span>
+<span id="cb34-41"><a href="#cb34-41" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Table. Results [Estimate of Year (P-value)] for different models when removing selective years. </span><span class="sc">\n</span><span class="st">"</span>,</span>
+<span id="cb34-42"><a href="#cb34-42" aria-hidden="true" tabindex="-1"></a>    <span class="st">"'Original' represents the results for the original model;</span><span class="sc">\n</span><span class="st">"</span>,</span>
+<span id="cb34-43"><a href="#cb34-43" aria-hidden="true" tabindex="-1"></a>    <span class="st">"'Removed Gaps' represents the results for these models when removing years with large gaps around the migration peaks (2011, 2013);</span><span class="sc">\n</span><span class="st">"</span>,</span>
+<span id="cb34-44"><a href="#cb34-44" aria-hidden="true" tabindex="-1"></a>    <span class="st">"'Removed Ends' represents the results for these models when removing years where it looks like sampling ended earlier than the end of migration (2001, 2006, 2023);</span><span class="sc">\n</span><span class="st">"</span>,</span>
+<span id="cb34-45"><a href="#cb34-45" aria-hidden="true" tabindex="-1"></a>    <span class="st">"'Removed All' represents the results for these models when removing all questionable years (2001, 2006, 2011, 2013, 2023)</span><span class="sc">\n</span><span class="st">"</span>,</span>
+<span id="cb34-46"><a href="#cb34-46" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Bold P values are significant at P &lt;= 0.05."</span></span>
+<span id="cb34-47"><a href="#cb34-47" aria-hidden="true" tabindex="-1"></a>    ))</span>
+<span id="cb34-48"><a href="#cb34-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-49"><a href="#cb34-49" aria-hidden="true" tabindex="-1"></a><span class="fu">saveWorkbook</span>(wb, <span class="st">"Data/table_supp.xlsx"</span>, <span class="at">overwrite =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 
@@ -1349,8 +1348,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   });
   clipboard.on('success', onCopySuccess);
   if (window.document.getElementById('quarto-embedded-source-code-modal')) {
-    // For code content inside modals, clipBoardJS needs to be initialized with a container option
-    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
     const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
       text: getTextToCopy,
       container: window.document.getElementById('quarto-embedded-source-code-modal')
@@ -1461,7 +1458,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       if (window.Quarto?.typesetMath) {
         window.Quarto.typesetMath(note);
       }
-      // TODO in 1.5, we should make sure this works without a callout special case
       if (note.classList.contains("callout")) {
         return note.outerHTML;
       } else {
