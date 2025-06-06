@@ -147,7 +147,7 @@ intermediate data files.
 
 ### Metadata", 
     
-    yaml::as.yaml(data_pkg)
+    str_replace_all(yaml::as.yaml(data_pkg), "\\n", "\n\n  ")
   ), "Data/Datasets/README.md")
   
   
