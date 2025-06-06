@@ -151,7 +151,7 @@ intermediate data files.
         data_pkg$resources, 
         \(r) {
           paste0(
-            paste0("Dataset: **", r$name, "** (", r$mediatype, "; ", r$encoding, ")\n\nFields: \n\n"),
+            paste0("#### Dataset: **", r$name, "** (", r$mediatype, "; ", r$encoding, ")\n\nFields: \n\n"),
             paste0(map_chr(r$schema$fields, 
                            \(x) paste0("- **", x[["name"]], "**\n",
                                        "    - type: ", x[["type"]], "\n",

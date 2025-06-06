@@ -25,7 +25,7 @@ intermediate data files.
 
 ### Metadata
 
-Dataset: **table_duration.csv** (text/csv; UTF-8)
+#### Dataset: **table_duration.csv** (text/csv; UTF-8)
 
 Fields: 
 
@@ -64,7 +64,7 @@ Fields:
     - description: P-value for the model as a whole
 
 
-Dataset: **table_pop_mig.csv** (text/csv; UTF-8)
+#### Dataset: **table_pop_mig.csv** (text/csv; UTF-8)
 
 Fields: 
 
@@ -94,7 +94,7 @@ Fields:
     - description: Number of samples (years) in the analysis
 
 
-Dataset: **table_pop_res.csv** (text/csv; UTF-8)
+#### Dataset: **table_pop_res.csv** (text/csv; UTF-8)
 
 Fields: 
 
@@ -124,7 +124,7 @@ Fields:
     - description: Number of samples (years) in the analysis
 
 
-Dataset: **table_skew.csv** (text/csv; UTF-8)
+#### Dataset: **table_skew.csv** (text/csv; UTF-8)
 
 Fields: 
 
@@ -163,7 +163,7 @@ Fields:
     - description: P-value for the model as a whole
 
 
-Dataset: **table_supplemental.csv** (text/csv; UTF-8)
+#### Dataset: **table_supplemental.csv** (text/csv; UTF-8)
 
 Fields: 
 
@@ -190,7 +190,7 @@ Fields:
     - description: Type of model being compared, 'original' is the model without any omissions, 'gaps_removed' has years with gaps in the record removed, 'end_removed' has years with a gap at the end removed, 'all_removed' has years with both gaps during and at the end removed
 
 
-Dataset: **table_timing_combined.csv** (text/csv; UTF-8)
+#### Dataset: **table_timing_combined.csv** (text/csv; UTF-8)
 
 Fields: 
 
@@ -220,7 +220,7 @@ Fields:
     - description: Number of samples (years) in the analysis
 
 
-Dataset: **table_timing.csv** (text/csv; UTF-8)
+#### Dataset: **table_timing.csv** (text/csv; UTF-8)
 
 Fields: 
 
@@ -259,7 +259,7 @@ Fields:
     - description: P-value for the model as a whole
 
 
-Dataset: **vultures_clean_2023.csv** (text/csv; UTF-8)
+#### Dataset: **vultures_clean_2023.csv** (text/csv; UTF-8)
 
 Fields: 
 
@@ -277,7 +277,7 @@ Fields:
     - description: Day of year
 
 
-Dataset: **vultures_cumulative_counts.csv** (text/csv; UTF-8)
+#### Dataset: **vultures_cumulative_counts.csv** (text/csv; UTF-8)
 
 Fields: 
 
@@ -301,7 +301,7 @@ Fields:
     - description: Cumulative counts
 
 
-Dataset: **vultures_final.csv** (text/csv; UTF-8)
+#### Dataset: **vultures_final.csv** (text/csv; UTF-8)
 
 Fields: 
 
@@ -475,7 +475,7 @@ Fields:
     - description: Number of missing count days in the two weeks before predicted start of migration
 
 
-Dataset: **vultures_gams_pred.csv** (text/csv; UTF-8)
+#### Dataset: **vultures_gams_pred.csv** (text/csv; UTF-8)
 
 Fields: 
 
