@@ -11,7 +11,7 @@ f <- f |>
     desc = case_match(
       field,
       "model" ~ "Model definition",
-      "term" ~ "Model parameter or term being definied",
+      "term" ~ "Model parameter or term being defined",
       "estimate" ~ "Model parameter estimate",
       "std_error" ~ "Standard error of the model parameter estimate",
       "p_value" ~ "P-value",
@@ -145,9 +145,21 @@ intermediate data files.
 - Supplemental analyses (`supplemental`)
 
 
-### Metadata", 
-    
-    str_replace_all(yaml::as.yaml(data_pkg), "\\n", "\n\n  ")
-  ), "Data/Datasets/README.md")
-  
+### Metadata\n\n", 
+    paste0(
+      map_chr(
+        data_pkg$resources, 
+        \(r) {
+          paste0(
+            paste0("Dataset: **", r$name, "** (", r$mediatype, "; ", r$encoding, ")\n\nFields: \n\n"),
+            paste0(map_chr(r$schema$fields, 
+                           \(x) paste0("- **", x[["name"]], "**\n",
+                                       "    - type: ", x[["type"]], "\n",
+                                       "    - description: ", x[["description"]], "\n")),
+                   collapse = "")
+          )
+        }), collapse = "\n\n")), 
+  "Data/Datasets/README.md")
+
+
   
