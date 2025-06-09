@@ -212,11 +212,20 @@ colour intensity showing strength in the pattern.
 
 #### Descriptive stats
 
+**Day of Year**
 ```{r}
 v |> 
   select(contains("start_doy"), contains("50_doy"), contains("end_doy"), "max_doy") |>
   desc_stats()
 ```
+
+**Date**
+```{r}
+v |> 
+  select(contains("start_doy"), contains("50_doy"), contains("end_doy"), "max_doy") |>
+  desc_stats(units = "date")
+```
+
 
 :::{.panel-tabset}
 
@@ -354,23 +363,27 @@ colour intensity showing strength in the pattern.
 For the start of migration, if we omit 1999, the pattern is stronger, 
 but the same, if we omit 2000, the pattern is weaker but still the same.
 ```{r}
+#| code-fold: false
 compare(m1, 1999)
 compare(m1, 2000)
 ```
 
 For the start of peak migration
 ```{r}
+#| code-fold: false
 compare(m2, 2000)
 compare(m2, 2020)
 ```
 
 The date of 50% passage
 ```{r}
+#| code-fold: false
 compare(m3, 2020)
 ```
 
 And the date of maximum counts
 ```{r}
+#| code-fold: false
 compare(m6, 2002)
 ```
 
@@ -613,6 +626,7 @@ colour intensity showing strength in the pattern.
 For the number of days in peak migration, if we omit 1999, the pattern is stronger, but the same (i.e. not significant), we see the same for the number of days 
 in peak migration for 1999 and 2009.
 ```{r}
+#| code-fold: false
 compare(m1, 1999)
 compare(m2, 1999)
 compare(m2, 2009)
@@ -886,12 +900,14 @@ colour intensity showing strength in the pattern.
 
 For the maximum population recorded during migration based on both predicted counts *and* raw counts, if we omit 1999, the patterns are stronger, but the same.
 ```{r}
+#| code-fold: false
 compare(m1, 1999)
 compare(m2, 1999)
 ```
 
 If we omit 2000 or 2022, the patterns are weaker, but still the same.
 ```{r}
+#| code-fold: false
 compare(m1, 2000)
 compare(m1, 2022)
 compare(m2, 2022)
@@ -1140,12 +1156,14 @@ colour intensity showing strength in the pattern.
 
 For the daily median number of resident birds based on both predicted counts *and* raw counts, if we omit 2001, the patterns are stronger, but the same.
 ```{r}
+#| code-fold: false
 compare(m1, 2001)
 compare(m2, 2001)
 ```
 
 If we omit 2020, the patterns are weaker, but still the same.
 ```{r}
+#| code-fold: false
 compare(m1, 2020)
 ```
 
@@ -1329,14 +1347,15 @@ colour intensity showing strength in the pattern.
 
 For 2001, the patterns shift but do not change.
 ```{r}
+#| code-fold: false
 compare(m1, 2001)
 compare(m3, 2001)
 compare(m4, 2001)
-
 ```
 
 For 2002, the patterns are stronger.
 ```{r}
+#| code-fold: false
 compare(m2, 2002)
 compare(m5, 2002)
 ```
@@ -1344,17 +1363,20 @@ compare(m5, 2002)
 For skew of the counts during the "all" period, if we omit 2004, the patterns
 are stronger, and nearly show a trend, but are still non-significant.
 ```{r}
+#| code-fold: false
 compare(m3, 2004)
 ```
 
 For kurtosis during the "all" migration period, if we omit 2009, the patterns 
 are less strong, but the same.
 ```{r}
+#| code-fold: false
 compare(m6, 2009)
 ```
 
 For 2015, the patterns are stronger, but the same (i.e., not significant).
 ```{r}
+#| code-fold: false
 compare(m1, 2015)
 compare(m3, 2015)
 compare(m4, 2015)
@@ -1362,6 +1384,7 @@ compare(m4, 2015)
 
 For kurtosis during the peak migration period, if we omit 2018, the patterns don't really change.
 ```{r}
+#| code-fold: false
 compare(m5, 2018)
 ```
 

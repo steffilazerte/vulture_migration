@@ -284,19 +284,35 @@ model_check_figs <- function(models) {
   }
 }
 
-desc_stats <- function(data) {
-  data |>
-    pivot_longer(cols = everything(), names_to = "measure") |>
-    summarize(mean = mean(value), 
-              sd = sd(value),
-              min = min(value),
-              median = median(value),
-              max = max(value),
-              n = n(),
-              .by = "measure") |>
-    gt() |>
-    gt_theme() |>
-    fmt_number(columns = c(mean, sd), decimals = 2)
+desc_stats <- function(data, units = "doy") {
+  if(units == "doy") {
+    data |>
+      pivot_longer(cols = everything(), names_to = "measure") |>
+      summarize(mean = mean(value), 
+                sd = sd(value),
+                min = min(value),
+                median = median(value),
+                max = max(value),
+                n = n(),
+                .by = "measure") |>
+      gt() |>
+      gt_theme() |>
+      fmt_number(columns = c(mean, sd), decimals = 2)
+  } else if(units == "date") {
+    # yday(as_date(1))  is Jan 2nd, so use as_date(1) - 1
+    data |>
+      pivot_longer(cols = everything(), names_to = "measure") |>
+      summarize(mean = format(as_date(round(mean(value))) - 1, "%b %d"), 
+                sd = sd(value),
+                min = format(as_date(round(min(value))) - 1, "%b %d"),
+                median = format(as_date(round(median(value))) - 1, "%b %d"),
+                max = format(as_date(round(max(value))) - 1, "%b %d"),
+                n = n(),
+                .by = "measure") |>
+      gt() |>
+      gt_theme() |>
+      fmt_number(columns = c(mean, sd), decimals = 2)
+  }
 }
   
 fmt_anova <- function(m) {
