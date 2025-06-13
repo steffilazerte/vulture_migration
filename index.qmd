@@ -2,7 +2,7 @@
 # Vulture Migration
 
 <!-- badges: start -->
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.13830990.svg)](https://doi.org/10.5281/zenodo.13830990)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.13830989.svg)](https://doi.org/10.5281/zenodo.13830989)
 ![In Review](https://img.shields.io/badge/status-In_Review-yellow)
 <!-- badges: end -->
 
