@@ -32,6 +32,11 @@ pred <- read_csv("Data/Datasets/vultures_gams_pred.csv")
 
 # Checking problematic years
 supp <- read_csv("Data/Datasets/table_supplemental.csv")
+
+# Problematic years
+v <- mutate(v, gaps = if_else(year %in% c(2011, 2013), "Gap around peak", "No gaps"))
+y1 <- c(2011, 2013)         # Gaps around the peak
+y2 <- c(2001, 2006, 2023)   # Missing end of migration
 ```
 
 
@@ -43,21 +48,56 @@ v <- v |>
 
 g1 <- ggplot(v, aes(x = year, y = date)) +
   theme_bw() +
-  theme(axis.title.x = element_blank()) +
-  geom_point() +
+  theme(axis.title.x = element_blank(),
+        legend.direction = "vertical", legend.position = "inside",
+        legend.position.inside = c(0.1, 0.85),
+        legend.key.width = unit(2, "pt"),
+        legend.key.spacing.y = unit(-5, "pt"),
+        legend.background = element_blank(), 
+        legend.key = element_blank(), 
+        legend.margin = margin(-10, 0, 0, 0, "pt"),
+        plot.margin = margin(1,2,0,1, "pt"), panel.spacing = unit(0, "pt")) +
+  geom_point(aes(shape = gaps)) +
   geom_smooth(method = "lm", se = TRUE) +
-  labs(y = "Date of peak migration", x = "")
+  scale_shape_manual(name = NULL, values = c(1, 19)) +
+  labs(y = "Date of Peak Migration", x = "")
 
 g2 <- ggplot(v, aes(x = year, y = mig_raw_max)) +
   theme_bw() +
-  geom_point() +
+  theme(legend.position = "none") +
+  geom_point(aes(shape = gaps)) +
   stat_smooth(method = MASS::glm.nb) +
-  labs(y = "Annual maximum\nDaily Estimated Total", x = "Year")
+  scale_shape_manual(name = NULL, values = c(1, 19)) +
+  labs(y = "Annual Maximum\nDaily Estimated Total", x = "Year")
 
-g <- g1 / g2 + plot_annotation(tag_levels = "A")
+g3 <- ggplot(v, aes(x = year, y = mig_raw_max)) +
+  theme_bw() +
+  theme(legend.direction = "horizontal", legend.position = "inside",
+        legend.position.inside = c(0.25, 0.87),
+        legend.background = element_blank(), 
+        legend.key = element_blank(), 
+        legend.margin = margin(-10, 0, 0, 0, "pt"),
+        plot.margin = margin(1,2,0,1, "pt"), panel.spacing = unit(0, "pt")) +
+  geom_point() +
+  stat_smooth(method = MASS::glm.nb, aes(fill = "All years"), alpha = 0.15) +
+  stat_smooth(data = filter(v, year != 2022), aes(fill = "Without 2022"), 
+              method = MASS::glm.nb, linewidth = 1, colour = "black") +
+  labs(y = "Annual Maximum\nDaily Estimated Total", x = "Year") +
+  scale_fill_manual(name = NULL, 
+                    values = c("All years" = "blue", "Without 2022" = "darkgrey"))
+
+g <- g1 / g2 + 
+  plot_annotation(tag_levels = "A") #+ 
+  # plot_layout(guides = "collect") &
+  # theme(legend.direction = "horizontal", legend.position = "bottom",
+  #       legend.key.width = unit(2, "pt"),
+  #       legend.background = element_blank(), 
+  #       legend.key = element_blank(), 
+  #       legend.margin = margin(-10, 0, 0, 0, "pt"),
+  #       plot.margin = margin(1,2,0,1, "pt"), panel.spacing = unit(0, "pt"))
 #ggsave("fig1_quick.png", dpi = 1000, width = 8, height = 7)
 
-gg <- g1 / (g2 + labs(y = "Annual maximum DET")) + plot_annotation(tag_levels = "A")
+gg <- g1 / (g2 + labs(y = "Annual Maximum DET")) + plot_annotation(tag_levels = "A")
 ```
 
 
@@ -99,8 +139,18 @@ gg
 #| fig-height: 8.5
 #| fig-width: 5
 #| out-width: 80%
-g
-gg
+g & theme(legend.position.inside = c(0.17, 0.85))
+gg & theme(legend.position.inside = c(0.17, 0.85))
+```
+
+### Supplemental comparison of with/without 2022
+
+```{r}
+#| fig-asp: 0.5
+#| fig-height: 2.5
+#| fig-width: 5
+#| out-width: 80%
+g3
 ```
 
 ## Map
