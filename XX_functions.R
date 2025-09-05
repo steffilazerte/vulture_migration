@@ -227,7 +227,7 @@ gt_cooks <- function(cooks, width = "40%") {
   for(i in col) {
     g <- tab_style(g, style = list(cell_fill(color = "#F9E3D6")),
                    cells_body(columns = contains(i), 
-                              rows = .data[[i]] > 4/25))
+                              rows = .data[[i]] > 4/24))
   }
 
   g |>
