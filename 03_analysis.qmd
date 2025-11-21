@@ -345,7 +345,7 @@ ggplot(doy_figs, aes(x = year, y = doy, group = measure, colour = measure, fill 
 
 The DHARMa model checks don't highlight any particular outlier problems, but out of an abundance of caution, we'll do a quick review of any high Cook's D values. 
 
-Values highlighted in red are less than 4/25, a standard Cook's D cutoff (4/sample size). These indicate potential influential data points for a particular model.
+Values highlighted in red are more than 4/25, a standard Cook's D cutoff (4/sample size). These indicate potential influential data points for a particular model.
 
 
 ```{r}
@@ -610,7 +610,7 @@ model_check_figs(models)
 
 The DHARMa model checks don't highlight any particular outlier problems, but out of an abundance of caution, we'll do a quick review of any high Cook's D values. 
 
-Values highlighted in red are less than 4/25, a standard Cook's D cutoff (4/sample size). These indicate potential influential data points for a particular model.
+Values highlighted in red are more than 4/25, a standard Cook's D cutoff (4/sample size). These indicate potential influential data points for a particular model.
 
 ```{r}
 get_cooks(models) |>
@@ -885,7 +885,7 @@ model_check_figs(models)
 
 The DHARMa model checks don't highlight any particular outlier problems, but out of an abundance of caution, we'll do a quick review of any high Cook's D values. 
 
-Values highlighted in red are less than 4/25, a standard Cook's D cutoff (4/sample size). These indicate potential influential data points for a particular model.
+Values highlighted in red are more than 4/25, a standard Cook's D cutoff (4/sample size). These indicate potential influential data points for a particular model.
 
 ```{r}
 get_cooks(models[-3]) |>
@@ -1141,7 +1141,7 @@ model_check_figs(models)
 
 The DHARMa model checks don't highlight any particular outlier problems, but out of an abundance of caution, we'll do a quick review of any high Cook's D values. 
 
-Values highlighted in red are less than 4/25, a standard Cook's D cutoff (4/sample size). These indicate potential influential data points for a particular model.
+Values highlighted in red are more than 4/25, a standard Cook's D cutoff (4/sample size). These indicate potential influential data points for a particular model.
 
 ```{r}
 get_cooks(models) |>
@@ -1326,7 +1326,7 @@ model_check_figs(models)
 
 The DHARMa model checks don't highlight any particular outlier problems, but out of an abundance of caution, we'll do a quick review of any high Cook's D values. 
 
-Values highlighted in red are less than 4/25, a standard Cook's D cutoff (4/sample size). These indicate potential influential data points for a particular model.
+Values highlighted in red are more than 4/25, a standard Cook's D cutoff (4/sample size). These indicate potential influential data points for a particular model.
 
 ```{r}
 get_cooks(models) |>
