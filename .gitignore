@@ -13,3 +13,7 @@ Docs/
 *_cache/
 *_files
 !docs/*_files
+
+# Pop science article
+Other/
+Data/TUVU*2025*
